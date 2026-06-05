@@ -20,9 +20,9 @@
   },
   "KILL": {
     "ASSIST": "Assistência(s): {{{ assists }}}",
-    "BAD_TITLE": "{{ victim }} foi morto por {{ killer }}",
+    "DEATH_TITLE": "{{ victim }} foi morto por {{ killer }}",
     "FAME": "Fama do Abate",
-    "GOOD_TITLE": "{{ killer }} matou {{ victim }}",
+    "KILL_TITLE": "{{ killer }} matou {{ victim }}",
     "KILLER_GUILD": "Guilda do Matador",
     "KILLER_IP": "IP do Matador",
     "LOOT_VALUE": "Valor do Loot",
@@ -67,6 +67,7 @@
       "SET": "Canal para a categoria '{{ category }}' definido para {{{ channel }}}."
     },
     "DESCRIPTION": {
+      "ASSISTS": "Mudar configurações de assistências.",
       "BATTLES": "Mudar configurações de batalhas.",
       "CHANNEL": "Canal para enviar notificações",
       "DEATHS": "Mudar configurações de mortes.",
@@ -167,6 +168,13 @@
       "UNTRACKED": "Parando de rastrear aliança: {{ name }}."
     },
     "ALREADY_TRACKED": "Já estou rastreando este item.",
+    "ASSISTS": {
+      "CHANNEL": {
+        "CUSTOM": "Notificações de assistência serão enviadas para o canal personalizado: {{{ channel }}}",
+        "DEFAULT": "Notificações de assistência serão enviadas para o canal padrão.",
+        "DESCRIPTION": "Enviar notificações de assistência para um canal personalizado."
+      }
+    },
     "DEATHS": {
       "CHANNEL": {
         "CUSTOM": "As notificações de morte serão exibidas no seguinte canal personalizado: {{{ channel }}}",

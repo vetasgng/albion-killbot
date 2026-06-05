@@ -77,6 +77,39 @@ const deaths = (subcommand) =>
         ),
     );
 
+const assists = (subcommand) =>
+  subcommand
+    .setName("assists")
+    .setDescription(t("SETTINGS.DESCRIPTION.ASSISTS"))
+    .addBooleanOption((option) => option.setName("enabled").setDescription(t("SETTINGS.CATEGORY.ENABLED")))
+    .addChannelOption((option) => option.setName("channel").setDescription(t("SETTINGS.DESCRIPTION.CHANNEL")))
+    .addStringOption((option) =>
+      option
+        .setName("mode")
+        .setDescription(t("SETTINGS.DESCRIPTION.MODE"))
+        .setChoices(
+          {
+            name: t("SETTINGS.MODE.IMAGE"),
+            value: "image",
+          },
+          {
+            name: t("SETTINGS.MODE.TEXT"),
+            value: "text",
+          },
+        ),
+    )
+    .addStringOption((option) =>
+      option
+        .setName("provider")
+        .setDescription(t("SETTINGS.DESCRIPTION.PROVIDER"))
+        .setChoices(
+          ...REPORT_PROVIDERS.filter((provider) => provider.events).map((provider) => ({
+            name: provider.name,
+            value: provider.id,
+          })),
+        ),
+    );
+
 const juicy = (subcommand) => {
   for (const server of SERVER_LIST) {
     subcommand.addBooleanOption((option) =>
@@ -221,6 +254,7 @@ const command = {
     .setDefaultMemberPermissions("0")
     .addSubcommand(kills)
     .addSubcommand(deaths)
+    .addSubcommand(assists)
     .addSubcommand(juicy)
     .addSubcommand(battles)
     .addSubcommand(rankings)
@@ -295,6 +329,27 @@ const command = {
       },
       deaths: async () => {
         const category = "deaths";
+        settings = getCommonOptions(settings, category, interaction);
+
+        const mode = interaction.options.getString("mode");
+        if (mode != null) settings[category].mode = mode;
+
+        let provider = interaction.options.getString("provider");
+        if (provider != null) settings[category].provider = provider;
+
+        await interaction.deferReply({ ephemeral: true });
+        await setSettings(interaction.guild.id, settings);
+
+        let reply = printCommonOptions(settings, category, interaction, t);
+        reply += t("SETTINGS.MODE.SET", { mode: settings[category].mode }) + "\n";
+
+        provider = REPORT_PROVIDERS.find((p) => p.id === settings[category].provider);
+        if (provider) reply += t("SETTINGS.PROVIDER.SET", { provider: provider.name }) + "\n";
+
+        return await editReply(reply);
+      },
+      assists: async () => {
+        const category = "assists";
         settings = getCommonOptions(settings, category, interaction);
 
         const mode = interaction.options.getString("mode");

@@ -7,6 +7,7 @@ import AdminSubscriptionsPage from "pages/admin/subscriptions/AdminSubscriptions
 import Auth from "pages/auth/Auth";
 import AuthGuard from "pages/auth/AuthGuard";
 import DashboardPage from "pages/dashboard/DashboardPage";
+import AssistsPage from "pages/dashboard/server/AssistsPage";
 import BattlesPage from "pages/dashboard/server/BattlesPage";
 import DeathsPage from "pages/dashboard/server/DeathsPage";
 import JuicyPage from "pages/dashboard/server/JuicyPage";
@@ -33,6 +34,7 @@ const routes = createRoutesFromElements(
             <Route index element={<Navigate to="track" replace={true} />} />
             <Route path="settings" element={<SettingsPage />} />
             <Route path="kills" element={<KillsPage />} />
+            <Route path="assists" element={<AssistsPage />} />
             <Route path="deaths" element={<DeathsPage />} />
             <Route path="juicy" element={<JuicyPage />} />
             <Route path="battles" element={<BattlesPage />} />

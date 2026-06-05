@@ -7,6 +7,7 @@ import {
   faSkull,
   faSkullCrossbones,
   faTrophy,
+  faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Loader from "components/common/Loader";
@@ -52,6 +53,11 @@ const ServerPage = () => {
       path: "kills",
       name: "Kills",
       icon: faSkull,
+    },
+    {
+      path: "assists",
+      name: "Assists",
+      icon: faUsers,
     },
     {
       path: "deaths",

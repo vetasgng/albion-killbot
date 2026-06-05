@@ -19,6 +19,11 @@ const initialState: ISettings = {
     channel: "",
     mode: "image",
   },
+  assists: {
+    enabled: false,
+    channel: "",
+    mode: "image",
+  },
   juicy: {
     enabled: {
       americas: false,
@@ -59,6 +64,7 @@ export const settingsSlice = createSlice({
       state.general = action.payload.general;
       state.kills = action.payload.kills;
       state.deaths = action.payload.deaths;
+      state.assists = action.payload.assists ?? initialState.assists;
       state.juicy = action.payload.juicy;
       state.battles = action.payload.battles;
       state.rankings = action.payload.rankings;
@@ -98,6 +104,18 @@ export const settingsSlice = createSlice({
     },
     setDeathsProvider: (state, action: PayloadAction<string>) => {
       state.deaths.provider = action.payload;
+    },
+    setAssistsEnabled: (state, action: PayloadAction<boolean>) => {
+      state.assists.enabled = action.payload;
+    },
+    setAssistsChannel: (state, action: PayloadAction<string>) => {
+      state.assists.channel = action.payload;
+    },
+    setAssistsMode: (state, action: PayloadAction<string>) => {
+      state.assists.mode = action.payload;
+    },
+    setAssistsProvider: (state, action: PayloadAction<string>) => {
+      state.assists.provider = action.payload;
     },
     setJuicyEnabled: (
       state,
@@ -176,6 +194,10 @@ export const {
   setDeathsChannel,
   setDeathsMode,
   setDeathsProvider,
+  setAssistsEnabled,
+  setAssistsChannel,
+  setAssistsMode,
+  setAssistsProvider,
   setJuicyEnabled,
   setJuicyChannel,
   setJuicyMode,

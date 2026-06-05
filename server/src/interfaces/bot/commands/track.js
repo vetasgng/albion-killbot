@@ -37,6 +37,9 @@ const player = (subcommand) =>
     .addChannelOption((option) => option.setName("kills_channel").setDescription(t("TRACK.KILLS.CHANNEL.DESCRIPTION")))
     .addChannelOption((option) =>
       option.setName("deaths_channel").setDescription(t("TRACK.DEATHS.CHANNEL.DESCRIPTION")),
+    )
+    .addChannelOption((option) =>
+      option.setName("assists_channel").setDescription(t("TRACK.ASSISTS.CHANNEL.DESCRIPTION")),
     );
 
 const guild = (subcommand) =>
@@ -61,6 +64,9 @@ const guild = (subcommand) =>
     .addChannelOption((option) => option.setName("kills_channel").setDescription(t("TRACK.KILLS.CHANNEL.DESCRIPTION")))
     .addChannelOption((option) =>
       option.setName("deaths_channel").setDescription(t("TRACK.DEATHS.CHANNEL.DESCRIPTION")),
+    )
+    .addChannelOption((option) =>
+      option.setName("assists_channel").setDescription(t("TRACK.ASSISTS.CHANNEL.DESCRIPTION")),
     );
 
 const alliance = (subcommand) =>
@@ -85,6 +91,9 @@ const alliance = (subcommand) =>
     .addChannelOption((option) => option.setName("kills_channel").setDescription(t("TRACK.KILLS.CHANNEL.DESCRIPTION")))
     .addChannelOption((option) =>
       option.setName("deaths_channel").setDescription(t("TRACK.DEATHS.CHANNEL.DESCRIPTION")),
+    )
+    .addChannelOption((option) =>
+      option.setName("assists_channel").setDescription(t("TRACK.ASSISTS.CHANNEL.DESCRIPTION")),
     );
 
 const command = {
@@ -108,6 +117,7 @@ const command = {
     const allianceId = interaction.options.getString("alliance");
     const killsChannel = interaction.options.getChannel("kills_channel");
     const deathsChannel = interaction.options.getChannel("deaths_channel");
+    const assistsChannel = interaction.options.getChannel("assists_channel");
 
     if (!server || (!playerName && !guildName && !allianceId)) {
       return await interaction.reply({
@@ -168,6 +178,11 @@ const command = {
           channel: deathsChannel.id,
         };
       }
+      if (assistsChannel) {
+        trackItem.assists = {
+          channel: assistsChannel.id,
+        };
+      }
 
       await addTrack(interaction.guild.id, type, trackItem);
 
@@ -176,8 +191,11 @@ const command = {
       if (killsChannel) response += t("TRACK.KILLS.CHANNEL.CUSTOM", { channel: killsChannel.toString() }) + "\n";
       else response += t("TRACK.KILLS.CHANNEL.DEFAULT") + "\n";
 
-      if (deathsChannel) response += t("TRACK.DEATHS.CHANNEL.CUSTOM", { channel: deathsChannel.toString() });
+      if (deathsChannel) response += t("TRACK.DEATHS.CHANNEL.CUSTOM", { channel: deathsChannel.toString() }) + "\n";
       else response += t("TRACK.DEATHS.CHANNEL.DEFAULT") + "\n";
+
+      if (assistsChannel) response += t("TRACK.ASSISTS.CHANNEL.CUSTOM", { channel: assistsChannel.toString() });
+      else response += t("TRACK.ASSISTS.CHANNEL.DEFAULT");
 
       return addContent(response);
     };
@@ -200,7 +218,7 @@ const command = {
 
     await interaction.editReply({ content, ephemeral: true });
 
-    if (!settings.kills.channel && !settings.deaths.channel) {
+    if (!settings.kills.channel && !settings.deaths.channel && !settings.assists.channel) {
       await interaction.followUp(t("SETTINGS.CHANNEL.NOT_SET"));
     }
   },

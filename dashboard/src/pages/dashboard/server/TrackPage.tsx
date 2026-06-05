@@ -36,7 +36,7 @@ const TrackPage = () => {
     (subscription.expires === "never" ||
       new Date(subscription.expires).getTime() > new Date().getTime());
   const hasNoConfiguredTrackChannels =
-    !settings.kills.channel && !settings.deaths.channel;
+    !settings.kills.channel && !settings.deaths.channel && !settings.assists.channel;
   const emptyList =
     track.players.length === 0 &&
     track.guilds.length === 0 &&
@@ -65,8 +65,8 @@ const TrackPage = () => {
         <Alert variant="warning" className="m-0">
           <b>Warning: </b>
           <span>
-            You do not have configured a channel to display kills or death
-            notifications. Please go to the{" "}
+            You do not have configured a channel to display kills, deaths, or
+            assist notifications. Please go to the{" "}
           </span>
           <Link to={`/dashboard/${id}/settings`}>Settings</Link>
           <span> page to set up notification channels.</span>

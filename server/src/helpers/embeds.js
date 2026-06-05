@@ -1,5 +1,5 @@
 const moment = require("moment");
-const { REPORT_PROVIDERS } = require("./constants");
+const { REPORT_PROVIDERS, EVENT_TYPES } = require("./constants");
 const { getLocale } = require("./locale");
 const { digitsFormatter, humanFormatter, printSpace } = require("./utils");
 const { SERVER_LIST } = require("./albion");
@@ -13,6 +13,7 @@ const COLORS = {
   LIGHT_RED: 0xed4f4f,
 
   DARK_GREEN: 52224,
+  DARK_AMBER: 0xb8860b,
 
   BLUE: 3447003,
   GREEN: 5763719,
@@ -43,8 +44,18 @@ const getEventColor = (event) => {
         insane: COLORS.YELLOW,
       }[event.juicy] || COLORS.GREY
     );
+  if (event.eventType === EVENT_TYPES.ASSISTS) return COLORS.DARK_AMBER;
   if (event.good !== undefined) return event.good ? COLORS.DARK_GREEN : COLORS.RED;
   return COLORS.GREY;
+};
+
+const getEventTitle = (event, t, { guildTags = false } = {}) => {
+  const isDeath = event.eventType === EVENT_TYPES.DEATHS || event.good === false;
+
+  return t(isDeath ? "KILL.DEATH_TITLE" : "KILL.KILL_TITLE", {
+    killer: getPlayerName(event, "Killer", { guildTags }),
+    victim: getPlayerName(event, "Victim", { guildTags }),
+  });
 };
 
 const getPlayerName = (event, player, { guildTags = false }) => {
@@ -76,13 +87,9 @@ const embedEvent = (event, { locale, guildTags = true, providerId, test } = {}) 
   const l = getLocale(locale);
   const { t } = l;
 
-  const { good } = event;
   const lootSum = event.lootValue ? event.lootValue.equipment + event.lootValue.inventory : null;
 
-  const title = t(good ? "KILL.GOOD_TITLE" : "KILL.BAD_TITLE", {
-    killer: getPlayerName(event, "Killer", { guildTags }),
-    victim: getPlayerName(event, "Victim", { guildTags }),
-  });
+  const title = getEventTitle(event, t, { guildTags });
 
   let description;
   if (event.numberOfParticipants === 1) {
@@ -197,12 +204,7 @@ const embedEventImage = (event, image, { locale, guildTags = true, addFooter, pr
   const l = getLocale(locale);
   const { t } = l;
 
-  const { good } = event;
-
-  const title = t(good ? "KILL.GOOD_TITLE" : "KILL.BAD_TITLE", {
-    killer: getPlayerName(event, "Killer", { guildTags }),
-    victim: getPlayerName(event, "Victim", { guildTags }),
-  });
+  const title = getEventTitle(event, t, { guildTags });
   const filename = `${event.EventId}-event.png`;
 
   const provider = REPORT_PROVIDERS.find((provider) => provider.id === providerId) || REPORT_PROVIDERS[0];

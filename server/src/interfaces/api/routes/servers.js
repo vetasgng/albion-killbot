@@ -167,6 +167,18 @@ router.use(`/:serverId`, serverAdmin);
  *              provider:
  *                type: string
  *                description: Provider for links in the notifications
+ *        assists:
+ *          allOf:
+ *          - $ref: '#/components/schemas/Category'
+ *          - type: object
+ *            properties:
+ *              mode:
+ *                type: string
+ *                description: Notification style
+ *                default: "image"
+ *              provider:
+ *                type: string
+ *                description: Provider for links in the notifications
  *        juicy:
  *          allOf:
  *          - $ref: '#/components/schemas/Category'
@@ -251,6 +263,14 @@ router.use(`/:serverId`, serverAdmin);
  *        deaths:
  *          type: object
  *          description: Custom settings for deaths
+ *          required: false
+ *          properties:
+ *            channel:
+ *              type: string
+ *              description: Channel to send notifications
+ *        assists:
+ *          type: object
+ *          description: Custom settings for assists
  *          required: false
  *          properties:
  *            channel:
@@ -409,7 +429,7 @@ router.put(`/:serverId/track`, serversController.setServerTrack);
  *             properties:
  *               type:
  *                 type: string
- *                 enum: [kills, deaths]
+ *                 enum: [kills, deaths, assists]
  *               mode:
  *                 type: string
  *                 enum: ["image", "text"]

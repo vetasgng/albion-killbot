@@ -20,9 +20,9 @@
   },
   "KILL": {
     "ASSIST": "Assist(s): {{{ assists }}}",
-    "BAD_TITLE": "{{ victim }} a été tuée par {{ killer }}",
+    "DEATH_TITLE": "{{ victim }} a été tuée par {{ killer }}",
     "FAME": "Kill Fame",
-    "GOOD_TITLE": "{{ killer }} a tué {{ victim }}",
+    "KILL_TITLE": "{{ killer }} a tué {{ victim }}",
     "KILLER_GUILD": "Guilde tueuse",
     "KILLER_IP": "IP du tueur",
     "LOOT_VALUE": "Loot Value",
@@ -67,6 +67,7 @@
       "SET": "Canal pour la catégorie '{{ category }}' sélectionné {{{ channel }}}."
     },
     "DESCRIPTION": {
+      "ASSISTS": "Modifier les paramètres des notifications d'assists.",
       "BATTLES": "Change settings for battle notifications.",
       "CHANNEL": "Canal pour envoyer des notifications",
       "DEATHS": "Change settings for death notifications.",
@@ -167,6 +168,13 @@
       "UNTRACKED": "Désactivation de la suivi de l'alliance: {{ name }}."
     },
     "ALREADY_TRACKED": "Je suis déja ceci.",
+    "ASSISTS": {
+      "CHANNEL": {
+        "CUSTOM": "Les notifications d'assists seront envoyées sur le canal personnalisé : {{{ channel }}}",
+        "DEFAULT": "Les notifications d'assists seront envoyées sur le canal par défaut.",
+        "DESCRIPTION": "Envoyer les notifications d'assists sur un canal personnalisé."
+      }
+    },
     "DEATHS": {
       "CHANNEL": {
         "CUSTOM": "Les notifications de décès seront affichées sur le canal personnalisé : {{{ channel }}}",

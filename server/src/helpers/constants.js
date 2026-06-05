@@ -14,6 +14,12 @@ const REPORT_MODES = {
   TEXT: "text",
 };
 
+const EVENT_TYPES = {
+  KILLS: "kills",
+  DEATHS: "deaths",
+  ASSISTS: "assists",
+};
+
 const liveId = {
   americas: "live_us",
   asia: "live_sgp",
@@ -71,5 +77,6 @@ module.exports = {
   RANKING_MODES,
   REPORT_MODES,
   REPORT_PROVIDERS,
+  EVENT_TYPES,
   SUBSCRIPTION_STATUS,
 };

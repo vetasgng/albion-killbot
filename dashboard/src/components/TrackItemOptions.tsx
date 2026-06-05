@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Button, Form, Modal, Stack } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import { useFetchServerQuery } from "store/api";
-import { setItemDeathsChannel, setItemKillsChannel } from "store/track";
+import { setItemAssistsChannel, setItemDeathsChannel, setItemKillsChannel } from "store/track";
 import { ITrackItem, TRACK_TYPE } from "types/track";
 import ChannelInput from "./dashboard/ChannelInput";
 
@@ -18,7 +18,7 @@ const TrackItemOptions = ({ type, item }: ITrackItemOptionsProps) => {
   const [show, setShow] = useState(false);
   const dispatch = useAppDispatch();
 
-  const { id, name, kills, deaths } = item;
+  const { id, name, kills, deaths, assists } = item;
   return (
     <>
       <Button size="sm" variant="secondary" onClick={() => setShow(true)}>
@@ -48,6 +48,24 @@ const TrackItemOptions = ({ type, item }: ITrackItemOptionsProps) => {
                 />
                 <Form.Text muted>
                   This will override the default kills settings.
+                </Form.Text>
+              </Form.Group>
+
+              <hr />
+
+              <h5>Assists</h5>
+              <Form.Group controlId="assistsChannel">
+                <Form.Label>Notification Channel</Form.Label>
+                <ChannelInput
+                  aria-label="Notification channel"
+                  availableChannels={server?.channels}
+                  value={assists?.channel}
+                  onChannelChange={(channel) =>
+                    dispatch(setItemAssistsChannel({ type, item, channel }))
+                  }
+                />
+                <Form.Text muted>
+                  This will override the default assists settings.
                 </Form.Text>
               </Form.Group>
 

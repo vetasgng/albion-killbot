@@ -8,6 +8,9 @@ export interface ITrackItem {
   deaths?: {
     channel?: string;
   };
+  assists?: {
+    channel?: string;
+  };
 }
 
 export enum TRACK_TYPE {

@@ -92,6 +92,29 @@ export const trackslice = createSlice({
         state.changed = true;
       }
     },
+    setItemAssistsChannel: (
+      state,
+      {
+        payload,
+      }: PayloadAction<{
+        type: TRACK_TYPE;
+        item: ITrackItem;
+        channel?: string;
+      }>
+    ) => {
+      const item = state[payload.type].find(
+        (item) =>
+          item.server === payload.item.server && item.id === payload.item.id
+      );
+
+      if (item) {
+        item.assists = {
+          ...item.assists,
+          channel: payload.channel,
+        };
+        state.changed = true;
+      }
+    },
     untrackPlayer: (state, { payload }: PayloadAction<string>) => {
       const i = state.players.findIndex(({ id }) => id === payload);
       if (i < 0) return;
@@ -120,6 +143,7 @@ export const {
   trackAlliance,
   setItemKillsChannel,
   setItemDeathsChannel,
+  setItemAssistsChannel,
   untrackPlayer,
   untrackGuild,
   untrackAlliance,

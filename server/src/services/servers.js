@@ -4,6 +4,7 @@ const logger = require("../helpers/logger");
 const settingsService = require("./settings");
 const { embedEvent, embedEventImage, embedBattle, embedRanking } = require("../helpers/embeds");
 const { generateEventImage } = require("./images");
+const { EVENT_TYPES } = require("../helpers/constants");
 const FAKE_EVENT = require("../assets/mocks/event_934270718.json");
 const FAKE_GOOD_EVENT = require("../assets/mocks/event_1000422003.json");
 const FAKE_INSANE_EVENT = require("../assets/mocks/event_1000545635.json");
@@ -96,7 +97,7 @@ async function removeMemberRole(serverId, userId, roleId, reason) {
   }
 }
 
-async function testNotification(serverId, { channelId, type = "kills", mode = "image" } = {}) {
+async function testNotification(serverId, { channelId, type = EVENT_TYPES.KILLS, mode = "image" } = {}) {
   try {
     if (!channelId) {
       const settings = await settingsService.getSettings(serverId);
@@ -116,11 +117,28 @@ async function testNotification(serverId, { channelId, type = "kills", mode = "i
 
     let action;
     switch (type) {
-      case "kills":
-      case "deaths":
+      case EVENT_TYPES.KILLS:
+      case EVENT_TYPES.DEATHS:
         action = `event.${mode}`;
         if (!actions.has(action) || typeof actions.get(action) !== "function") throw new Error(`Unknown mode ${mode}`);
-        return await actions.get(action)({ ...FAKE_EVENT, good: type === "kills" });
+        return await actions.get(action)({
+          ...FAKE_EVENT,
+          good: type === EVENT_TYPES.KILLS,
+          eventType: type,
+        });
+      case EVENT_TYPES.ASSISTS: {
+        action = `event.${mode}`;
+        if (!actions.has(action) || typeof actions.get(action) !== "function") throw new Error(`Unknown mode ${mode}`);
+        const assistPlayer = FAKE_INSANE_EVENT.Participants.find(
+          (participant) =>
+            participant.Id !== FAKE_INSANE_EVENT.Killer.Id && participant.Id !== FAKE_INSANE_EVENT.Victim.Id,
+        );
+        return await actions.get(action)({
+          ...FAKE_INSANE_EVENT,
+          eventType: EVENT_TYPES.ASSISTS,
+          assistPlayer,
+        });
+      }
       case "good":
         action = `event.${mode}`;
         if (!actions.has(action) || typeof actions.get(action) !== "function") throw new Error(`Unknown mode ${mode}`);

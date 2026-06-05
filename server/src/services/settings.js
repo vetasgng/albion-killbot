@@ -23,6 +23,11 @@ const DEFAULT_SETTINGS = Object.freeze({
     channel: null,
     mode: REPORT_MODES.IMAGE,
   },
+  assists: {
+    enabled: false,
+    channel: null,
+    mode: REPORT_MODES.IMAGE,
+  },
   juicy: {
     enabled: {},
     mode: REPORT_MODES.IMAGE,
@@ -72,12 +77,12 @@ async function fetchAllSettings() {
 
 async function setSettings(serverId, data) {
   // TODO: Schema validation
-  const { general, kills, deaths, juicy, battles, rankings } = data;
+  const { general, kills, deaths, assists, juicy, battles, rankings } = data;
 
   await updateOne(
     SETTINGS_COLLECTION,
     { server: serverId },
-    { $set: { server: serverId, general, kills, deaths, juicy, battles, rankings } },
+    { $set: { server: serverId, general, kills, deaths, assists, juicy, battles, rankings } },
     { upsert: true },
   );
   remove(`settings-${serverId}`);

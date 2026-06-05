@@ -1,7 +1,7 @@
 const config = require("config");
 
 const logger = require("../../../helpers/logger");
-const { REPORT_MODES } = require("../../../helpers/constants");
+const { REPORT_MODES, EVENT_TYPES } = require("../../../helpers/constants");
 const { getTrackedEvent } = require("../../../helpers/tracking");
 const { embedEvent, embedEventImage, embedEventInventoryImage } = require("../../../helpers/embeds");
 const { transformGuild } = require("../../../helpers/discord");
@@ -17,7 +17,7 @@ const { hasSubscriptionByServerId } = require("../../../services/subscriptions")
 const { sendNotification } = require("./notifications");
 
 const sendEvent = async ({ client, server, guild, event, settings, track, limits, type, premium = false } = {}) => {
-  const { good, juicy, tracked } = event;
+  const { juicy, trackItem } = event;
   if (!event.lootValue) event.lootValue = await getEventVictimLootValue(event, { server });
   const logMeta = {
     server,
@@ -29,7 +29,9 @@ const sendEvent = async ({ client, server, guild, event, settings, track, limits
     type,
   };
   let killType = "unknown";
-  if (type === "kills" || type === "deaths") killType = good ? "kill" : "death";
+  if (type === EVENT_TYPES.KILLS) killType = "kill";
+  else if (type === EVENT_TYPES.DEATHS) killType = "death";
+  else if (type === EVENT_TYPES.ASSISTS) killType = "assist";
   else if (type === "juicy") killType = juicy;
 
   if (premium && !(await hasSubscriptionByServerId(guild.id))) return;
@@ -63,9 +65,8 @@ const sendEvent = async ({ client, server, guild, event, settings, track, limits
   }
 
   let channel = setting.channel;
-  if (type === "kills" || type === "deaths") {
-    if (good) channel = (tracked.kills && tracked.kills.channel) || channel;
-    else channel = (tracked.deaths && tracked.deaths.channel) || channel;
+  if (type === EVENT_TYPES.KILLS || type === EVENT_TYPES.DEATHS || type === EVENT_TYPES.ASSISTS) {
+    channel = (trackItem?.[type]?.channel) || channel;
   } else if (type === "juicy") {
     channel = setting[juicy].channel;
   }
@@ -161,7 +162,7 @@ async function subscribe(client) {
             settings,
             track,
             limits,
-            type: guildEvent.good ? "kills" : "deaths",
+            type: guildEvent.eventType,
           });
         }
         if (event.juicy && settings.juicy.enabled[event.server]) {

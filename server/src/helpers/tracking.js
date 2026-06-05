@@ -1,4 +1,5 @@
 const { equalsCaseInsensitive } = require("./utils");
+const { EVENT_TYPES } = require("./constants");
 
 const applyLimitsToTrack = (track, limits) => {
   let players = track.players || [];
@@ -17,9 +18,27 @@ const applyLimitsToTrack = (track, limits) => {
   };
 };
 
+function findTrackItemForPlayer(player, { players, guilds, alliances }, eventServer) {
+  if (!player) return null;
+
+  const playerTrack = players.find((t) => t.server === eventServer && t.id === player.Id);
+  if (playerTrack) return playerTrack;
+
+  if (player.GuildId) {
+    const guildTrack = guilds.find((t) => t.server === eventServer && t.id === player.GuildId);
+    if (guildTrack) return guildTrack;
+  }
+
+  if (player.AllianceId) {
+    const allianceTrack = alliances.find((t) => t.server === eventServer && t.id === player.AllianceId);
+    if (allianceTrack) return allianceTrack;
+  }
+
+  return null;
+}
+
 // This method checks if an event is tracked by a discord server
-// and flags it as a good event (killed is tracked) or bad event (victim is tracker)
-// and returns a copy of it or null if the event is not tracked at all
+// and flags it as a kill, death, or assist event for the matched track item
 function getTrackedEvent(event, track, limits) {
   const { players, guilds, alliances } = applyLimitsToTrack(track, limits);
 
@@ -27,27 +46,28 @@ function getTrackedEvent(event, track, limits) {
     return null;
   }
 
-  const playerIds = players.filter((item) => item.server === event.server).map((item) => item.id);
-  const guildIds = guilds.filter((item) => item.server === event.server).map((item) => item.id);
-  const allianceIds = alliances.filter((item) => item.server === event.server).map((item) => item.id);
+  // Check if the killer is tracked
+  let trackItem = findTrackItemForPlayer(event.Killer, { players, guilds, alliances }, event.server);
+  if (trackItem) {
+    return Object.assign({}, event, { good: true, eventType: EVENT_TYPES.KILLS, trackItem });
+  }
 
-  // Scan track lists until we find any tracked object
-  let good = false;
-  let tracked = null;
+  // Check if the victim is tracked
+  trackItem = findTrackItemForPlayer(event.Victim, { players, guilds, alliances }, event.server);
+  if (trackItem) {
+    return Object.assign({}, event, { good: false, eventType: EVENT_TYPES.DEATHS, trackItem });
+  }
 
-  if (!tracked) good = true;
-  if (!tracked) tracked = playerIds.includes(event.Killer.Id);
-  if (!tracked) tracked = guildIds.includes(event.Killer.GuildId);
-  if (!tracked) tracked = allianceIds.includes(event.Killer.AllianceId);
+  // Check if any other participant is tracked
+  if (event.numberOfParticipants > 1 && Array.isArray(event.Participants)) {
+    for (const participant of event.Participants) {
+      if (participant.Id === event.Killer.Id || participant.Id === event.Victim.Id) continue;
 
-  if (!tracked) good = false;
-  if (!tracked) tracked = playerIds.includes(event.Victim.Id);
-  if (!tracked) tracked = guildIds.includes(event.Victim.GuildId);
-  if (!tracked) tracked = allianceIds.includes(event.Victim.AllianceId);
-
-  if (tracked) {
-    // We need to create a new object here so we don't change the original event
-    return Object.assign({}, event, { good, tracked });
+      trackItem = findTrackItemForPlayer(participant, { players, guilds, alliances }, event.server);
+      if (trackItem) {
+        return Object.assign({}, event, { eventType: EVENT_TYPES.ASSISTS, trackItem, assistPlayer: participant });
+      }
+    }
   }
 
   return null;

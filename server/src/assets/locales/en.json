@@ -20,9 +20,9 @@
   },
   "KILL": {
     "ASSIST": "Assist(s): {{{ assists }}}",
-    "BAD_TITLE": "{{ victim }} was killed by {{ killer }}",
+    "DEATH_TITLE": "{{ victim }} was killed by {{ killer }}",
     "FAME": "Kill Fame",
-    "GOOD_TITLE": "{{ killer }} killed {{ victim }}",
+    "KILL_TITLE": "{{ killer }} killed {{ victim }}",
     "KILLER_GUILD": "Killer's Guild",
     "KILLER_IP": "Killer's IP",
     "LOOT_VALUE": "Loot Value",
@@ -67,6 +67,7 @@
       "SET": "Channel for category '{{ category }}' defined to {{{ channel }}}."
     },
     "DESCRIPTION": {
+      "ASSISTS": "Change settings for assist notifications.",
       "BATTLES": "Change settings for battle notifications.",
       "CHANNEL": "Channel to send notifications",
       "DEATHS": "Change settings for death notifications.",
@@ -167,6 +168,13 @@
       "UNTRACKED": "Untracking alliance: {{ name }}."
     },
     "ALREADY_TRACKED": "I am already tracking this item.",
+    "ASSISTS": {
+      "CHANNEL": {
+        "CUSTOM": "Assist notifications will be sent to the custom channel: {{{ channel }}}",
+        "DEFAULT": "Assist notifications will be sent to the default channel.",
+        "DESCRIPTION": "Send assist notifications to a custom channel."
+      }
+    },
     "DEATHS": {
       "CHANNEL": {
         "CUSTOM": "Death notifications will be displayed on the custom channel: {{{ channel }}}",

@@ -20,9 +20,9 @@
   },
   "KILL": {
     "ASSIST": "Ayuda(s): {{{ assists }}}",
-    "BAD_TITLE": "{{ victim }} fue asesinado por {{ killer }}",
+    "DEATH_TITLE": "{{ victim }} fue asesinado por {{ killer }}",
     "FAME": "Fama por Muerte",
-    "GOOD_TITLE": "{{ killer }} Mató {{ victim }}",
+    "KILL_TITLE": "{{ killer }} Mató {{ victim }}",
     "KILLER_GUILD": "Gremio de Asesino",
     "KILLER_IP": "IP de el Asesino",
     "LOOT_VALUE": "Valor del Loot",
@@ -67,6 +67,7 @@
       "SET": "Canal para categoria '{{ category }}' definido para {{{ channel }}}."
     },
     "DESCRIPTION": {
+      "ASSISTS": "Cambiar configuración de notificaciones de asistencias.",
       "BATTLES": "Change settings for battle notifications.",
       "CHANNEL": "Canal para enviar notificaciones",
       "DEATHS": "Change settings for death notifications.",
@@ -167,6 +168,13 @@
       "UNTRACKED": "Dejar de rastrear Alianza: {{ name }}."
     },
     "ALREADY_TRACKED": "Ya estoy rastreando este artículo.",
+    "ASSISTS": {
+      "CHANNEL": {
+        "CUSTOM": "Las notificaciones de asistencia se enviarán al canal personalizado: {{{ channel }}}",
+        "DEFAULT": "Las notificaciones de asistencia se enviarán al canal predeterminado.",
+        "DESCRIPTION": "Enviar notificaciones de asistencia a un canal personalizado."
+      }
+    },
     "DEATHS": {
       "CHANNEL": {
         "CUSTOM": "Las notificaciones de muerte se mostrarán en el canal personalizado: {{{ canal }}}",

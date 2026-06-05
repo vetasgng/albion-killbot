@@ -20,9 +20,9 @@
   },
   "KILL": {
     "ASSIST": "Помошник(и): {{{ assists }}}",
-    "BAD_TITLE": "{{ victim }} была убита {{ killer }}",
+    "DEATH_TITLE": "{{ victim }} была убита {{ killer }}",
     "FAME": "Слава",
-    "GOOD_TITLE": "{{ killer }} убил {{ victim }}",
+    "KILL_TITLE": "{{ killer }} убил {{ victim }}",
     "KILLER_GUILD": "Гильдия убийц",
     "KILLER_IP": "IP убийцы",
     "LOOT_VALUE": "Loot Value",
@@ -67,6 +67,7 @@
       "SET": "Channel for category '{{ category }}' defined to {{{ channel }}}."
     },
     "DESCRIPTION": {
+      "ASSISTS": "Change settings for assist notifications.",
       "BATTLES": "Change settings for battle notifications.",
       "CHANNEL": "Канал для отправки уведомлений",
       "DEATHS": "Change settings for death notifications.",
@@ -167,6 +168,13 @@
       "UNTRACKED": "Прекращение отслеживание альянса: {{ name }}."
     },
     "ALREADY_TRACKED": "Я уже отслеживаю это.",
+    "ASSISTS": {
+      "CHANNEL": {
+        "CUSTOM": "Уведомления об ассистах будут отправляться в пользовательский канал: {{{ channel }}}",
+        "DEFAULT": "Уведомления об ассистах будут отправляться в канал по умолчанию.",
+        "DESCRIPTION": "Отправлять уведомления об ассистах в пользовательский канал."
+      }
+    },
     "DEATHS": {
       "CHANNEL": {
         "CUSTOM": "Уведомления о смерти будут отображаться на клиентском канале: {{{channel }}}",
