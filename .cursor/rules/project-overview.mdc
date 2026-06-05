@@ -1,0 +1,34 @@
+---
+description: Albion Killbot monorepo layout, components, and dev workflow
+alwaysApply: true
+---
+
+# Albion Killbot
+
+Discord bot + web dashboard for Albion Online kill/death tracking. MIT licensed monorepo with two packages: `server/` and `dashboard/`.
+
+## Server modes
+
+Started via `server/bin/start.js` with `--mode` or `MODE` env var:
+
+| Mode | Role |
+|------|------|
+| `crawler` | Fetches kills from Albion APIs, publishes to AMQP |
+| `bot` | Consumes queue, posts Discord embeds |
+| `api` | Express REST API + Swagger for dashboard and webhooks |
+
+## Local development
+
+Prefer Docker: `ctl start` (from `npm link` on root `ctl.sh`). Logs: `ctl logs [component]`. Full restart when subprocesses misbehave: `ctl restart`.
+
+Env: `server/.env` needs at least `DISCORD_TOKEN`; MongoDB, AMQP, and other vars per `server/src/config/default.js`.
+
+## CI expectations
+
+PRs run lint + prettier per package (`server-ci.yml`, `dashboard-ci.yml`). Match existing style before submitting.
+
+## Scope when changing code
+
+- Server-only logic → `server/src/`
+- Dashboard UI → `dashboard/src/`
+- Do not commit secrets (`.env`, tokens, keys)

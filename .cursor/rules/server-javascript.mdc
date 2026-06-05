@@ -1,0 +1,39 @@
+---
+description: Server JavaScript style, config, and logging conventions
+globs: server/**/*.js
+alwaysApply: false
+---
+
+# Server JavaScript
+
+CommonJS (`require` / `module.exports`). Node 16.x. No TypeScript on server.
+
+## Formatting (Prettier)
+
+- Double quotes, semicolons, trailing commas, 120 char width, 2-space indent
+- Run `npm run lint` and `npm run prettier` in `server/` before finishing
+
+## Config and env
+
+Use `config` package — never read `process.env` outside `server/src/config/`:
+
+```javascript
+const config = require("config");
+if (config.get("features.juicy.enabled")) { /* … */ }
+```
+
+## Logging
+
+Use Winston helper — include structured context objects:
+
+```javascript
+const logger = require("../helpers/logger");
+logger.warn(`[${server.name}] Unable to fetch: ${error.message}`, { server, error });
+```
+
+## Conventions
+
+- Albion API field names stay PascalCase (`EventId`, `GuildName`) — match upstream API
+- Mongo `_id` → `id` string conversion happens in `ports/database.js`; services use `id`
+- i18n for bot user strings via `helpers/locale` (`t("KEY")`), not hardcoded English in commands
+- Unused args prefixed with `_` or named `req`/`res` to satisfy ESLint

@@ -1,0 +1,41 @@
+---
+description: Server layered architecture and file placement
+globs: server/**/*
+alwaysApply: false
+---
+
+# Server Architecture
+
+Follow the existing layered layout. Do not skip layers or put business logic in interfaces.
+
+```
+interfaces/   Entry points (api, bot, crawler) — HTTP routes, Discord commands, cron controllers
+services/     Business logic — orchestration, domain rules
+ports/        External abstractions — database, queue, albion, discord, stripe
+ports/adapters/   Concrete clients (mongoDbClient, albionApiClient, amqpClient, …)
+helpers/      Shared utilities (logger, embeds, locale, cache)
+config/       node-config files (default.js, production.js)
+```
+
+## Patterns
+
+**API**: `routes/` → `controllers/` → `services/` → `ports/`. Routes export `{ path, router }` and include `@openapi` JSDoc.
+
+**Bot**: `commands/` and `controllers/` call `services/` only — never adapters directly.
+
+**Ports**: Facade over adapters. Adapters hold HTTP/SDK calls; ports add retries, caching, and domain shaping.
+
+```javascript
+// ✅ Controller delegates to service
+const eventsService = require("../../../services/events");
+async function getEvent(req, res) {
+  const event = await eventsService.getEvent(req.params.eventId, { server: req.query.server });
+  if (!event) return res.sendStatus(404);
+  return res.send(event);
+}
+
+// ❌ Controller calling albion adapter directly
+const albionApiClient = require("../../../ports/adapters/albionApiClient");
+```
+
+New external integrations: add adapter under `ports/adapters/`, expose via a `ports/*.js` module, consume from services.

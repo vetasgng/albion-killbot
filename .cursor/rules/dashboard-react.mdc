@@ -1,0 +1,43 @@
+---
+description: Dashboard React, TypeScript, and Redux Toolkit patterns
+globs: dashboard/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# Dashboard (React)
+
+Create React App + TypeScript. UI: React Bootstrap + styled-components. State: Redux Toolkit + RTK Query.
+
+## Structure
+
+```
+pages/        Route-level views (HomePage, DashboardPage, admin/*)
+components/   Reusable UI (common/, subscriptions/, dashboard/)
+store/        Redux slices + RTK Query API modules (store/api/)
+types/        Shared interfaces (ISettings, IServer, User, …)
+helpers/      Hooks, theme, Discord/Stripe utilities
+```
+
+## API calls
+
+Add endpoints to `store/api/index.ts` (or split modules like `store/api/admin.ts`). Use tag invalidation for cache:
+
+```typescript
+updateSettings: builder.mutation<void, { serverId: string; settings: Partial<ISettings> }>({
+  query: ({ serverId, settings }) => ({
+    url: `/servers/${serverId}/settings`,
+    method: "PUT",
+    body: settings,
+  }),
+  invalidatesTags: ["Server"],
+}),
+```
+
+Base URL: `REACT_APP_API_URL` (defaults to `/api`).
+
+## Components
+
+- Functional components with typed props interfaces (`IPageProps`, `PageProps`)
+- Prefer RTK Query hooks (`useFetchServerQuery`) over ad-hoc fetch
+- Avoid `any` — define or extend types in `types/`
+- Run `npm run lint` and `npm run prettier` in `dashboard/` before finishing
