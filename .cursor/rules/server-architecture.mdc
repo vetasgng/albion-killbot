@@ -39,3 +39,22 @@ const albionApiClient = require("../../../ports/adapters/albionApiClient");
 ```
 
 New external integrations: add adapter under `ports/adapters/`, expose via a `ports/*.js` module, consume from services.
+
+## Event image rendering
+
+Killboard canvas code lives under `services/images/` (import as `require("…/services/images")`):
+
+```
+services/images/
+  index.js              # public API: generateEventImage, generateInventoryImage
+  eventImage.js         # event image layout + memoize
+  inventoryImage.js     # inventory image layout + memoize
+  canvas.js             # font registration, assetsPath, drawImage
+  draw/
+    items.js            # drawItem
+    player.js           # drawPlayer, awakening traits
+    stats.js            # timestamp, fame, loot, assist count
+    participantBars.js  # damage/healing bars
+```
+
+Post-processing (`optimizeImage` via sharp) stays in `helpers/images.js`.
