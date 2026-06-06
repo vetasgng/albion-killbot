@@ -18,7 +18,7 @@ const INFO_TEXT_COLORS = {
 };
 
 const BAR_SEGMENT_COLORS = {
-  damage: ["#730b0b", "#7e3400", "#835400", "#817306", "#79902c", "#6aad56", "#4fc987", "#00e3bf"],
+  damage: ["#730b0b", "#7e3400", "#835400", "#653800", "#79902c", "#6aad56", "#4fc987", "#00e3bf"],
   healing: ["#1a6638", "#33a855", "#56c96a", "#5ed4a8", "#3ecfb0", "#2ab8c9", "#3a9fd9", "#4a78d4"],
 };
 
