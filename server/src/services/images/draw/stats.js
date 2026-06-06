@@ -2,13 +2,11 @@ const moment = require("moment");
 const path = require("node:path");
 const { digitsFormatter } = require("../../../helpers/utils");
 const { assetsPath, drawImage } = require("../canvas");
+const { applyInfoTextStyle } = require("../theme/textStyles");
 
-const drawIconStat = async (ctx, { icon, text, x, y, iconSize, fontSize = "40px Roboto" }) => {
+const drawIconStat = async (ctx, { icon, text, x, y, iconSize, styleType = "statValue" }) => {
   ctx.beginPath();
-  ctx.font = fontSize;
-  ctx.fillStyle = "#FFF";
-  ctx.strokeStyle = "#000";
-  ctx.lineWidth = 4;
+  applyInfoTextStyle(ctx, styleType);
   const textWidth = ctx.measureText(text).width;
   const textHeight = ctx.measureText("M").width;
   await drawImage(ctx, path.join(assetsPath, icon), x - iconSize / 2, y, iconSize, iconSize);
@@ -19,7 +17,7 @@ const drawIconStat = async (ctx, { icon, text, x, y, iconSize, fontSize = "40px 
 
 const drawTimestamp = async (ctx, event, x, y, { iconSize = 75 } = {}) => {
   const timestamp = moment.utc(event.TimeStamp).format("YYYY.MM.DD HH:mm");
-  await drawIconStat(ctx, { icon: "time.png", text: timestamp, x, y, iconSize, fontSize: "35px Roboto" });
+  await drawIconStat(ctx, { icon: "time.png", text: timestamp, x, y, iconSize, styleType: "statTimestamp" });
 };
 
 const drawFame = async (ctx, event, x, y, { iconSize = 100 } = {}) => {

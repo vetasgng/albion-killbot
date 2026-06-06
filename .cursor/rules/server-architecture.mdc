@@ -47,14 +47,20 @@ Killboard canvas code lives under `services/images/` (import as `require("…/se
 ```
 services/images/
   index.js              # public API: generateEventImage, generateInventoryImage
-  eventImage.js         # event image layout + memoize
-  inventoryImage.js     # inventory image layout + memoize
-  canvas.js             # font registration, assetsPath, drawImage
-  draw/
-    items.js            # drawItem
-    player.js           # drawPlayer, awakening traits
-    stats.js            # timestamp, fame, loot, assist count
-    participantBars.js  # damage/healing bars
+  layouts/              # image composition
+    eventImage.js
+    inventoryImage.js
+  theme/                # visual tokens
+    colors.js
+    textStyles.js
+  canvas/               # font registration, assetsPath, drawImage
+    index.js
+  draw/                 # drawing primitives
+    background.js
+    items.js
+    player.js
+    stats.js
+    participantBars.js
 ```
 
 Post-processing (`optimizeImage` via sharp) stays in `helpers/images.js`.

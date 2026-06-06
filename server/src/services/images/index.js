@@ -1,5 +1,5 @@
-const { generateEventImage } = require("./eventImage");
-const { generateInventoryImage } = require("./inventoryImage");
+const { generateEventImage } = require("./layouts/eventImage");
+const { generateInventoryImage } = require("./layouts/inventoryImage");
 
 module.exports = {
   generateEventImage,

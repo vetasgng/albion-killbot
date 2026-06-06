@@ -1,12 +1,13 @@
 const path = require("node:path");
 const { createCanvas } = require("canvas");
-const { optimizeImage } = require("../../helpers/images");
-const { digitsFormatter, fileSizeFormatter } = require("../../helpers/utils");
-const logger = require("../../helpers/logger");
-const { memoize } = require("../../helpers/cache");
-const { SECOND } = require("../../helpers/constants");
-const { assetsPath, drawImage } = require("./canvas");
-const { drawItem } = require("./draw/items");
+const { optimizeImage } = require("../../../helpers/images");
+const { digitsFormatter, fileSizeFormatter } = require("../../../helpers/utils");
+const logger = require("../../../helpers/logger");
+const { memoize } = require("../../../helpers/cache");
+const { SECOND } = require("../../../helpers/constants");
+const { assetsPath, drawImage } = require("../canvas");
+const { drawItem } = require("../draw/items");
+const { applyInfoTextStyle } = require("../theme/textStyles");
 
 async function generateInventoryImage(event, { splitLootValue = false } = {}) {
   return memoize(
@@ -45,10 +46,7 @@ async function generateInventoryImage(event, { splitLootValue = false } = {}) {
         y += BLOCK_SIZE;
 
         ctx.beginPath();
-        ctx.font = "36px Roboto";
-        ctx.fillStyle = "#FFF";
-        ctx.strokeStyle = "#000";
-        ctx.lineWidth = 4;
+        applyInfoTextStyle(ctx, "statValue", { font: "36px Roboto" });
         const lootValueText = digitsFormatter(event.lootValue.inventory);
         const lootValueTextWidth = ctx.measureText(lootValueText).width;
         const lootValueLineHeight = ctx.measureText("M").width;

@@ -2,6 +2,7 @@ const path = require("node:path");
 const { getItemFile } = require("../../../ports/albion");
 const logger = require("../../../helpers/logger");
 const { assetsPath, drawImage } = require("../canvas");
+const { applyInfoTextStyle } = require("../theme/textStyles");
 
 const drawItem = async (ctx, item, x, y, { size = 217, attunedPlayerName } = {}) => {
   if (!item) return await drawImage(ctx, path.join(assetsPath, "slot.png"), x, y, size, size);
@@ -30,10 +31,10 @@ const drawItem = async (ctx, item, x, y, { size = 217, attunedPlayerName } = {})
   }
 
   ctx.save();
-  ctx.fillStyle = "white";
-  ctx.strokeStyle = "black";
-  ctx.lineWidth = Math.round(size / 40);
-  ctx.font = `${Math.round(size / 7.5)}px Roboto`;
+  applyInfoTextStyle(ctx, "overlay", {
+    font: `${Math.round(size / 7.5)}px Roboto`,
+    lineWidth: Math.round(size / 40),
+  });
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   ctx.strokeText(item.Count, x + size * 0.76, y + size * 0.73);

@@ -4,6 +4,8 @@ const { existsSync } = require("node:fs");
 const { transformTrait } = require("../../../helpers/albion");
 const { assetsPath, loadImage } = require("../canvas");
 const { drawItem } = require("./items");
+const { applyInfoTextStyle, drawInfoText } = require("../theme/textStyles");
+const { BAR_COLORS } = require("../theme/colors");
 
 const drawTrait = async (ctx, trait, x, y) => {
   const { name, type, value, unit, relativeValue } = transformTrait(trait);
@@ -18,9 +20,9 @@ const drawTrait = async (ctx, trait, x, y) => {
     x += 70;
   }
 
-  ctx.fillStyle = "white";
-  ctx.strokeStyle = "black";
-  ctx.font = config.get("features.events.displayTraitIcons") ? "26px Roboto" : "30px Roboto";
+  applyInfoTextStyle(ctx, "overlay", {
+    font: config.get("features.events.displayTraitIcons") ? "26px Roboto" : "30px Roboto",
+  });
   ctx.strokeText(`+${value}${unit} ${name}`, x, y);
   ctx.fillText(`+${value}${unit} ${name}`, x, y);
   y += 20;
@@ -29,7 +31,7 @@ const drawTrait = async (ctx, trait, x, y) => {
   const barHeight = 10;
   ctx.fillStyle = ctx.createPattern(await loadImage(path.join(assetsPath, "assistBarBg.png")), "repeat");
   ctx.fillRect(x, y, maxBarWidth, barHeight);
-  ctx.fillStyle = "#0dd621";
+  ctx.fillStyle = BAR_COLORS.trait;
   ctx.fillRect(x, y, relativeValue * maxBarWidth, barHeight);
 
   const barGradient = ctx.createLinearGradient(x + maxBarWidth / 2, y, x + maxBarWidth / 2, y + barHeight);
@@ -50,11 +52,7 @@ const drawAwakening = async (ctx, weapon, x, y, { size = 145, attunedPlayerName 
   y += 40;
 
   if (weapon.LegendarySoul.traits.length === 0) {
-    ctx.fillStyle = "white";
-    ctx.strokeStyle = "black";
-    ctx.font = "38px Roboto";
-    ctx.strokeText("<No traits>", x + 100, y + 100);
-    ctx.fillText("<No traits>", x + 100, y + 100);
+    drawInfoText(ctx, "overlay", "<No traits>", x + 100, y + 100, { font: "38px Roboto" });
   }
 
   for (const trait of weapon.LegendarySoul.traits) {
@@ -67,15 +65,11 @@ const drawPlayer = async (ctx, player, x, y, { showAttunement } = {}) => {
   const BLOCK_SIZE = 217;
 
   ctx.beginPath();
-  ctx.fillStyle = "#FFF";
-  ctx.strokeStyle = "#000";
 
   let guild = "";
   if (player.GuildName) guild = player.GuildName;
   if (player.AllianceName) guild = `[${player.AllianceName}] ${guild}`;
-  ctx.font = "35px Roboto";
-  ctx.lineWidth = 3;
-  ctx.fillStyle = "#FFF";
+  applyInfoTextStyle(ctx, "guildAlliance", { fill: "#FFFFFF", font: "35px Roboto", lineWidth: 3 });
   let tw = ctx.measureText(guild).width;
   let th = ctx.measureText("M").width;
   y += th * 2;
@@ -84,8 +78,7 @@ const drawPlayer = async (ctx, player, x, y, { showAttunement } = {}) => {
   y += th * 2;
 
   const name = `${player.Name}`;
-  ctx.font = "60px Roboto";
-  ctx.lineWidth = 6;
+  applyInfoTextStyle(ctx, "playerName", { font: "60px Roboto", lineWidth: 6 });
   tw = ctx.measureText(name).width;
   th = ctx.measureText("M").width;
   ctx.strokeText(name, x + BLOCK_SIZE * 1.5 - tw / 2, y);
@@ -93,10 +86,7 @@ const drawPlayer = async (ctx, player, x, y, { showAttunement } = {}) => {
   y += th - 5;
 
   const ip = `IP: ${Math.round(player.AverageItemPower)}`;
-  ctx.font = "33px Roboto";
-  ctx.fillStyle = "#AAAAAA";
-  ctx.strokeStyle = "#000000";
-  ctx.lineWidth = 2;
+  applyInfoTextStyle(ctx, "itemPower");
   tw = ctx.measureText(ip).width;
   th = ctx.measureText("M").width;
   ctx.strokeText(ip, x + BLOCK_SIZE * 1.5 - tw / 2, y);

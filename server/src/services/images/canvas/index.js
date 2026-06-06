@@ -1,8 +1,8 @@
 const path = require("node:path");
 const { registerFont, loadImage } = require("canvas");
-const logger = require("../../helpers/logger");
+const logger = require("../../../helpers/logger");
 
-const assetsPath = path.join(__dirname, "..", "..", "assets");
+const assetsPath = path.join(__dirname, "..", "..", "..", "assets");
 
 registerFont(path.join(assetsPath, "fonts", "Roboto-Regular.ttf"), {
   family: "Roboto",

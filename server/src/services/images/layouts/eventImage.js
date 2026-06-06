@@ -1,15 +1,18 @@
-const path = require("node:path");
 const { createCanvas } = require("canvas");
-const { hasAwakening } = require("../../helpers/albion");
-const { optimizeImage } = require("../../helpers/images");
-const { fileSizeFormatter } = require("../../helpers/utils");
-const logger = require("../../helpers/logger");
-const { memoize } = require("../../helpers/cache");
-const { SECOND } = require("../../helpers/constants");
-const { assetsPath, drawImage } = require("./canvas");
-const { drawPlayer } = require("./draw/player");
-const { drawTimestamp, drawFame, drawLootValue, drawAssistCount } = require("./draw/stats");
-const { drawParticipantBars } = require("./draw/participantBars");
+const { hasAwakening } = require("../../../helpers/albion");
+const { optimizeImage } = require("../../../helpers/images");
+const { fileSizeFormatter } = require("../../../helpers/utils");
+const logger = require("../../../helpers/logger");
+const { memoize } = require("../../../helpers/cache");
+const { SECOND } = require("../../../helpers/constants");
+const { drawEventBackground } = require("../draw/background");
+const { drawPlayer } = require("../draw/player");
+const { drawTimestamp, drawFame, drawLootValue, drawAssistCount } = require("../draw/stats");
+const {
+  drawParticipantBars,
+  getParticipantBarsBottom,
+  PARTICIPANT_BARS_BOTTOM_PADDING,
+} = require("../draw/participantBars");
 
 const CANVAS_WIDTH = 1600;
 const BASE_HEIGHT = 1250;
@@ -22,12 +25,15 @@ async function generateEventImage(event, { showAttunement = true, splitLootValue
     async () => {
       showAttunement = showAttunement && hasAwakening(event);
       const attunementHeight = showAttunement ? ATTUNEMENT_HEIGHT : 0;
+      const barsY = PARTICIPANT_BARS_Y + attunementHeight;
+      const barsBottom = getParticipantBarsBottom(event.Participants, barsY);
+      const canvasHeight = Math.max(BASE_HEIGHT + attunementHeight, barsBottom + PARTICIPANT_BARS_BOTTOM_PADDING);
 
-      let canvas = createCanvas(CANVAS_WIDTH, BASE_HEIGHT + attunementHeight);
+      let canvas = createCanvas(CANVAS_WIDTH, canvasHeight);
       const w = canvas.width;
       const ctx = canvas.getContext("2d");
 
-      await drawImage(ctx, path.join(assetsPath, "background.png"), -1, -1, 1602, 1554);
+      await drawEventBackground(ctx, CANVAS_WIDTH, canvasHeight);
       await drawPlayer(ctx, event.Killer, 15, 0, { showAttunement });
       await drawPlayer(ctx, event.Victim, 935, 0, { showAttunement });
       await drawTimestamp(ctx, event, w / 2, 50);
@@ -36,12 +42,7 @@ async function generateEventImage(event, { showAttunement = true, splitLootValue
       await drawFame(ctx, event, w / 2, 470);
       if (event.lootValue) await drawLootValue(ctx, event.lootValue, w / 2, 675, { splitLootValue });
 
-      await drawParticipantBars(ctx, event.Participants, w, PARTICIPANT_BARS_Y + attunementHeight, {
-        margin: 35,
-        gap: 30,
-        height: 50,
-        radius: 25,
-      });
+      await drawParticipantBars(ctx, event.Participants, w, barsY);
 
       const buffer = await optimizeImage(canvas.toBuffer(), 580);
       canvas = null;
