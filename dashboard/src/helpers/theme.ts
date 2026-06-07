@@ -2,6 +2,9 @@ export interface ThemeProps {
   name: string;
 
   background: string;
+  surface: string;
+  surfaceElevated: string;
+  borderSubtle: string;
 
   primary: string;
   secondary: string;
@@ -10,6 +13,7 @@ export interface ThemeProps {
   text: string;
   contrastText: string;
   mutedText: string;
+  subtleText: string;
 
   rgb?: {
     background?: string;
@@ -26,12 +30,27 @@ export interface ThemeProps {
   servers: {
     [server: string]: string;
   };
+
+  layout: {
+    sidebarWidth: string;
+    contentMaxWidth: string;
+    navSectionGap: string;
+    navItemRadius: string;
+  };
+
+  nav: {
+    activeBackground: string;
+    activeBorder: string;
+  };
 }
 
 const theme: ThemeProps = {
   name: "dark",
 
   background: "#1c1c1c",
+  surface: "#242424",
+  surfaceElevated: "#2f2f2f",
+  borderSubtle: "rgba(255, 255, 255, 0.08)",
 
   primary: "#ffbd59",
   secondary: "#69657c",
@@ -40,6 +59,7 @@ const theme: ThemeProps = {
   text: "#ffffff",
   contrastText: "#333333",
   mutedText: "#6c757d",
+  subtleText: "#adb5bd",
 
   rgb: {
     primary: "255,189,89",
@@ -50,6 +70,18 @@ const theme: ThemeProps = {
     americas: "#33673b",
     asia: "#cc3f0c",
     europe: "#3b68a3",
+  },
+
+  layout: {
+    sidebarWidth: "260px",
+    contentMaxWidth: "960px",
+    navSectionGap: "1.5rem",
+    navItemRadius: "0.5rem",
+  },
+
+  nav: {
+    activeBackground: "rgba(255, 189, 89, 0.12)",
+    activeBorder: "#ffbd59",
   },
 };
 

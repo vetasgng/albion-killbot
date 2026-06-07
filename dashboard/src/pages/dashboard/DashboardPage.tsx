@@ -68,7 +68,7 @@ const DashboardPage = () => {
 
   return (
     <Page
-      title="My Servers"
+      title="Dashboard"
       alerts={[
         {
           variant: "info",

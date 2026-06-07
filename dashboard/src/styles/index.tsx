@@ -99,7 +99,7 @@ const globalStyle = createGlobalStyle<{ theme: ThemeProps }>`
   .id-text {
     font-size: 10px;
     line-height: 10px;
-    color: ${({ theme }) => theme.mutedText};
+    color: ${({ theme }) => theme.subtleText};
   }
 
   .cancelled-text {

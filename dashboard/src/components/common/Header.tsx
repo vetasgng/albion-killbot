@@ -154,7 +154,7 @@ const Header = () => {
                   className="align-items-center"
                 >
                   <FontAwesomeIcon icon={faTableColumns} width={ICON_WIDTH} />
-                  <div>My Servers</div>
+                  <div>Dashboard</div>
                 </Stack>
               </Dropdown.Item>
               <Dropdown.Item as={NavLink} to="/subscriptions">
@@ -220,7 +220,7 @@ const Header = () => {
             <HeaderNavItem
               to="/dashboard"
               icon={faTableColumns}
-              label="My Servers"
+              label="Dashboard"
             />
             <HeaderNavItem
               to="/subscriptions"

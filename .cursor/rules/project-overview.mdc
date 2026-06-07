@@ -23,6 +23,8 @@ Prefer Docker: `ctl start` (from `npm link` on root `ctl.sh`). Logs: `ctl logs [
 
 Env: `server/.env` needs at least `DISCORD_TOKEN`; MongoDB, AMQP, and other vars per `server/src/config/default.js`.
 
+**Dashboard dev server:** Use **Albion Nexus - Development** for local UI testing and demos (`/dashboard/1447669162917761047/...`). Do not use Albion Killbot or other guilds unless explicitly asked.
+
 ## CI expectations
 
 PRs run lint + prettier per package (`server-ci.yml`, `dashboard-ci.yml`). Match existing style before submitting.

@@ -13,10 +13,26 @@ Create React App + TypeScript. UI: React Bootstrap + styled-components. State: R
 ```
 pages/        Route-level views (HomePage, DashboardPage, admin/*)
 components/   Reusable UI (common/, subscriptions/, dashboard/)
+constants/    Shared config (e.g. serverNav.ts for dashboard server shell)
 store/        Redux slices + RTK Query API modules (store/api/)
 types/        Shared interfaces (ISettings, IServer, User, …)
 helpers/      Hooks, theme, Discord/Stripe utilities
 ```
+
+## Server dashboard layout
+
+Server-scoped routes (`/dashboard/:serverId/*`) use a shared shell:
+
+- [`constants/serverNav.ts`](dashboard/src/constants/serverNav.ts) — grouped nav sections, item metadata (path, name, icon, description), and `getServerNavItem()`
+- [`components/dashboard/server/ServerLayout.tsx`](dashboard/src/components/dashboard/server/ServerLayout.tsx) — sidebar + page header + outlet wrapper
+- Desktop: sticky grouped sidebar; mobile: Offcanvas nav from header menu button
+- Layout/nav tokens live in [`helpers/theme.ts`](dashboard/src/helpers/theme.ts) (`layout`, `nav`)
+
+Add or rename server sub-routes in `serverNav.ts` and `routes.tsx` together.
+
+## Local UI testing
+
+Use the **Albion Nexus - Development** guild (`1447669162917761047`), e.g. `http://localhost/dashboard/1447669162917761047/track`. See project overview for the standing dev-server convention.
 
 ## API calls
 
