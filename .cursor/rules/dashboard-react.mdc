@@ -68,6 +68,7 @@ Use the **Albion Nexus - Development** guild (`1447669162917761047`), e.g. `http
 ## Premium / subscriptions UI
 
 - [`SubscriptionStripePriceCard.tsx`](dashboard/src/components/subscriptions/SubscriptionStripePriceCard.tsx) + [`subscriptions/styles.ts`](dashboard/src/components/subscriptions/styles.ts) — themed pricing cards with gold popular-tier highlight; styled checkout button and feature list
+- [`SubscriptionCard.tsx`](dashboard/src/components/subscriptions/SubscriptionCard.tsx) / [`SubscriptionCardStripe.tsx`](dashboard/src/components/subscriptions/SubscriptionCardStripe.tsx) + [`SubscriptionCardDetails.tsx`](dashboard/src/components/subscriptions/SubscriptionCardDetails.tsx) — user subscription cards use `SubscriptionCardRoot`, `SubscriptionDetailGrid`, and shared status/owner/server row components (aligned with price card theming)
 - [`helpers/subscriptions.ts`](dashboard/src/helpers/subscriptions.ts) — `getSubscriptionPriceLimits()` and `getSubscriptionPriceFeatures()` read optional Stripe metadata (`players`, `guilds`, `alliances`) with `DEFAULT_PREMIUM_LIMITS` fallback
 - [`PremiumPage.tsx`](dashboard/src/pages/premium/PremiumPage.tsx) — currency dropdown uses themed menu; responsive card grid; empty state when no plans exist for the selected currency
 - [`ServerSubscriptionPage.tsx`](dashboard/src/pages/dashboard/server/ServerSubscriptionPage.tsx) — empty state with link to Premium when no subscription is assigned to the server

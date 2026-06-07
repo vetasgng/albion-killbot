@@ -1,16 +1,26 @@
 import { faStripe } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Loader from "components/common/Loader";
-import { getServerPictureUrl, getUserPictureUrl } from "helpers/discord";
 import { getCurrency } from "helpers/utils";
-import { Button, Card, Image, Stack } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Button, Card, Stack } from "react-bootstrap";
 import { useFetchUserQuery } from "store/api";
 import { useDoSubscriptionManageMutation } from "store/api/subscriptions";
 import { ISubscriptionExtended } from "types/subscription";
 import SubscriptionAdmin from "./SubscriptionAdmin";
 import SubscriptionAssign from "./SubscriptionAssign";
-import SubscriptionStatusBadge from "./SubscriptionStatusBadge";
+import {
+  SubscriptionDateRow,
+  SubscriptionOwnerRow,
+  SubscriptionServerRow,
+  SubscriptionStatusRow,
+} from "./SubscriptionCardDetails";
+import {
+  PriceRecurrence,
+  SubscriptionCardRoot,
+  SubscriptionDetailGrid,
+  SubscriptionDetailLabel,
+  SubscriptionDetailValue,
+} from "./styles";
 
 interface Props {
   subscription: ISubscriptionExtended;
@@ -38,98 +48,37 @@ const SubscriptionCardStripe = ({ subscription }: Props) => {
   const { price } = stripe;
 
   return (
-    <Card>
+    <SubscriptionCardRoot>
       <Card.Body>
-        <div
-          style={{
-            display: "grid",
-            columnGap: "2rem",
-            rowGap: "0.25rem",
-            gridTemplateColumns: "minmax(100px, max-content) auto",
-            gridAutoRows: "1.75rem",
-          }}
-        >
-          <div className="text-muted">Status:</div>
-          <div>
-            <SubscriptionStatusBadge status={stripe.status} />
-          </div>
+        <SubscriptionDetailGrid>
+          <SubscriptionStatusRow status={stripe.status} />
 
-          <div className="text-muted">Period End:</div>
-          <div>
-            {new Date(expires).toLocaleDateString(undefined, {
-              day: "2-digit",
-              weekday: "long",
-              month: "short",
-              year: "numeric",
-            })}
-          </div>
+          <SubscriptionDateRow label="Period End:" date={expires} />
 
-          <div className="text-muted">Next Renew:</div>
-          <div>
-            {new Date(stripe.current_period_end * 1000).toLocaleDateString(
-              undefined,
-              {
-                day: "2-digit",
-                weekday: "long",
-                month: "short",
-                year: "numeric",
-              }
-            )}
-          </div>
+          <SubscriptionDateRow
+            label="Next Renew:"
+            date={stripe.current_period_end * 1000}
+          />
 
-          <div className="text-muted">Amount:</div>
-          <Stack direction="horizontal" gap={1}>
-            <div>
-              {getCurrency(price.price / 100, {
-                currency: price.currency,
-              })}
-            </div>
-            <div>/</div>
-            <div>
-              {price.recurrence.count} {price.recurrence.interval}
-            </div>
-          </Stack>
+          <SubscriptionDetailLabel>Amount:</SubscriptionDetailLabel>
+          <SubscriptionDetailValue>
+            <Stack direction="horizontal" gap={1}>
+              <span>
+                {getCurrency(price.price / 100, {
+                  currency: price.currency,
+                })}
+              </span>
+              <span>/</span>
+              <PriceRecurrence>
+                {price.recurrence.count} {price.recurrence.interval}
+              </PriceRecurrence>
+            </Stack>
+          </SubscriptionDetailValue>
 
-          {owner && (
-            <>
-              <div className="text-muted">Owner:</div>
-              <Stack
-                className="d-flex align-items-center"
-                direction="horizontal"
-                gap={2}
-              >
-                <Image
-                  roundedCircle
-                  src={getUserPictureUrl(owner)}
-                  style={{ width: 30, height: 30 }}
-                  alt={owner.username}
-                />
-                <div>{owner.username || owner.id}</div>
-              </Stack>
-            </>
-          )}
+          {owner && <SubscriptionOwnerRow owner={owner} />}
 
-          {server && (
-            <>
-              <div className="text-muted">Server:</div>
-              <Link to={`/dashboard/${server.id}/subscription`}>
-                <Stack
-                  className="d-flex align-items-center"
-                  direction="horizontal"
-                  gap={2}
-                >
-                  <Image
-                    roundedCircle
-                    src={getServerPictureUrl(server, true)}
-                    style={{ width: 30, height: 30 }}
-                    alt={server.name}
-                  />
-                  <div>{server.name}</div>
-                </Stack>
-              </Link>
-            </>
-          )}
-        </div>
+          {server && <SubscriptionServerRow server={server} />}
+        </SubscriptionDetailGrid>
       </Card.Body>
 
       <Card.Footer>
@@ -162,7 +111,7 @@ const SubscriptionCardStripe = ({ subscription }: Props) => {
           />
         </Stack>
       </Card.Footer>
-    </Card>
+    </SubscriptionCardRoot>
   );
 };
 

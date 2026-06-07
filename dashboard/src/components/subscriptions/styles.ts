@@ -1,4 +1,4 @@
-import { Card } from "react-bootstrap";
+import { Card, Image } from "react-bootstrap";
 import styled, { css } from "styled-components";
 
 export const PriceCardRoot = styled(Card)<{ $popular?: boolean }>`
@@ -155,6 +155,71 @@ export const PremiumLink = styled.a`
   &:hover {
     color: ${({ theme }) => theme.text};
   }
+`;
+
+export const SubscriptionCardRoot = styled(Card)`
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background-color: ${({ theme }) => theme.surfaceElevated};
+  background-image: linear-gradient(
+    rgba(255, 255, 255, 0.05),
+    rgba(255, 255, 255, 0.05)
+  );
+  border: 1px solid ${({ theme }) => theme.borderSubtle};
+  border-radius: ${({ theme }) => theme.layout.navItemRadius};
+  box-shadow: none;
+  overflow: hidden;
+
+  .card-body {
+    color: ${({ theme }) => theme.text};
+  }
+
+  .card-footer {
+    background-color: rgba(255, 255, 255, 0.03);
+    border-color: ${({ theme }) => theme.borderSubtle};
+  }
+`;
+
+export const SubscriptionDetailGrid = styled.div`
+  display: grid;
+  column-gap: 2rem;
+  row-gap: 0.25rem;
+  grid-template-columns: minmax(100px, max-content) auto;
+  grid-auto-rows: minmax(1.75rem, auto);
+`;
+
+export const SubscriptionDetailLabel = styled.div`
+  color: ${({ theme }) => theme.subtleText};
+  font-size: 0.9rem;
+`;
+
+export const SubscriptionDetailValue = styled.div`
+  color: ${({ theme }) => theme.text};
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+
+  a {
+    color: inherit;
+    text-decoration: none;
+
+    &:hover {
+      color: ${({ theme }) => theme.primary};
+    }
+  }
+`;
+
+export const SubscriptionAvatar = styled(Image)`
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+`;
+
+export const SubscriptionEntityRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 `;
 
 export const PremiumCurrencyDropdownMenu = styled.div`
