@@ -82,7 +82,7 @@ const PremiumPage = () => {
             <>
               <span>
                 Thank you for your purchase! Go to{" "}
-                <Link to="/subscriptions">My Subscriptions</Link> to see your
+                <Link to="/subscriptions">Subscriptions</Link> to see your
                 new subscription.
               </span>
             </>

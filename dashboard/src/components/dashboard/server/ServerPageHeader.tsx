@@ -1,12 +1,14 @@
 import { faBars, faCrown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ServerNavItem } from "constants/serverNav";
-import { Badge, Button } from "react-bootstrap";
 import {
   PageDescription,
   PageHeaderContent,
   PageHeaderRoot,
+  PageMenuButton,
+  PagePremiumBadge,
   PageTitle,
+  PageTitleIcon,
   PageTitleRow,
 } from "./styles";
 
@@ -21,21 +23,26 @@ const ServerPageHeader = ({ item, onMenuClick }: ServerPageHeaderProps) => {
       <PageHeaderContent>
         <PageTitleRow>
           {onMenuClick && (
-            <Button
-              variant="secondary"
+            <PageMenuButton
+              type="button"
               className="d-lg-none"
               aria-label="Open navigation menu"
               onClick={onMenuClick}
             >
               <FontAwesomeIcon icon={faBars} />
-            </Button>
+            </PageMenuButton>
+          )}
+          {item?.icon && (
+            <PageTitleIcon aria-hidden="true">
+              <FontAwesomeIcon icon={item.icon} />
+            </PageTitleIcon>
           )}
           <PageTitle>{item?.name ?? "Server"}</PageTitle>
           {item?.premium && (
-            <Badge bg="primary">
-              <FontAwesomeIcon icon={faCrown} className="me-1" />
+            <PagePremiumBadge>
+              <FontAwesomeIcon icon={faCrown} />
               Premium
-            </Badge>
+            </PagePremiumBadge>
           )}
         </PageTitleRow>
         {item?.description && (

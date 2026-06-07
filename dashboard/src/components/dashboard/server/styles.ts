@@ -480,9 +480,10 @@ export const NavItemLink = styled(NavLink)`
     border-color 0.2s ease;
 
   &.active {
-    background-color: ${({ theme }) => theme.nav.activeBackground};
+    background-color: ${({ theme }) =>
+      theme.nav.activeBackground} !important;
     border-left-color: ${({ theme }) => theme.nav.activeBorder};
-    color: ${({ theme }) => theme.primary};
+    color: ${({ theme }) => theme.primary} !important;
   }
 
   &:hover {
@@ -507,14 +508,30 @@ export const NavItemLabel = styled.span`
 `;
 
 export const PageHeaderRoot = styled.header`
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
   justify-content: space-between;
   gap: 1rem;
   margin-bottom: 1.25rem;
-  padding-bottom: 1rem;
+  padding: 0 0 1rem 0.75rem;
   border-bottom: 1px solid ${({ theme }) => theme.borderSubtle};
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    border-radius: 0 2px 2px 0;
+    background: linear-gradient(
+      180deg,
+      ${({ theme }) => theme.primary} 0%,
+      rgba(${({ theme }) => theme.rgb?.primary ?? "255,189,89"}, 0.2) 100%
+    );
+  }
 `;
 
 export const PageHeaderContent = styled.div`
@@ -525,23 +542,101 @@ export const PageHeaderContent = styled.div`
 export const PageTitleRow = styled.div`
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.625rem;
   flex-wrap: wrap;
+`;
+
+export const PageMenuButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  flex-shrink: 0;
+  border: 1px solid ${({ theme }) => theme.borderSubtle};
+  border-radius: ${({ theme }) => theme.layout.navItemRadius};
+  background-color: ${({ theme }) => theme.surfaceElevated};
+  background-image: linear-gradient(
+    rgba(255, 255, 255, 0.04),
+    rgba(255, 255, 255, 0.04)
+  );
+  color: ${({ theme }) => theme.text};
+  transition: border-color 0.2s ease, color 0.2s ease;
+
+  &:hover {
+    border-color: rgba(
+      ${({ theme }) => theme.rgb?.primary ?? "255,189,89"},
+      0.45
+    );
+    color: ${({ theme }) => theme.primary};
+  }
+`;
+
+export const PageTitleIcon = styled.span`
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  flex-shrink: 0;
+  border-radius: ${({ theme }) => theme.layout.navItemRadius};
+  background-color: ${({ theme }) => theme.nav.activeBackground};
+  border: 1px solid
+    rgba(${({ theme }) => theme.rgb?.primary ?? "255,189,89"}, 0.25);
+  color: ${({ theme }) => theme.primary};
+
+  svg {
+    width: 0.95rem;
+  }
+
+  @media (min-width: ${({ theme }) => theme.layout.breakpoints.lg}) {
+    display: inline-flex;
+  }
 `;
 
 export const PageTitle = styled.h1`
   margin: 0;
-  font-size: 1.5rem;
+  font-size: 1.35rem;
   font-weight: 600;
   line-height: 1.3;
   color: ${({ theme }) => theme.text};
+
+  @media (min-width: ${({ theme }) => theme.layout.breakpoints.md}) {
+    font-size: 1.5rem;
+  }
+`;
+
+export const PagePremiumBadge = styled.span`
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.text};
+  background-color: rgba(
+    ${({ theme }) => theme.rgb?.primary ?? "255,189,89"},
+    0.16
+  );
+  border: 1px solid
+    rgba(${({ theme }) => theme.rgb?.primary ?? "255,189,89"}, 0.35);
+
+  svg {
+    width: 0.7rem;
+  }
 `;
 
 export const PageDescription = styled.p`
-  margin: 0.375rem 0 0;
-  font-size: 0.9rem;
+  margin: 0.5rem 0 0;
+  padding-left: 0.125rem;
+  font-size: 0.875rem;
   color: ${({ theme }) => theme.subtleText};
-  line-height: 1.4;
+  line-height: 1.45;
+  max-width: 42rem;
 `;
 
 export const ContentStack = styled.div`

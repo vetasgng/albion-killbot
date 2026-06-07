@@ -69,7 +69,7 @@ const SubscriptionsPage = () => {
 
   return (
     <Page
-      title="My Subscriptions"
+      title="Subscriptions"
       alerts={[
         {
           show: queryParams.get("status") === "success",

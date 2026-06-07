@@ -74,6 +74,21 @@ export const ContentPanelRoot = styled.div`
       0.3
     );
     color: ${({ theme }) => theme.text};
+
+    a {
+      color: ${({ theme }) => theme.primary};
+      font-weight: 500;
+      text-decoration: underline;
+      text-underline-offset: 0.15em;
+
+      &:visited {
+        color: ${({ theme }) => theme.primary};
+      }
+
+      &:hover {
+        color: ${({ theme }) => theme.text};
+      }
+    }
   }
 `;
 

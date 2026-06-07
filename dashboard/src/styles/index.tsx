@@ -11,6 +11,13 @@ const globalStyle = createGlobalStyle<{ theme: ThemeProps }>`
     --bs-primary-rgb: ${({ theme }) => theme.rgb?.primary};
     --bs-secondary-rgb: ${({ theme }) => theme.rgb?.secondary};
     --bs-danger-rgb: ${({ theme }) => theme.rgb?.danger};
+
+    --bs-nav-link-color: ${({ theme }) => theme.text};
+    --bs-nav-link-hover-color: ${({ theme }) => theme.primary};
+    --bs-nav-link-active-color: ${({ theme }) => theme.primary};
+    --bs-nav-pills-link-active-color: ${({ theme }) => theme.primary};
+    --bs-nav-pills-link-active-bg: ${({ theme }) => theme.nav.activeBackground};
+    --bs-navbar-active-color: ${({ theme }) => theme.primary};
   }
 
   html,
@@ -167,14 +174,18 @@ const globalStyle = createGlobalStyle<{ theme: ThemeProps }>`
   .alert {
     border-radius: 0.5rem;
 
-      a {
-        color: ${({ theme }) => theme.contrastText};
-        font-weight: 500;
+    a {
+      color: ${({ theme }) => theme.primary};
+      font-weight: 500;
 
-        &:hover {
-          color: ${({ theme }) => theme.primary};
-        }
+      &:visited {
+        color: ${({ theme }) => theme.primary};
       }
+
+      &:hover {
+        color: ${({ theme }) => theme.text};
+      }
+    }
   }
   
   /* Bootstrap Badge overrides */
@@ -694,14 +705,13 @@ const globalStyle = createGlobalStyle<{ theme: ThemeProps }>`
       .nav-item {
         .nav-link {
           border-radius: 0.5rem;
-          color:  ${({ theme }) => theme.text};
+          color: ${({ theme }) => theme.text};
 
           &.active {
-            background: none;
-            background-image: linear-gradient(
-              rgba(255, 255, 255, 0.05),
-              rgba(255, 255, 255, 0.05)
-            );
+            background-color: ${({ theme }) =>
+              theme.nav.activeBackground} !important;
+            background-image: none !important;
+            color: ${({ theme }) => theme.primary} !important;
           }
 
           &:hover {
@@ -710,6 +720,15 @@ const globalStyle = createGlobalStyle<{ theme: ThemeProps }>`
           }
         }
       }
+    }
+  }
+
+  .navbar-nav {
+    .nav-link.active,
+    a.active {
+      background-color: ${({ theme }) =>
+        theme.nav.activeBackground} !important;
+      color: ${({ theme }) => theme.primary} !important;
     }
   }
 

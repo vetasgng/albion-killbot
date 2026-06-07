@@ -25,8 +25,13 @@ Server-scoped routes (`/dashboard/:serverId/*`) use a shared shell:
 
 - [`constants/serverNav.ts`](dashboard/src/constants/serverNav.ts) — grouped nav sections, item metadata (path, name, icon, description), and `getServerNavItem()`
 - [`components/dashboard/server/ServerLayout.tsx`](dashboard/src/components/dashboard/server/ServerLayout.tsx) — sidebar + page header + outlet wrapper
+- [`components/dashboard/server/ServerPageHeader.tsx`](dashboard/src/components/dashboard/server/ServerPageHeader.tsx) — page title row with nav icon, premium badge, and mobile menu button
 - Desktop: sticky grouped sidebar; mobile: Offcanvas nav from header menu button
 - Layout/nav tokens live in [`helpers/theme.ts`](dashboard/src/helpers/theme.ts) (`layout`, `nav`, `layout.padding`, `layout.breakpoints`)
+
+## Site header
+
+[`components/common/Header.tsx`](dashboard/src/components/common/Header.tsx) + [`Header/styles.tsx`](dashboard/src/components/common/Header/styles.tsx) — global navbar with theme-aligned surface, compact logo, pill user menu, and polished mobile collapse nav.
 
 Add or rename server sub-routes in `serverNav.ts` and `routes.tsx` together.
 
