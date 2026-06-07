@@ -45,7 +45,9 @@ Add or rename server sub-routes in `serverNav.ts` and `routes.tsx` together.
 
 ## Settings pages
 
+- [`NotificationChannelSettings.tsx`](dashboard/src/components/dashboard/NotificationChannelSettings.tsx) — shared enabled switch, channel row, and test notification button
 - [`NotificationSettingsForm.tsx`](dashboard/src/components/dashboard/NotificationSettingsForm.tsx) — shared form for Kills, Assists, and Deaths pages
+- [`BattlesSettingsForm.tsx`](dashboard/src/components/dashboard/BattlesSettingsForm.tsx) / [`RankingsSettingsForm.tsx`](dashboard/src/components/dashboard/RankingsSettingsForm.tsx) — Battles thresholds + provider; Rankings daily/weekly/monthly mode selects
 - [`SettingHelp.tsx`](dashboard/src/components/dashboard/SettingHelp.tsx) — modal help (replaces hover tooltips) on General settings and Juicy pages
 
 ## Forms

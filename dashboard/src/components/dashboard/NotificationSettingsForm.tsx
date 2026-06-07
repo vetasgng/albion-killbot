@@ -1,8 +1,7 @@
-import ChannelInput from "components/dashboard/ChannelInput";
+import NotificationChannelSettings from "components/dashboard/NotificationChannelSettings";
 import { useAppDispatch, useAppSelector } from "helpers/hooks";
 import { capitalize } from "helpers/utils";
-import { Button, Col, Form, Row, Stack } from "react-bootstrap";
-import { useTestNotificationSettingsMutation } from "store/api";
+import { Form, Stack } from "react-bootstrap";
 import {
   setAssistsChannel,
   setAssistsEnabled,
@@ -63,54 +62,22 @@ const NotificationSettingsForm = ({
 }: NotificationSettingsFormProps) => {
   const dispatch = useAppDispatch();
   const settings = useAppSelector((state) => state.settings[type]);
-  const [dispatchTestNotification, testNotification] =
-    useTestNotificationSettingsMutation();
   const config = notificationConfig[type];
 
   return (
     <Stack gap={2}>
-      <Form.Group controlId={`${type}-enabled`}>
-        <Form.Check
-          type="switch"
-          label="Enabled"
-          checked={settings.enabled}
-          onChange={(e) => dispatch(config.setEnabled(e.target.checked))}
-        />
-      </Form.Group>
-
-      <Row className="g-2 align-items-end">
-        <Col xs={12} md={true}>
-          <Form.Group controlId={`${type}-channel`}>
-            <Form.Label>Notification Channel</Form.Label>
-            <ChannelInput
-              aria-label={config.channelAriaLabel}
-              disabled={!settings.enabled}
-              availableChannels={channels}
-              value={settings.channel}
-              onChannelChange={(channelId) =>
-                dispatch(config.setChannel(channelId))
-              }
-            />
-          </Form.Group>
-        </Col>
-        <Col xs={12} md="auto">
-          <Button
-            disabled={!settings.enabled || testNotification.isLoading}
-            variant="secondary"
-            type="button"
-            onClick={() => {
-              dispatchTestNotification({
-                serverId,
-                type,
-                channelId: settings.channel,
-                mode: settings.mode,
-              });
-            }}
-          >
-            Test Notification
-          </Button>
-        </Col>
-      </Row>
+      <NotificationChannelSettings
+        idPrefix={type}
+        channelAriaLabel={config.channelAriaLabel}
+        enabled={settings.enabled}
+        onEnabledChange={(enabled) => dispatch(config.setEnabled(enabled))}
+        channel={settings.channel}
+        onChannelChange={(channelId) => dispatch(config.setChannel(channelId))}
+        channels={channels}
+        serverId={serverId}
+        notificationType={type}
+        testMode={settings.mode}
+      />
 
       <Form.Group controlId={`${type}-mode`}>
         <Form.Label>Mode</Form.Label>
