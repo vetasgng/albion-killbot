@@ -1,3 +1,8 @@
+import {
+  EmptyStateRoot,
+  EmptyStateText,
+  EmptyStateTitle,
+} from "components/layout/ContentPanel";
 import { useEffect, useState } from "react";
 import { Pagination, Stack } from "react-bootstrap";
 import { ISubscription } from "types/subscription";
@@ -7,12 +12,14 @@ interface SubscriptionListProps {
   className?: string;
   pageSize?: number;
   subscriptions?: ISubscription[];
+  onDelete?: () => void;
 }
 
 const SubscriptionList = ({
   subscriptions = [],
   className,
   pageSize = 10,
+  onDelete,
 }: SubscriptionListProps) => {
   const [width, setWidth] = useState(window.innerWidth);
   const PAGE_GAP = 2 + Math.floor(width / 450);
@@ -59,9 +66,12 @@ const SubscriptionList = ({
 
   if (subscriptions.length === 0)
     return (
-      <h5 className="d-flex justify-content-center py-5">
-        No subscriptions to display.
-      </h5>
+      <EmptyStateRoot>
+        <EmptyStateTitle>No subscriptions to display</EmptyStateTitle>
+        <EmptyStateText>
+          Run a search with filters to find subscriptions.
+        </EmptyStateText>
+      </EmptyStateRoot>
     );
 
   return (
@@ -70,6 +80,7 @@ const SubscriptionList = ({
         <SubscriptionListItem
           key={subscription.id}
           subscription={subscription}
+          onDelete={onDelete}
         />
       ))}
 

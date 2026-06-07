@@ -4,7 +4,13 @@ import Loader from "components/common/Loader";
 import SubscriptionList from "components/SubscriptionList";
 import SubscriptionAdd from "components/subscriptions/SubscriptionAdd";
 import { useAppDispatch, useAppSelector } from "helpers/hooks";
-import { useEffect } from "react";
+import {
+  AdminDropdownMenu,
+  AdminFilterFooter,
+  AdminFilterPanel,
+  AdminSectionTitle,
+} from "pages/admin/styles";
+import { useCallback, useEffect } from "react";
 import { Button, Card, Col, Dropdown, Form, Row, Stack } from "react-bootstrap";
 import {
   setSubscriptionOwner,
@@ -23,13 +29,21 @@ const AdminSubscriptionsPage = () => {
     (state) => state.admin.subscription
   );
 
-  useEffect(() => {
-    const query: any = {};
+  const buildQuery = useCallback(() => {
+    const query: Record<string, string> = {};
     if (server) query.server = server;
     if (owner) query.owner = owner;
     if (status !== "All") query.status = status;
     if (stripe) query.stripe = stripe;
+    return query;
+  }, [server, owner, status, stripe]);
 
+  const refetchSubscriptions = useCallback(() => {
+    search(buildQuery());
+  }, [search, buildQuery]);
+
+  useEffect(() => {
+    const query = buildQuery();
     if (Object.keys(query).length > 0) search(query, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -39,21 +53,17 @@ const AdminSubscriptionsPage = () => {
 
   return (
     <Stack gap={3}>
+      <AdminSectionTitle>Subscriptions</AdminSectionTitle>
+
       <Form
         onSubmit={(e) => {
           e?.preventDefault();
 
-          const query: any = {};
-          if (server) query.server = server;
-          if (owner) query.owner = owner;
-          if (status !== "All") query.status = status;
-          if (stripe) query.stripe = stripe;
-
-          search(query);
+          search(buildQuery());
         }}
       >
-        <Card>
-          <Card.Body className="p-3">
+        <AdminFilterPanel>
+          <Card.Body>
             <Stack gap={2}>
               <Row className="gy-2">
                 <Form.Group controlId="owner" as={Col} xs={12} lg="auto">
@@ -95,20 +105,20 @@ const AdminSubscriptionsPage = () => {
                     <Dropdown.Toggle variant="secondary" className="w-100">
                       {status}
                     </Dropdown.Toggle>
-                    <Dropdown.Menu>
+                    <Dropdown.Menu as={AdminDropdownMenu}>
                       <Dropdown.Item
                         onClick={() => dispatch(setSubscriptionStatus("All"))}
                       >
                         All
                       </Dropdown.Item>
-                      {subscriptionStatuses.map((status: string) => (
+                      {subscriptionStatuses.map((statusOption: string) => (
                         <Dropdown.Item
-                          key={status}
+                          key={statusOption}
                           onClick={() =>
-                            dispatch(setSubscriptionStatus(status))
+                            dispatch(setSubscriptionStatus(statusOption))
                           }
                         >
-                          {status}
+                          {statusOption}
                         </Dropdown.Item>
                       ))}
                     </Dropdown.Menu>
@@ -117,20 +127,15 @@ const AdminSubscriptionsPage = () => {
               </Row>
             </Stack>
           </Card.Body>
-          <Card.Footer>
-            <Stack
-              direction="horizontal"
-              className="justify-content-end"
-              gap={2}
-            >
-              <SubscriptionAdd />
-              <Button variant="primary" type="submit">
-                <FontAwesomeIcon icon={faSearch} />
-                <div>Search</div>
-              </Button>
-            </Stack>
-          </Card.Footer>
-        </Card>
+
+          <AdminFilterFooter>
+            <SubscriptionAdd />
+            <Button variant="primary" type="submit">
+              <FontAwesomeIcon icon={faSearch} />
+              <span>Search</span>
+            </Button>
+          </AdminFilterFooter>
+        </AdminFilterPanel>
       </Form>
 
       {isFetching ? (
@@ -147,7 +152,10 @@ const AdminSubscriptionsPage = () => {
           <rect x="15" y="445" rx="5" ry="5" width="475" height="40" />
         </Loader>
       ) : (
-        <SubscriptionList subscriptions={data} />
+        <SubscriptionList
+          subscriptions={data}
+          onDelete={refetchSubscriptions}
+        />
       )}
     </Stack>
   );

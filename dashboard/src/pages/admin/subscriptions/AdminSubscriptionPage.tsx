@@ -3,7 +3,18 @@ import ServerCard from "components/ServerCard";
 import SubscriptionDelete from "components/SubscriptionDelete";
 import Loader from "components/common/Loader";
 import SubscriptionEdit from "components/subscriptions/SubscriptionEdit";
+import SubscriptionStatusBadge from "components/subscriptions/SubscriptionStatusBadge";
+import { getSubscriptionStatus } from "helpers/subscriptions";
 import { getSubscriptionUrl } from "helpers/stripe";
+import {
+  AdminDetailLabel,
+  AdminDetailRow,
+  AdminDetailSecondary,
+  AdminDetailValue,
+  AdminFilterFooter,
+  AdminFilterPanel,
+  AdminSectionTitle,
+} from "pages/admin/styles";
 import { Button, Card, Stack } from "react-bootstrap";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { useFetchServerQuery } from "store/api";
@@ -21,7 +32,6 @@ const AdminSubscriptionPage = () => {
   if (!subscription.data) return <Navigate to=".." replace={true} />;
 
   const {
-    id,
     owner,
     server: subscriptionServer,
     expires,
@@ -29,89 +39,90 @@ const AdminSubscriptionPage = () => {
     stripe,
   } = subscription.data;
 
+  const expiryText =
+    expires === "never"
+      ? "Never expires"
+      : `${
+          new Date(expires).getTime() > new Date().getTime()
+            ? "Active until"
+            : "Expired at"
+        } ${new Date(expires).toLocaleString()}`;
+
   return (
     <Stack gap={3}>
-      <Card>
-        <Card.Header>Subscription</Card.Header>
+      <AdminSectionTitle>Subscription details</AdminSectionTitle>
+
+      <AdminFilterPanel>
         <Card.Body>
           <Stack gap={2}>
-            <Stack direction="horizontal" gap={1}>
-              <span>Id: </span>
-              <span className="text-primary">{id}</span>
-            </Stack>
-
             {owner && (
-              <Stack direction="horizontal" gap={1}>
-                <span>Owner: </span>
-                <span className="text-primary">{owner}</span>
-              </Stack>
+              <AdminDetailRow>
+                <AdminDetailLabel>Owner</AdminDetailLabel>
+                <AdminDetailValue>{owner}</AdminDetailValue>
+              </AdminDetailRow>
             )}
 
             {subscriptionServer && (
-              <Stack direction="horizontal" gap={1}>
-                <span>Server: </span>
-                <span className="text-primary">{subscriptionServer}</span>
-              </Stack>
+              <AdminDetailRow>
+                <AdminDetailLabel>Server</AdminDetailLabel>
+                <AdminDetailValue>{subscriptionServer}</AdminDetailValue>
+              </AdminDetailRow>
             )}
 
             {stripe && (
-              <Stack direction="horizontal" gap={1}>
-                <span>Stripe: </span>
-                <a
-                  href={getSubscriptionUrl(stripe)}
-                  target="_blank"
-                  className="text-primary"
-                  rel="noreferrer"
-                >
-                  {stripe}
-                </a>
-              </Stack>
+              <AdminDetailRow>
+                <AdminDetailLabel>Stripe</AdminDetailLabel>
+                <AdminDetailValue>
+                  <a
+                    href={getSubscriptionUrl(stripe)}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {stripe}
+                  </a>
+                </AdminDetailValue>
+              </AdminDetailRow>
             )}
 
-            <Stack direction="horizontal" gap={1}>
-              <span>Status: </span>
-              <span className="text-primary">
-                {expires === "never"
-                  ? `Never expires`
-                  : `
-                        ${
-                          new Date(expires).getTime() > new Date().getTime()
-                            ? `Active until `
-                            : `Expired at `
-                        }
-                         ${new Date(expires).toLocaleString()}`}
-              </span>
-              {stripe && <span>(Auto-managed by Stripe)</span>}
-            </Stack>
+            <AdminDetailRow>
+              <AdminDetailLabel>Status</AdminDetailLabel>
+              <SubscriptionStatusBadge
+                status={getSubscriptionStatus(subscription.data)}
+              />
+              <AdminDetailSecondary>{expiryText}</AdminDetailSecondary>
+              {stripe && (
+                <AdminDetailSecondary>
+                  (Auto-managed by Stripe)
+                </AdminDetailSecondary>
+              )}
+            </AdminDetailRow>
 
-            <Stack direction="horizontal" gap={2}>
-              <div>Track Limits:</div>
-              <div className="text-primary">
+            <AdminDetailRow>
+              <AdminDetailLabel>Track limits</AdminDetailLabel>
+              <AdminDetailValue>
                 {limits ? "Custom" : "Default"}
-              </div>
-            </Stack>
+              </AdminDetailValue>
+            </AdminDetailRow>
 
             {limits && (
-              <ul>
+              <Stack as="ul" gap={1} className="mb-0 ps-3">
                 <li>Players: {limits.players}</li>
                 <li>Guilds: {limits.guilds}</li>
                 <li>Alliances: {limits.alliances}</li>
-              </ul>
+              </Stack>
             )}
           </Stack>
         </Card.Body>
-        <Card.Footer>
-          <Stack direction="horizontal" gap={2} className="justify-content-end">
-            <SubscriptionEdit subscription={subscription.data} />
-            <SubscriptionDelete
-              subscription={subscription.data}
-              onDelete={() =>
-                navigate("/admin/subscriptions", { replace: true })
-              }
-            />
-          </Stack>
-        </Card.Footer>
-      </Card>
+
+        <AdminFilterFooter>
+          <SubscriptionEdit subscription={subscription.data} />
+          <SubscriptionDelete
+            subscription={subscription.data}
+            onDelete={() => navigate("/admin/subscriptions", { replace: true })}
+          />
+        </AdminFilterFooter>
+      </AdminFilterPanel>
+
       {subscription.data.server && (
         <ServerCard
           list

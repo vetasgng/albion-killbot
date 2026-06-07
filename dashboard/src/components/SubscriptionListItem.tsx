@@ -1,82 +1,110 @@
+import SubscriptionDelete from "components/SubscriptionDelete";
+import SubscriptionStatusBadge from "components/subscriptions/SubscriptionStatusBadge";
+import { getSubscriptionStatus } from "helpers/subscriptions";
 import { getSubscriptionUrl } from "helpers/stripe";
-import { Button, Card, Col, Row, Stack, Table } from "react-bootstrap";
+import {
+  AdminDetailLabel,
+  AdminDetailRow,
+  AdminDetailSecondary,
+  AdminDetailValue,
+} from "pages/admin/styles";
+import { Button, Card, Col, Row, Stack } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { ISubscription } from "types/subscription";
 
 interface SubscriptionListItemProps {
   subscription: ISubscription;
+  onDelete?: () => void;
 }
 
-const SubscriptionListItem = ({ subscription }: SubscriptionListItemProps) => (
-  <Card className="p-3">
-    <Row key={subscription.id} className="gy-2">
-      <Col xs={12} xl={8} className="d-flex flex-column justify-content-center">
-        <Table borderless responsive>
-          <tbody>
-            <tr>
-              <td>ID</td>
-              <td className="text-primary">{subscription.id}</td>
-            </tr>
-            <tr>
-              <td>Owner</td>
-              <td className="text-primary">{subscription.owner}</td>
-            </tr>
-            <tr>
-              <td>Status</td>
-              <td className="text-primary">
-                {subscription.expires === "never"
-                  ? `Free`
-                  : `${
-                      new Date(subscription.expires).getTime() >
-                      new Date().getTime()
-                        ? `Active until `
-                        : `Expired at `
-                    } ${new Date(subscription.expires).toLocaleString()}`}
-              </td>
-            </tr>
+const formatExpiryText = (subscription: ISubscription) => {
+  if (subscription.expires === "never") return null;
+
+  const isActive =
+    new Date(subscription.expires).getTime() > new Date().getTime();
+
+  return `${isActive ? "Active until" : "Expired at"} ${new Date(
+    subscription.expires
+  ).toLocaleString()}`;
+};
+
+const SubscriptionListItem = ({
+  subscription,
+  onDelete,
+}: SubscriptionListItemProps) => {
+  const expiryText = formatExpiryText(subscription);
+
+  return (
+    <Card className="p-3">
+      <Row className="gy-2">
+        <Col
+          xs={12}
+          xl={8}
+          className="d-flex flex-column justify-content-center"
+        >
+          <Stack gap={2}>
+            <AdminDetailRow>
+              <AdminDetailLabel>Owner</AdminDetailLabel>
+              <AdminDetailValue>{subscription.owner}</AdminDetailValue>
+            </AdminDetailRow>
+
+            <AdminDetailRow>
+              <AdminDetailLabel>Status</AdminDetailLabel>
+              <SubscriptionStatusBadge
+                status={getSubscriptionStatus(subscription)}
+              />
+              {expiryText && (
+                <AdminDetailSecondary>{expiryText}</AdminDetailSecondary>
+              )}
+            </AdminDetailRow>
+
             {subscription.server && (
-              <tr>
-                <td>Server</td>
-                <td className="text-primary">{subscription.server}</td>
-              </tr>
+              <AdminDetailRow>
+                <AdminDetailLabel>Server</AdminDetailLabel>
+                <AdminDetailValue>{subscription.server}</AdminDetailValue>
+              </AdminDetailRow>
             )}
+
             {subscription.stripe && (
-              <tr>
-                <td>Stripe</td>
-                <td className="text-primary">
+              <AdminDetailRow>
+                <AdminDetailLabel>Stripe</AdminDetailLabel>
+                <AdminDetailValue>
                   <a
                     href={getSubscriptionUrl(subscription.stripe)}
                     target="_blank"
-                    className="text-primary"
                     rel="noreferrer"
                   >
                     {subscription.stripe}
                   </a>
-                </td>
-              </tr>
+                </AdminDetailValue>
+              </AdminDetailRow>
             )}
-          </tbody>
-        </Table>
-      </Col>
+          </Stack>
+        </Col>
 
-      <Col
-        xs={12}
-        xl={4}
-        className="actions d-flex align-items-start justify-content-end"
-      >
-        <Stack gap={2} direction="horizontal">
-          <Link to={`/admin/subscriptions/${subscription.id}`}>
-            <Button variant="primary">Manage</Button>
-          </Link>
-          {subscription.server && (
-            <Link to={`/dashboard/${subscription.server}`}>
-              <Button variant="primary">Dashboard</Button>
+        <Col
+          xs={12}
+          xl={4}
+          className="actions d-flex align-items-start justify-content-end"
+        >
+          <Stack gap={2} direction="horizontal" className="flex-wrap justify-content-end">
+            <Link to={`/admin/subscriptions/${subscription.id}`}>
+              <Button variant="primary">Manage</Button>
             </Link>
-          )}
-        </Stack>
-      </Col>
-    </Row>
-  </Card>
-);
+            {subscription.server && (
+              <Link to={`/dashboard/${subscription.server}`}>
+                <Button variant="primary">Dashboard</Button>
+              </Link>
+            )}
+            <SubscriptionDelete
+              subscription={subscription}
+              onDelete={onDelete}
+            />
+          </Stack>
+        </Col>
+      </Row>
+    </Card>
+  );
+};
 
 export default SubscriptionListItem;

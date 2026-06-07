@@ -1,3 +1,8 @@
+import {
+  EmptyStateRoot,
+  EmptyStateText,
+  EmptyStateTitle,
+} from "components/layout/ContentPanel";
 import { useAppDispatch } from "helpers/hooks";
 import { useEffect, useState } from "react";
 import { Button, Pagination, Stack } from "react-bootstrap";
@@ -67,9 +72,12 @@ const ServerList = ({ servers, className, pageSize = 10 }: ServerListProps) => {
 
   if (servers.length === 0)
     return (
-      <h5 className="d-flex justify-content-center py-5">
-        No servers to display.
-      </h5>
+      <EmptyStateRoot>
+        <EmptyStateTitle>No servers to display</EmptyStateTitle>
+        <EmptyStateText>
+          Try adjusting your search or refresh the list.
+        </EmptyStateText>
+      </EmptyStateRoot>
     );
 
   const navigateServerSubscriptions = (serverId: string) => {

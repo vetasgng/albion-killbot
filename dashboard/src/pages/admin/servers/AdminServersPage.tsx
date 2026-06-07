@@ -2,6 +2,7 @@ import { faRefresh } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Loader from "components/common/Loader";
 import ServerList from "components/ServerList";
+import { AdminFilterPanel, AdminSectionTitle } from "pages/admin/styles";
 import { useEffect, useState } from "react";
 import { Button, Card, Form, InputGroup, Stack } from "react-bootstrap";
 import { useFetchAdminServersQuery } from "store/api/admin";
@@ -45,25 +46,29 @@ const AdminServersPage = () => {
 
   return (
     <Stack gap={3}>
-      <Card className="p-2">
-        <Form onSubmit={() => serversQuery.refetch()}>
-          <Form.Group controlId="search">
-            <Form.Label>Search</Form.Label>
-            <InputGroup>
-              <Form.Control
-                type="text"
-                aria-describedby="search-help"
-                placeholder="Search servers"
-                value={searchServer}
-                onChange={(e) => setSearchServer(e.target.value)}
-              />
-              <Button variant="primary" type="submit">
-                <FontAwesomeIcon icon={faRefresh} />
-              </Button>
-            </InputGroup>
-          </Form.Group>
-        </Form>
-      </Card>
+      <AdminSectionTitle>Servers</AdminSectionTitle>
+
+      <AdminFilterPanel>
+        <Card.Body>
+          <Form onSubmit={() => serversQuery.refetch()}>
+            <Form.Group controlId="search">
+              <Form.Label>Search</Form.Label>
+              <InputGroup>
+                <Form.Control
+                  type="text"
+                  aria-describedby="search-help"
+                  placeholder="Search servers"
+                  value={searchServer}
+                  onChange={(e) => setSearchServer(e.target.value)}
+                />
+                <Button variant="primary" type="submit">
+                  <FontAwesomeIcon icon={faRefresh} />
+                </Button>
+              </InputGroup>
+            </Form.Group>
+          </Form>
+        </Card.Body>
+      </AdminFilterPanel>
 
       <ServerList servers={servers} />
     </Stack>

@@ -16,14 +16,6 @@ const SubscriptionCard = ({ subscription }: Props) => {
 
   return (
     <Card>
-      <Card.Header>
-        <h6 className="m-0">
-          <Stack direction="horizontal" gap={2}>
-            <div>{subscription.id}</div>
-          </Stack>
-        </h6>
-      </Card.Header>
-
       <Card.Body>
         <div
           style={{

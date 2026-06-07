@@ -7,11 +7,7 @@ const { getLimits, getPremiumLimits } = require("../../../services/limits");
 const { TRACK_TYPE, addTrack } = require("../../../services/track");
 const { isTracked } = require("../../../helpers/tracking");
 const { equalsCaseInsensitive } = require("../../../helpers/utils");
-const {
-  isActiveSubscription,
-  isSubscriptionsEnabled,
-  getSubscriptionByServerId,
-} = require("../../../services/subscriptions");
+const { isActiveSubscription, getSubscriptionByServerId } = require("../../../services/subscriptions");
 
 const { t } = getLocale();
 
@@ -136,7 +132,7 @@ const command = {
     const searchAndAdd = async (type, value, { limit = 5, premiumLimit = 0 }) => {
       const tType = t(`TRACK.${type.toUpperCase()}.TYPE`).toLowerCase();
       const url = `${config.get("dashboard.url")}/premium`;
-      const shouldBuyPremium = isSubscriptionsEnabled() && !isActiveSubscription(subscription) && premiumLimit > limit;
+      const shouldBuyPremium = !isActiveSubscription(subscription) && premiumLimit > limit;
 
       if (limit == 0) {
         if (shouldBuyPremium)

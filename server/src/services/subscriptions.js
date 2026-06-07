@@ -1,4 +1,3 @@
-const config = require("config");
 const EventEmitter = require("events");
 const moment = require("moment");
 const stripe = require("../ports/stripe");
@@ -10,10 +9,6 @@ const SUBSCRIPTIONS_COLLECTION = "subscriptions";
 const subscriptionEvents = new EventEmitter();
 
 /* Helpers */
-function isSubscriptionsEnabled() {
-  return config.get("features.subscriptions.enabled");
-}
-
 function getSubscriptionExpires(subscription, { unit } = {}) {
   if (!subscription || !subscription.expires) return 0;
   return moment(subscription.expires).diff(moment(), unit);
@@ -69,22 +64,18 @@ async function fetchAllSubscriptions() {
 }
 
 async function getSubscriptionById(_id) {
-  if (!isSubscriptionsEnabled()) return null;
   return await findOne(SUBSCRIPTIONS_COLLECTION, { _id });
 }
 
 async function getSubscriptionByOwner(owner) {
-  if (!isSubscriptionsEnabled()) return null;
   return await findOne(SUBSCRIPTIONS_COLLECTION, { owner });
 }
 
 async function fetchSubscriptionsByOwner(owner) {
-  if (!isSubscriptionsEnabled()) return [];
   return await find(SUBSCRIPTIONS_COLLECTION, { owner });
 }
 
 async function getSubscriptionByServerId(server) {
-  if (!isSubscriptionsEnabled()) return null;
   return await findOne(SUBSCRIPTIONS_COLLECTION, { server });
 }
 
@@ -93,18 +84,15 @@ async function findSubscriptionsByServerId(server) {
 }
 
 async function getSubscriptionByStripeId(stripe) {
-  if (!isSubscriptionsEnabled()) return null;
   return await findOne(SUBSCRIPTIONS_COLLECTION, { stripe });
 }
 
 async function getSubscriptionByCheckoutId(checkoutId) {
-  if (!isSubscriptionsEnabled()) return null;
   const checkout = await stripe.getCheckoutSession(checkoutId);
   return await findOne(SUBSCRIPTIONS_COLLECTION, { stripe: checkout.subscription });
 }
 
 function isActiveSubscription(subscription) {
-  if (!isSubscriptionsEnabled()) return false;
   if (!subscription || !subscription.expires) return false;
   if (subscription.expires === "never") return true;
   // We have a grace period of 3 days
@@ -230,7 +218,6 @@ module.exports = {
   getSubscriptionExpires,
   hasSubscriptionByServerId,
   isActiveSubscription,
-  isSubscriptionsEnabled,
   manageSubscription,
   removeSubscription,
   removeSubscriptionByServerId,

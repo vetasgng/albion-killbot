@@ -73,6 +73,13 @@ Use the **Albion Nexus - Development** guild (`1447669162917761047`), e.g. `http
 - [`ServerSubscriptionPage.tsx`](dashboard/src/pages/dashboard/server/ServerSubscriptionPage.tsx) — empty state with link to Premium when no subscription is assigned to the server
 - [`SubscriptionsPage.tsx`](dashboard/src/pages/subscriptions/SubscriptionsPage.tsx) — same empty state pattern when the user has no subscriptions
 
+## Admin UI
+
+- [`AdminPage.tsx`](dashboard/src/pages/admin/AdminPage.tsx) + [`pages/admin/styles.ts`](dashboard/src/pages/admin/styles.ts) — `ContentPanelRoot` shell with themed pill nav (`AdminNav`), filter panels (`AdminFilterPanel`, `AdminFilterFooter`), and detail rows (`AdminDetailRow`)
+- [`AdminServersPage.tsx`](dashboard/src/pages/admin/servers/AdminServersPage.tsx) / [`AdminSubscriptionsPage.tsx`](dashboard/src/pages/admin/subscriptions/AdminSubscriptionsPage.tsx) — section titles, themed search/filter forms, status dropdown menu
+- [`ServerList.tsx`](dashboard/src/components/ServerList.tsx) / [`SubscriptionList.tsx`](dashboard/src/components/SubscriptionList.tsx) — dashed empty states when no results
+- [`SubscriptionListItem.tsx`](dashboard/src/components/SubscriptionListItem.tsx) / [`AdminSubscriptionPage.tsx`](dashboard/src/pages/admin/subscriptions/AdminSubscriptionPage.tsx) — detail rows with `SubscriptionStatusBadge`; list items include `SubscriptionDelete` with confirmation modal
+
 ## API calls
 
 Add endpoints to `store/api/index.ts` (or split modules like `store/api/admin.ts`). Use tag invalidation for cache:

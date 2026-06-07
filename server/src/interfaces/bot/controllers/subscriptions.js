@@ -5,7 +5,6 @@ const { DAY, MINUTE } = require("../../../helpers/constants");
 const logger = require("../../../helpers/logger");
 const { runInterval } = require("../../../helpers/scheduler");
 const {
-  isSubscriptionsEnabled,
   isActiveSubscription,
   fetchAllSubscriptions,
   subscriptionEvents,
@@ -142,7 +141,6 @@ const initExpirationNotice = (client) => {
 module.exports = {
   name: "subscriptions",
   init: ({ client }) => {
-    if (!isSubscriptionsEnabled()) return;
     initPremiumRoles(client);
     initExpirationNotice(client);
   },

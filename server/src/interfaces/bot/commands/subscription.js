@@ -1,10 +1,6 @@
 const { SlashCommandBuilder } = require("discord.js");
 const { getLocale } = require("../../../helpers/locale");
-const {
-  isSubscriptionsEnabled,
-  getSubscriptionByServerId,
-  getSubscriptionExpires,
-} = require("../../../services/subscriptions");
+const { getSubscriptionByServerId, getSubscriptionExpires } = require("../../../services/subscriptions");
 
 const { t } = getLocale();
 
@@ -15,12 +11,6 @@ const command = {
     .setDefaultMemberPermissions("0"),
   handle: async (interaction, { t }) => {
     const ephemeral = true;
-
-    if (!isSubscriptionsEnabled())
-      return interaction.reply({
-        content: t("SUBSCRIPTION.FAILED", { reason: t("SETTINGS.DISABLED") }),
-        ephemeral,
-      });
 
     const subscription = await getSubscriptionByServerId(interaction.guild.id);
     if (!subscription || !subscription.expires)
