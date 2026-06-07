@@ -14,13 +14,15 @@ const DashboardPage = () => {
 
   if (servers.isFetching) {
     return (
-      <Loader width={500} height={500}>
-        <rect x="160" y="15" rx="0" ry="0" width="210" height="20" />
-        <rect x="15" y="55" rx="0" ry="0" width="160" height="120" />
-        <rect x="185" y="55" rx="0" ry="0" width="160" height="120" />
-        <rect x="355" y="55" rx="0" ry="0" width="160" height="120" />
-        <rect x="15" y="185" rx="0" ry="0" width="160" height="120" />
-      </Loader>
+      <Page title="Dashboard">
+        <Loader width={500} height={500}>
+          <rect x="160" y="15" rx="0" ry="0" width="210" height="20" />
+          <rect x="15" y="55" rx="0" ry="0" width="160" height="120" />
+          <rect x="185" y="55" rx="0" ry="0" width="160" height="120" />
+          <rect x="355" y="55" rx="0" ry="0" width="160" height="120" />
+          <rect x="15" y="185" rx="0" ry="0" width="160" height="120" />
+        </Loader>
+      </Page>
     );
   }
 

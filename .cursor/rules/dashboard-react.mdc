@@ -50,6 +50,13 @@ Add or rename server sub-routes in `serverNav.ts` and `routes.tsx` together.
 - [`BattlesSettingsForm.tsx`](dashboard/src/components/dashboard/BattlesSettingsForm.tsx) / [`RankingsSettingsForm.tsx`](dashboard/src/components/dashboard/RankingsSettingsForm.tsx) — Battles thresholds + provider; Rankings daily/weekly/monthly mode selects
 - [`SettingHelp.tsx`](dashboard/src/components/dashboard/SettingHelp.tsx) — modal help (replaces hover tooltips) on General settings and Juicy pages
 
+## Empty and error states
+
+- [`NoData.tsx`](dashboard/src/components/common/NoData.tsx) — themed dashed empty state (`EmptyStateRoot`) for generic load failures
+- [`LoadError.tsx`](dashboard/src/components/LoadError.tsx) — settings page load failure with back-to-dashboard link
+- [`NotFoundPage.tsx`](dashboard/src/pages/NotFoundPage.tsx) — 404 with `ContentPanelRoot`
+- [`PremiumLoginGate.tsx`](dashboard/src/pages/premium/PremiumLoginGate.tsx) — unauthenticated premium route prompt
+
 ## Forms
 
 Global `form label.form-label` in [`styles/index.tsx`](dashboard/src/styles/index.tsx) uses the graffiti tab style (background gradient, border, flush with the control below). Switches and checkboxes use `form-check-label` and are unchanged.

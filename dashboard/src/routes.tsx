@@ -19,6 +19,7 @@ import SettingsPage from "pages/dashboard/server/SettingsPage";
 import TrackPage from "pages/dashboard/server/TrackPage";
 import HomePage from "pages/home/HomePage";
 import NotFoundPage from "pages/NotFoundPage";
+import PremiumLoginGate from "pages/premium/PremiumLoginGate";
 import PremiumPage from "pages/premium/PremiumPage";
 import SubscriptionsPage from "pages/subscriptions/SubscriptionsPage";
 import { createRoutesFromElements, Navigate, Route } from "react-router-dom";
@@ -65,7 +66,7 @@ const routes = createRoutesFromElements(
       <Route
         element={
           <AuthGuard>
-            <h5>Please login to see the available plans</h5>
+            <PremiumLoginGate />
           </AuthGuard>
         }
       >

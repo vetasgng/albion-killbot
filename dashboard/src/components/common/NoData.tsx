@@ -1,8 +1,23 @@
-const NoData = () => {
+import {
+  EmptyStateRoot,
+  EmptyStateText,
+  EmptyStateTitle,
+} from "components/layout/ContentPanel";
+
+interface NoDataProps {
+  title?: string;
+  message?: string;
+}
+
+const NoData = ({
+  title = "No data available",
+  message = "Please refresh the page and try again.",
+}: NoDataProps) => {
   return (
-    <h5 className="d-flex justify-content-center py-5">
-      No data available. Please refresh the page and try again.
-    </h5>
+    <EmptyStateRoot>
+      <EmptyStateTitle>{title}</EmptyStateTitle>
+      <EmptyStateText>{message}</EmptyStateText>
+    </EmptyStateRoot>
   );
 };
 
