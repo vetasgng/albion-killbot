@@ -48,36 +48,42 @@ const SaveBarMessage = styled.div`
   }
 `;
 
-interface TrackSaveBarProps {
+interface UnsavedChangesBarProps {
   show: boolean;
   isSaving: boolean;
   onSave: () => void;
   onReset: () => void;
+  title?: string;
+  description?: string;
+  saveLabel?: string;
 }
 
-const TrackSaveBar = ({
+const UnsavedChangesBar = ({
   show,
   isSaving,
   onSave,
   onReset,
-}: TrackSaveBarProps) => {
+  title = "Unsaved changes",
+  description = "Save to apply your changes on Discord.",
+  saveLabel = "Save changes",
+}: UnsavedChangesBarProps) => {
   if (!show) return null;
 
   return (
     <>
       <SaveBarSpacer aria-hidden="true" />
-      <SaveBarRoot role="region" aria-label="Unsaved changes">
+      <SaveBarRoot role="region" aria-label={title}>
         <SaveBarInner>
           <SaveBarMessage>
-            <strong>Unsaved changes</strong>
-            <span>Save to update your notification list on Discord.</span>
+            <strong>{title}</strong>
+            <span>{description}</span>
           </SaveBarMessage>
           <Stack direction="horizontal" gap={2} className="ms-auto">
             <Button variant="secondary" disabled={isSaving} onClick={onReset}>
               Reset
             </Button>
             <Button variant="primary" disabled={isSaving} onClick={onSave}>
-              {isSaving ? "Saving..." : "Save changes"}
+              {isSaving ? "Saving..." : saveLabel}
             </Button>
           </Stack>
         </SaveBarInner>
@@ -86,4 +92,4 @@ const TrackSaveBar = ({
   );
 };
 
-export default TrackSaveBar;
+export default UnsavedChangesBar;

@@ -30,6 +30,10 @@ Server-scoped routes (`/dashboard/:serverId/*`) use a shared shell:
 
 Add or rename server sub-routes in `serverNav.ts` and `routes.tsx` together.
 
+## Unsaved changes bar
+
+[`UnsavedChangesBar.tsx`](dashboard/src/components/dashboard/UnsavedChangesBar.tsx) — sticky bottom bar when there are pending edits. Used by [`Settings.tsx`](dashboard/src/components/Settings.tsx) (all server settings pages) and [`TrackPage.tsx`](dashboard/src/pages/dashboard/server/TrackPage.tsx). No full-page loader on save; buttons show `Saving...` while the mutation runs.
+
 ## Track page (Notification List)
 
 [`TrackPage.tsx`](dashboard/src/pages/dashboard/server/TrackPage.tsx) layout order: alerts → search → tracked list card. Search is the primary action; page title comes from the server shell header, not a duplicate card header.
@@ -37,7 +41,7 @@ Add or rename server sub-routes in `serverNav.ts` and `routes.tsx` together.
 - Search card uses `#track-search` anchor and responsive stacked input on narrow widths (`ContentPanel` styles).
 - Search results use green-accent styling (`entity-list--search`, "Search results" panel); tracked lists use gold-accent styling (`entity-list--tracked`, `tracked-entities-card`).
 - When the list is empty, only `TrackEmptyState` is shown (no empty section headers). When partially filled, only non-empty entity sections render.
-- Unsaved state is shown in a sticky `TrackSaveBar` at the bottom of the viewport; adding from search also triggers a save reminder toast.
+- Unsaved state uses `UnsavedChangesBar`; adding from search also triggers a save reminder toast.
 
 ## Local UI testing
 

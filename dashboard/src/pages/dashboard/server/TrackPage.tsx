@@ -1,6 +1,6 @@
 import LoadError from "components/LoadError";
 import TrackEmptyState from "components/dashboard/TrackEmptyState";
-import TrackSaveBar from "components/dashboard/TrackSaveBar";
+import UnsavedChangesBar from "components/dashboard/UnsavedChangesBar";
 import Loader from "components/common/Loader";
 import Search from "components/Search";
 import TrackList from "components/TrackList";
@@ -108,13 +108,14 @@ const TrackPage = () => {
         </Stack>
       </Card>
 
-      <TrackSaveBar
+      <UnsavedChangesBar
         show={track.changed}
         isSaving={updateTrack.isLoading}
         onReset={() => {
           if (server.data?.track) dispatch(loadTrack(server.data.track));
         }}
         onSave={() => dispatchUpdateTrack({ serverId: id, track })}
+        description="Save to update your notification list on Discord."
       />
     </Stack>
   );
