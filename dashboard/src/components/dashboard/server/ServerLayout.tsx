@@ -1,6 +1,6 @@
 import { getServerNavItem } from "constants/serverNav";
+import { getServerPictureUrl } from "helpers/discord";
 import { ReactNode, useState } from "react";
-import { Offcanvas } from "react-bootstrap";
 import { useLocation, useParams } from "react-router-dom";
 import { ServerBase } from "types/server";
 import ServerPageHeader from "./ServerPageHeader";
@@ -11,6 +11,10 @@ import {
   ContentStack,
   LayoutRoot,
   MainColumn,
+  MobileNavOffcanvas,
+  OffcanvasHeaderIdentity,
+  ServerIcon,
+  ServerName,
   SubscriptionAlertSlot,
 } from "./styles";
 
@@ -54,23 +58,29 @@ const ServerLayout = ({
         </MainColumn>
       </LayoutRoot>
 
-      <Offcanvas
+      <MobileNavOffcanvas
         show={showNav}
         onHide={closeNav}
         placement="start"
         className="d-lg-none"
       >
-        <Offcanvas.Header closeButton>
-          <Offcanvas.Title>{server.name}</Offcanvas.Title>
-        </Offcanvas.Header>
-        <Offcanvas.Body>
+        <MobileNavOffcanvas.Header closeButton>
+          <OffcanvasHeaderIdentity>
+            <ServerIcon
+              src={getServerPictureUrl(server, true)}
+              alt={server.name}
+            />
+            <ServerName title={server.name}>{server.name}</ServerName>
+          </OffcanvasHeaderIdentity>
+        </MobileNavOffcanvas.Header>
+        <MobileNavOffcanvas.Body>
           <ServerNavContent
             server={server}
             showIdentity={false}
             onNavigate={closeNav}
           />
-        </Offcanvas.Body>
-      </Offcanvas>
+        </MobileNavOffcanvas.Body>
+      </MobileNavOffcanvas>
     </>
   );
 };

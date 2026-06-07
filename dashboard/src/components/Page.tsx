@@ -1,3 +1,4 @@
+import { ContentPanelRoot, PageTitle } from "components/layout/ContentPanel";
 import { ReactNode } from "react";
 import { Alert, Container, Stack } from "react-bootstrap";
 
@@ -17,7 +18,7 @@ const Page = ({ alerts, title, children }: PageProps) => {
   const renderAlert = (alert: IAlert, index: number) => {
     if (alert.show !== undefined && !alert.show) return;
     return (
-      <Alert key={index} variant={alert.variant}>
+      <Alert key={index} variant={alert.variant} className="m-0">
         {alert.message}
       </Alert>
     );
@@ -25,13 +26,13 @@ const Page = ({ alerts, title, children }: PageProps) => {
 
   return (
     <Container fluid className="py-3">
-      <Stack gap={2}>
-        {alerts?.map(renderAlert)}
-        <div className="d-flex justify-content-center">
-          <h1>{title}</h1>
-        </div>
-        <div>{children}</div>
-      </Stack>
+      <ContentPanelRoot>
+        <Stack gap={3}>
+          {alerts?.map(renderAlert)}
+          <PageTitle>{title}</PageTitle>
+          <div>{children}</div>
+        </Stack>
+      </ContentPanelRoot>
     </Container>
   );
 };

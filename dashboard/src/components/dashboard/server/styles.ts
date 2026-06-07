@@ -1,3 +1,5 @@
+import { ContentPanelRoot } from "components/layout/ContentPanel";
+import { Offcanvas } from "react-bootstrap";
 import { NavLink, Link } from "react-router-dom";
 import styled from "styled-components";
 
@@ -70,65 +72,52 @@ export const SidebarPanel = styled.div`
     0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%);
 `;
 
+export const MobileNavOffcanvas = styled(Offcanvas)`
+  &.offcanvas {
+    background-color: ${({ theme }) => theme.surface};
+    background-image: linear-gradient(
+        rgba(255, 255, 255, 0.06),
+        rgba(255, 255, 255, 0.06)
+      ),
+      linear-gradient(
+        180deg,
+        rgba(${({ theme }) => theme.rgb?.primary ?? "255,189,89"}, 0.08) 0%,
+        transparent 35%
+      );
+    border-right: 1px solid ${({ theme }) => theme.borderSubtle};
+    color: ${({ theme }) => theme.text};
+  }
+
+  .offcanvas-header {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid ${({ theme }) => theme.borderSubtle};
+    padding: 1rem;
+  }
+
+  .offcanvas-title {
+    color: ${({ theme }) => theme.text};
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+
+  .btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
+    opacity: 0.7;
+  }
+
+  .offcanvas-body {
+    padding: ${({ theme }) => theme.layout.padding.panel.base};
+  }
+`;
+
 export const MainColumn = styled.main`
   flex: 1;
   min-width: 0;
   max-width: none;
 `;
 
-export const ContentPanel = styled.div`
-  min-width: 0;
-  width: 100%;
-  box-sizing: border-box;
-  padding: ${({ theme }) => theme.layout.padding.panel.base};
-
-  @media (min-width: ${({ theme }) => theme.layout.breakpoints.md}) {
-    padding: ${({ theme }) => theme.layout.padding.panel.md};
-  }
-
-  @media (min-width: ${({ theme }) => theme.layout.breakpoints.lg}) {
-    padding: ${({ theme }) => theme.layout.padding.panel.lg};
-  }
-
-  @media (min-width: ${({ theme }) => theme.layout.breakpoints.xl}) {
-    padding: ${({ theme }) => theme.layout.padding.panel.xl};
-  }
-
-  @media (min-width: ${({ theme }) => theme.layout.breakpoints.xxl}) {
-    padding: ${({ theme }) => theme.layout.padding.panel.xxl};
-  }
-
-  border-radius: 0.75rem;
-  background-color: ${({ theme }) => theme.surface};
-  background-image: linear-gradient(
-    rgba(255, 255, 255, 0.04),
-    rgba(255, 255, 255, 0.04)
-  );
-  border: 1px solid ${({ theme }) => theme.borderSubtle};
-  box-shadow: 0px 2px 4px -1px rgb(0 0 0 / 20%),
-    0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%);
-
-  .card {
-    background-color: ${({ theme }) => theme.surfaceElevated};
-    background-image: linear-gradient(
-      rgba(255, 255, 255, 0.05),
-      rgba(255, 255, 255, 0.05)
-    );
-    border: 1px solid ${({ theme }) => theme.borderSubtle};
-    box-shadow: none;
-    border-radius: ${({ theme }) => theme.layout.navItemRadius};
-  }
-
-  .card > .card-header:first-child {
-    border-top-left-radius: ${({ theme }) => theme.layout.navItemRadius};
-    border-top-right-radius: ${({ theme }) => theme.layout.navItemRadius};
-  }
-
-  .card > .card-footer:last-child {
-    border-bottom-left-radius: ${({ theme }) => theme.layout.navItemRadius};
-    border-bottom-right-radius: ${({ theme }) => theme.layout.navItemRadius};
-  }
-
+export const ContentPanel = styled(ContentPanelRoot)`
   .list-group {
     background-color: ${({ theme }) => theme.surfaceElevated};
     background-image: none;
@@ -171,11 +160,6 @@ export const ContentPanel = styled.div`
     line-height: 1.2;
   }
 
-  .text-muted,
-  .form-text {
-    color: ${({ theme }) => theme.subtleText} !important;
-  }
-
   .track-list-item {
     display: flex;
     flex-wrap: wrap;
@@ -193,72 +177,113 @@ export const ContentPanel = styled.div`
     flex-shrink: 0;
   }
 
+  .search-form .search-form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
   .search-input-group {
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     border-radius: ${({ theme }) => theme.layout.navItemRadius};
-    overflow: hidden;
+    overflow: visible;
+    gap: 0;
   }
 
   .search-input-group > .form-control {
-    flex: 1 1 12rem;
+    flex: 1 1 auto;
     min-width: 0;
     border-radius: 0;
   }
 
   .search-input-group > .form-control:first-child {
-    border-top-left-radius: ${({ theme }) => theme.layout.navItemRadius};
+    border-top-left-radius: 0;
     border-bottom-left-radius: ${({ theme }) => theme.layout.navItemRadius};
   }
 
-  .search-input-group > .search-server-dropdown,
-  .search-input-group > .btn {
+  .search-input-group > .search-input-actions {
     flex-shrink: 0;
   }
 
-  .search-input-group > .search-server-dropdown .dropdown-toggle {
-    border-radius: 0;
+  .search-input-actions {
+    display: flex;
+    flex-shrink: 0;
   }
 
-  .search-input-group > .btn:last-child {
+  .search-input-actions > .search-server-toggle,
+  .search-input-actions > .dropdown-toggle {
+    border-radius: 0;
+    max-width: 9rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .search-input-actions > .search-input-submit {
     border-radius: 0;
     border-top-right-radius: ${({ theme }) => theme.layout.navItemRadius};
     border-bottom-right-radius: ${({ theme }) => theme.layout.navItemRadius};
+  }
+
+  .search-input-actions > .dropdown-menu {
+    z-index: 1050;
   }
 
   @media (max-width: ${({ theme }) => theme.layout.breakpoints.sm}) {
     .search-input-group {
       flex-direction: column;
       align-items: stretch;
-      border-radius: ${({ theme }) => theme.layout.navItemRadius};
+      row-gap: 0.5rem;
     }
 
-    .search-input-group > .form-control,
-    .search-input-group > .search-server-dropdown,
-    .search-input-group > .search-server-dropdown .dropdown-toggle,
-    .search-input-group > .btn {
+    .search-input-group > .form-control {
+      flex: none;
       width: 100%;
-      border-radius: 0 !important;
-    }
-
-    .search-input-group > .form-control:first-child {
-      border-top-left-radius: ${({ theme }) =>
-        theme.layout.navItemRadius} !important;
+      border-top-left-radius: 0 !important;
       border-top-right-radius: ${({ theme }) =>
         theme.layout.navItemRadius} !important;
-    }
-
-    .search-input-group > .btn:last-child {
       border-bottom-left-radius: ${({ theme }) =>
         theme.layout.navItemRadius} !important;
       border-bottom-right-radius: ${({ theme }) =>
         theme.layout.navItemRadius} !important;
     }
-  }
 
-  .card-header {
-    background-color: rgba(255, 255, 255, 0.03);
-    border-color: ${({ theme }) => theme.borderSubtle};
-    color: ${({ theme }) => theme.text};
+    .search-input-group > .search-input-actions {
+      width: 100%;
+      margin-left: 0 !important;
+    }
+
+    .search-input-actions > .search-server-toggle,
+    .search-input-actions > .dropdown-toggle,
+    .search-input-actions > .search-input-submit {
+      margin-left: 0 !important;
+    }
+
+    .search-input-actions > .search-server-toggle,
+    .search-input-actions > .dropdown-toggle {
+      flex: 1 1 auto;
+      width: auto;
+      max-width: none;
+      --bs-btn-border-radius: 0;
+      border-top-left-radius: ${({ theme }) =>
+        theme.layout.navItemRadius} !important;
+      border-bottom-left-radius: ${({ theme }) =>
+        theme.layout.navItemRadius} !important;
+      border-top-right-radius: 0 !important;
+      border-bottom-right-radius: 0 !important;
+    }
+
+    .search-input-actions > .search-input-submit {
+      flex: 0 0 auto;
+      --bs-btn-border-radius: 0;
+      border-top-left-radius: 0 !important;
+      border-bottom-left-radius: 0 !important;
+      border-top-right-radius: ${({ theme }) =>
+        theme.layout.navItemRadius} !important;
+      border-bottom-right-radius: ${({ theme }) =>
+        theme.layout.navItemRadius} !important;
+      border-left: 1px solid ${({ theme }) => theme.text}2f;
+    }
   }
 
   .search-results-panel {
@@ -376,6 +401,15 @@ export const ServerIdentity = styled.div`
   border-radius: ${({ theme }) => theme.layout.navItemRadius};
   background-color: rgba(255, 255, 255, 0.04);
   border: 1px solid ${({ theme }) => theme.borderSubtle};
+`;
+
+export const OffcanvasHeaderIdentity = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+  flex: 1;
+  padding-right: 0.5rem;
 `;
 
 export const ChangeServerLink = styled(Link)`

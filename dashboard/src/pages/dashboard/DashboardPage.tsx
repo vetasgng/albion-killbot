@@ -1,4 +1,5 @@
 import Loader from "components/common/Loader";
+import DashboardEmptyState from "components/dashboard/DashboardEmptyState";
 import Page from "components/Page";
 import ServerCard from "components/ServerCard";
 import { getServerInviteUrl } from "helpers/discord";
@@ -84,11 +85,7 @@ const DashboardPage = () => {
       <Row className="g-4 align-self-center">
         {servers.data && servers.data.map(renderServer)}
       </Row>
-      {servers.data?.length === 0 && (
-        <h5 className="d-flex justify-content-center py-5">
-          No servers available.
-        </h5>
-      )}
+      {servers.data?.length === 0 && <DashboardEmptyState />}
     </Page>
   );
 };

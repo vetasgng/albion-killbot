@@ -1,5 +1,3 @@
-import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import combinedEventImage from "assets/settings/combinedEventImage.png";
 import guildTags from "assets/settings/guildTags.png";
 import showAttunement from "assets/settings/showAttunement.png";
@@ -7,9 +5,10 @@ import splitLootValue from "assets/settings/splitLootValue.png";
 import LoadError from "components/LoadError";
 import Settings from "components/Settings";
 import Loader from "components/common/Loader";
+import SettingHelp from "components/dashboard/SettingHelp";
 import { useAppDispatch, useAppSelector } from "helpers/hooks";
 import { getLocaleName } from "helpers/utils";
-import { Button, Form, OverlayTrigger, Stack, Tooltip } from "react-bootstrap";
+import { Form, Stack } from "react-bootstrap";
 import { useGetConstantsQuery } from "store/api";
 import {
   setGeneralGuildTags,
@@ -63,27 +62,13 @@ const SettingsPage = () => {
                 className="align-items-center"
               >
                 <div>Show Attunement</div>
-                <OverlayTrigger
-                  placement="auto-end"
-                  overlay={
-                    <Tooltip>
-                      <Stack gap={2} className="align-items-start">
-                        <div>
-                          Display awakened weapon attributes on kill reports
-                        </div>
-                        <img
-                          src={showAttunement}
-                          alt="Example of Show Attunement"
-                          style={{ borderRadius: "0.2rem" }}
-                        />
-                      </Stack>
-                    </Tooltip>
-                  }
+                <SettingHelp
+                  title="Show Attunement"
+                  imageSrc={showAttunement}
+                  imageAlt="Example of Show Attunement"
                 >
-                  <Button className="btn-icon" variant="secondary" size="sm">
-                    <FontAwesomeIcon icon={faQuestionCircle} />
-                  </Button>
-                </OverlayTrigger>
+                  Display awakened weapon attributes on kill reports
+                </SettingHelp>
               </Stack>
             </Form.Switch.Label>
           </Form.Switch>
@@ -103,25 +88,13 @@ const SettingsPage = () => {
                 className="align-items-center"
               >
                 <div>Show Guild Tags</div>
-                <OverlayTrigger
-                  placement="auto-end"
-                  overlay={
-                    <Tooltip>
-                      <Stack gap={2} className="align-items-start">
-                        <div>When bot mentions a player, show the guild:</div>
-                        <img
-                          src={guildTags}
-                          alt="Example of Guild Tags"
-                          style={{ borderRadius: "0.2rem" }}
-                        />
-                      </Stack>
-                    </Tooltip>
-                  }
+                <SettingHelp
+                  title="Show Guild Tags"
+                  imageSrc={guildTags}
+                  imageAlt="Example of Guild Tags"
                 >
-                  <Button className="btn-icon" variant="secondary" size="sm">
-                    <FontAwesomeIcon icon={faQuestionCircle} />
-                  </Button>
-                </OverlayTrigger>
+                  When bot mentions a player, show the guild
+                </SettingHelp>
               </Stack>
             </Form.Switch.Label>
           </Form.Switch>
@@ -143,27 +116,13 @@ const SettingsPage = () => {
                 className="align-items-center"
               >
                 <div>Split Loot Value</div>
-                <OverlayTrigger
-                  placement="auto-end"
-                  overlay={
-                    <Tooltip>
-                      <Stack gap={2} className="align-items-start">
-                        <div>
-                          Split the loot value between gear and inventory:
-                        </div>
-                        <img
-                          src={splitLootValue}
-                          alt="Example of Split Loot"
-                          style={{ borderRadius: "0.2rem" }}
-                        />
-                      </Stack>
-                    </Tooltip>
-                  }
+                <SettingHelp
+                  title="Split Loot Value"
+                  imageSrc={splitLootValue}
+                  imageAlt="Example of Split Loot"
                 >
-                  <Button className="btn-icon" variant="secondary" size="sm">
-                    <FontAwesomeIcon icon={faQuestionCircle} />
-                  </Button>
-                </OverlayTrigger>
+                  Split the loot value between gear and inventory
+                </SettingHelp>
               </Stack>
             </Form.Switch.Label>
           </Form.Switch>
@@ -185,28 +144,14 @@ const SettingsPage = () => {
                 className="align-items-center"
               >
                 <div>Combined Kill Image</div>
-                <OverlayTrigger
-                  placement="auto-end"
-                  overlay={
-                    <Tooltip>
-                      <Stack gap={2} className="align-items-start">
-                        <div>
-                          Append victim inventory to kill report images instead
-                          of sending a separate inventory image:
-                        </div>
-                        <img
-                          src={combinedEventImage}
-                          alt="Example of Combined Kill"
-                          style={{ borderRadius: "0.2rem" }}
-                        />
-                      </Stack>
-                    </Tooltip>
-                  }
+                <SettingHelp
+                  title="Combined Kill Image"
+                  imageSrc={combinedEventImage}
+                  imageAlt="Example of Combined Kill"
                 >
-                  <Button className="btn-icon" variant="secondary" size="sm">
-                    <FontAwesomeIcon icon={faQuestionCircle} />
-                  </Button>
-                </OverlayTrigger>
+                  Append victim inventory to kill report images instead of
+                  sending a separate inventory image
+                </SettingHelp>
               </Stack>
             </Form.Switch.Label>
           </Form.Switch>

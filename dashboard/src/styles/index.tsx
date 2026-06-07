@@ -378,12 +378,18 @@ const globalStyle = createGlobalStyle<{ theme: ThemeProps }>`
   /* Bootstrap Form overrides */
   form {
     label.form-label {
+      position: relative;
+      z-index: 1;
+      display: block;
       margin: 0;
-      padding-left: 0.5rem;
-      padding-right: 0.65rem;
-      border-top-right-radius: 0.5rem;
-
-      font-size: 14px;
+      margin-bottom: -1px;
+      transform: translateY(-1px);
+      padding: 0.2rem 0.55rem;
+      width: fit-content;
+      max-width: 100%;
+      font-size: 0.75rem;
+      font-weight: 600;
+      line-height: 1.2;
 
       background-color: ${({ theme }) => theme.background};
       background-image: linear-gradient(
@@ -391,6 +397,21 @@ const globalStyle = createGlobalStyle<{ theme: ThemeProps }>`
         rgba(255, 255, 255, 0.05)
       );
       color: ${({ theme }) => theme.text};
+
+      border: 1px solid ${({ theme }) => theme.borderSubtle};
+      border-bottom: none;
+      border-radius: ${({ theme }) => theme.layout.navItemRadius}
+        ${({ theme }) => theme.layout.navItemRadius} 0 0;
+    }
+
+    label.form-label + .form-control,
+    label.form-label + .form-select,
+    label.form-label + .input-group > .form-control:first-child {
+      border-top-left-radius: 0;
+    }
+
+    label.form-label + div .form-control:first-child {
+      border-top-left-radius: 0;
     }
 
     select.form-select {

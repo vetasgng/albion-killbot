@@ -12,7 +12,7 @@ Create React App + TypeScript. UI: React Bootstrap + styled-components. State: R
 
 ```
 pages/        Route-level views (HomePage, DashboardPage, admin/*)
-components/   Reusable UI (common/, subscriptions/, dashboard/)
+components/   Reusable UI (common/, subscriptions/, dashboard/, layout/)
 constants/    Shared config (e.g. serverNav.ts for dashboard server shell)
 store/        Redux slices + RTK Query API modules (store/api/)
 types/        Shared interfaces (ISettings, IServer, User, …)
@@ -30,9 +30,22 @@ Server-scoped routes (`/dashboard/:serverId/*`) use a shared shell:
 
 Add or rename server sub-routes in `serverNav.ts` and `routes.tsx` together.
 
+## Content panel
+
+[`components/layout/ContentPanel.tsx`](dashboard/src/components/layout/ContentPanel.tsx) — shared elevated surface (`ContentPanelRoot`) used by global [`Page.tsx`](dashboard/src/components/Page.tsx) and extended by server [`styles.ts`](dashboard/src/components/dashboard/server/styles.ts) for track/settings-specific nested rules.
+
 ## Unsaved changes bar
 
-[`UnsavedChangesBar.tsx`](dashboard/src/components/dashboard/UnsavedChangesBar.tsx) — sticky bottom bar when there are pending edits. Used by [`Settings.tsx`](dashboard/src/components/Settings.tsx) (all server settings pages) and [`TrackPage.tsx`](dashboard/src/pages/dashboard/server/TrackPage.tsx). No full-page loader on save; buttons show `Saving...` while the mutation runs.
+[`UnsavedChangesBar.tsx`](dashboard/src/components/dashboard/UnsavedChangesBar.tsx) — sticky bottom bar when there are pending edits. Used by [`Settings.tsx`](dashboard/src/components/Settings.tsx) (all server settings pages) and [`TrackPage.tsx`](dashboard/src/pages/dashboard/server/TrackPage.tsx). Settings dirty state uses `settings.changed` in the settings slice; no full-page loader on save.
+
+## Settings pages
+
+- [`NotificationSettingsForm.tsx`](dashboard/src/components/dashboard/NotificationSettingsForm.tsx) — shared form for Kills, Assists, and Deaths pages
+- [`SettingHelp.tsx`](dashboard/src/components/dashboard/SettingHelp.tsx) — modal help (replaces hover tooltips) on General settings and Juicy pages
+
+## Forms
+
+Global `form label.form-label` in [`styles/index.tsx`](dashboard/src/styles/index.tsx) uses the graffiti tab style (background gradient, border, flush with the control below). Switches and checkboxes use `form-check-label` and are unchanged.
 
 ## Track page (Notification List)
 

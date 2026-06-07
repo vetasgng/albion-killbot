@@ -1,14 +1,29 @@
 import { faBug } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Stack } from "react-bootstrap";
+import { Button, Stack } from "react-bootstrap";
+import { Link } from "react-router-dom";
+import styled from "styled-components";
+
+const LoadErrorMessage = styled.div`
+  text-align: center;
+  color: ${({ theme }) => theme.subtleText};
+  font-size: 0.95rem;
+  line-height: 1.5;
+`;
 
 const LoadError = () => {
   return (
-    <Stack gap={2} className="justify-content-center h-100">
+    <Stack gap={3} className="justify-content-center align-items-center py-5">
       <FontAwesomeIcon size="3x" icon={faBug} />
-      <div className="lead text-center">
-        Failed to load page. Please try again later.
-      </div>
+      <LoadErrorMessage>
+        Failed to load this page. Refresh to try again, or return to the
+        dashboard.
+      </LoadErrorMessage>
+      <Link to="/dashboard">
+        <Button variant="secondary" size="sm">
+          Back to Dashboard
+        </Button>
+      </Link>
     </Stack>
   );
 };

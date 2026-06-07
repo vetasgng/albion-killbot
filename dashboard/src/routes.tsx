@@ -18,6 +18,7 @@ import ServerSubscriptionPage from "pages/dashboard/server/ServerSubscriptionPag
 import SettingsPage from "pages/dashboard/server/SettingsPage";
 import TrackPage from "pages/dashboard/server/TrackPage";
 import HomePage from "pages/home/HomePage";
+import NotFoundPage from "pages/NotFoundPage";
 import PremiumPage from "pages/premium/PremiumPage";
 import SubscriptionsPage from "pages/subscriptions/SubscriptionsPage";
 import { createRoutesFromElements, Navigate, Route } from "react-router-dom";
@@ -70,7 +71,7 @@ const routes = createRoutesFromElements(
       >
         <Route path="premium" element={<PremiumPage />} />
       </Route>
-      <Route path="*" element={<h1>404 - Not found</h1>} />
+      <Route path="*" element={<NotFoundPage />} />
     </Route>
   </>
 );
