@@ -3,7 +3,11 @@ import { useState } from "react";
 import { Button, Form, Modal, Stack } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import { useFetchServerQuery } from "store/api";
-import { setItemAssistsChannel, setItemDeathsChannel, setItemKillsChannel } from "store/track";
+import {
+  setItemAssistsChannel,
+  setItemDeathsChannel,
+  setItemKillsChannel,
+} from "store/track";
 import { ITrackItem, TRACK_TYPE } from "types/track";
 import ChannelInput from "./dashboard/ChannelInput";
 
@@ -25,13 +29,15 @@ const TrackItemOptions = ({ type, item }: ITrackItemOptionsProps) => {
         Customize
       </Button>
 
-      <Modal show={show} centered={true}>
-        <Modal.Title>
-          <Stack className="p-3 gap-1">
-            <div className="id-text">{id}</div>
-            <div>{name}</div>
-          </Stack>
-        </Modal.Title>
+      <Modal show={show} onHide={() => setShow(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>
+            <Stack gap={1}>
+              <div className="id-text">{id}</div>
+              <div>{name}</div>
+            </Stack>
+          </Modal.Title>
+        </Modal.Header>
         <Modal.Body>
           <Form>
             <Stack gap={2}>

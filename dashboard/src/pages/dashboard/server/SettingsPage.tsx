@@ -191,8 +191,8 @@ const SettingsPage = () => {
                     <Tooltip>
                       <Stack gap={2} className="align-items-start">
                         <div>
-                          Append victim inventory to kill report images
-                          instead of sending a separate inventory image:
+                          Append victim inventory to kill report images instead
+                          of sending a separate inventory image:
                         </div>
                         <img
                           src={combinedEventImage}

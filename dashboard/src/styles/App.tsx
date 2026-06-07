@@ -1,6 +1,38 @@
 import "react-cookienotice/dist/style.css";
 import styled from "styled-components";
 
+export const ServerDashboardOutlet = styled.div`
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 0;
+
+  @media (min-width: ${({ theme }) => theme.layout.breakpoints.lg}) {
+    padding-top: ${({ theme }) => theme.layout.padding.pageY.lg};
+    padding-bottom: ${({ theme }) => theme.layout.padding.pageY.lg};
+    padding-left: ${({ theme }) => theme.layout.padding.pageX.lg};
+    padding-right: ${({ theme }) => theme.layout.padding.pageX.lg};
+  }
+
+  @media (min-width: ${({ theme }) => theme.layout.breakpoints.xl}) {
+    padding-top: ${({ theme }) => theme.layout.padding.pageY.xl};
+    padding-bottom: ${({ theme }) => theme.layout.padding.pageY.xl};
+    padding-left: ${({ theme }) => theme.layout.padding.pageX.xl};
+    padding-right: ${({ theme }) => theme.layout.padding.pageX.xl};
+    margin-left: auto;
+    margin-right: auto;
+    max-width: calc(100% - 1200px * 0.35);
+  }
+
+  @media (min-width: ${({ theme }) => theme.layout.breakpoints.xxl}) {
+    padding-top: ${({ theme }) => theme.layout.padding.pageY.xxl};
+    padding-bottom: ${({ theme }) => theme.layout.padding.pageY.xxl};
+    padding-left: ${({ theme }) => theme.layout.padding.pageX.xxl};
+    padding-right: ${({ theme }) => theme.layout.padding.pageX.xxl};
+    max-width: calc(100% - 1904px * 0.4);
+  }
+`;
+
 export default styled.div`
   display: flex;
   flex-direction: column;

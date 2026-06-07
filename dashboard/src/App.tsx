@@ -4,11 +4,12 @@ import Toasts from "components/Toasts";
 import Header from "components/common/Header";
 import { CookieNotice } from "react-cookienotice";
 import { Outlet, useLocation } from "react-router-dom";
-import Container from "styles/App";
+import Container, { ServerDashboardOutlet } from "styles/App";
 
 export const App = () => {
   const location = useLocation();
   const isHome = location.pathname === "/";
+  const isServerDashboard = /^\/dashboard\/[^/]+/.test(location.pathname);
 
   return (
     <Container>
@@ -16,6 +17,10 @@ export const App = () => {
       <Paper elevation={24} className="content">
         {isHome ? (
           <Outlet />
+        ) : isServerDashboard ? (
+          <ServerDashboardOutlet>
+            <Outlet />
+          </ServerDashboardOutlet>
         ) : (
           <div className="container">
             <Outlet />

@@ -1,6 +1,6 @@
 import { getServerNavItem } from "constants/serverNav";
 import { ReactNode, useState } from "react";
-import { Container, Offcanvas } from "react-bootstrap";
+import { Offcanvas } from "react-bootstrap";
 import { useLocation, useParams } from "react-router-dom";
 import { ServerBase } from "types/server";
 import ServerPageHeader from "./ServerPageHeader";
@@ -34,7 +34,7 @@ const ServerLayout = ({
   const closeNav = () => setShowNav(false);
 
   return (
-    <Container fluid className="py-3">
+    <>
       <LayoutRoot>
         <ServerSidebar server={server} />
 
@@ -71,7 +71,7 @@ const ServerLayout = ({
           />
         </Offcanvas.Body>
       </Offcanvas>
-    </Container>
+    </>
   );
 };
 

@@ -1,9 +1,12 @@
+import LoadError from "components/LoadError";
+import TrackEmptyState from "components/dashboard/TrackEmptyState";
+import TrackSaveBar from "components/dashboard/TrackSaveBar";
 import Loader from "components/common/Loader";
 import Search from "components/Search";
 import TrackList from "components/TrackList";
 import { useAppDispatch, useAppSelector } from "helpers/hooks";
 import { useEffect } from "react";
-import { Alert, Button, Card, Stack } from "react-bootstrap";
+import { Alert, Card, Stack } from "react-bootstrap";
 import { Link, useParams } from "react-router-dom";
 import { useFetchServerQuery, useUpdateTrackMutation } from "store/api";
 import { loadTrack } from "store/track";
@@ -17,13 +20,13 @@ const TrackPage = () => {
   const [dispatchUpdateTrack, updateTrack] = useUpdateTrackMutation();
 
   useEffect(() => {
-    if (server?.data?.settings) {
+    if (server?.data?.track) {
       dispatch(loadTrack(server.data.track));
     }
-  }, [dispatch, server]);
+  }, [dispatch, server.data?.track]);
 
-  if (server.isLoading || updateTrack.isLoading) return <Loader />;
-  if (!server.data) return <div>No data for this server.</div>;
+  if (server.isLoading) return <Loader />;
+  if (!server.data) return <LoadError />;
 
   const { id, limits, settings, subscription } = server.data;
 
@@ -36,26 +39,39 @@ const TrackPage = () => {
     (subscription.expires === "never" ||
       new Date(subscription.expires).getTime() > new Date().getTime());
   const hasNoConfiguredTrackChannels =
-    !settings.kills.channel && !settings.deaths.channel && !settings.assists.channel;
+    !settings.kills.channel &&
+    !settings.deaths.channel &&
+    !settings.assists.channel;
   const emptyList =
     track.players.length === 0 &&
     track.guilds.length === 0 &&
     track.alliances.length === 0;
+  const totalTracked =
+    track.players.length + track.guilds.length + track.alliances.length;
+  const trackSections = [
+    { type: TRACK_TYPE.PLAYERS, limit: limits.players, list: track.players },
+    { type: TRACK_TYPE.GUILDS, limit: limits.guilds, list: track.guilds },
+    {
+      type: TRACK_TYPE.ALLIANCES,
+      limit: limits.alliances,
+      list: track.alliances,
+    },
+  ].filter(({ list }) => !emptyList && list.length > 0);
 
   return (
     <Stack gap={3}>
       {hasOverLimitItems ? (
         <Alert variant="danger" className="m-0">
           Items <span className="text-danger">over the limit</span> will not
-          generate notifications. To increase your limits, please check the
-          <Link to="/premium"> Premium</Link> page to buy assign a subscription.
+          generate notifications. To increase your limits, please check the{" "}
+          <Link to="/premium">Premium</Link> page to buy or assign a
+          subscription.
         </Alert>
       ) : (
         !isPremium && (
           <Alert variant="info" className="m-0">
             Want to have more slots to track? To increase your limits, please
-            check the
-            <Link to="/premium"> Premium</Link> page to buy assign a
+            check the <Link to="/premium">Premium</Link> page to buy or assign a
             subscription.
           </Alert>
         )
@@ -68,64 +84,38 @@ const TrackPage = () => {
             You do not have configured a channel to display kills, deaths, or
             assist notifications. Please go to the{" "}
           </span>
-          <Link to={`/dashboard/${id}/settings`}>Settings</Link>
+          <Link to={`/dashboard/${id}/kills`}>notification settings</Link>
           <span> page to set up notification channels.</span>
         </Alert>
       )}
 
-      {track.changed && (
-        <Alert variant="warning" className="m-0">
-          You have unsaved changes.
-        </Alert>
-      )}
+      <Search limits={limits} />
 
-      <Card>
-        <Card.Header>Notification List</Card.Header>
+      <Card className="tracked-entities-card">
+        {!emptyList && (
+          <Card.Header className="tracked-entities-card-header d-flex justify-content-between align-items-center py-2">
+            <span>Tracked entities</span>
+            <span className="text-muted small">{totalTracked} total</span>
+          </Card.Header>
+        )}
+
         <Stack gap={3} className="p-2">
-          <TrackList
-            type={TRACK_TYPE.PLAYERS}
-            limit={limits.players}
-            list={track.players}
-          />
-          <TrackList
-            type={TRACK_TYPE.GUILDS}
-            limit={limits.guilds}
-            list={track.guilds}
-          />
-          <TrackList
-            type={TRACK_TYPE.ALLIANCES}
-            limit={limits.alliances}
-            list={track.alliances}
-          />
+          {trackSections.map(({ type, limit, list }) => (
+            <TrackList key={type} type={type} limit={limit} list={list} />
+          ))}
 
-          {emptyList && (
-            <div className="px-2">
-              Use the search to add to the notification list.
-            </div>
-          )}
+          {emptyList && <TrackEmptyState />}
         </Stack>
-
-        <Card.Footer>
-          <Stack direction="horizontal" gap={2} className="justify-content-end">
-            <Button
-              variant="secondary"
-              onClick={() => {
-                if (server?.data?.track) dispatch(loadTrack(server.data.track));
-              }}
-            >
-              Reset
-            </Button>
-            <Button
-              variant="primary"
-              onClick={() => dispatchUpdateTrack({ serverId: id, track })}
-            >
-              Save
-            </Button>
-          </Stack>
-        </Card.Footer>
       </Card>
 
-      <Search limits={limits} />
+      <TrackSaveBar
+        show={track.changed}
+        isSaving={updateTrack.isLoading}
+        onReset={() => {
+          if (server.data?.track) dispatch(loadTrack(server.data.track));
+        }}
+        onSave={() => dispatchUpdateTrack({ serverId: id, track })}
+      />
     </Stack>
   );
 };

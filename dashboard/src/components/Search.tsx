@@ -33,20 +33,20 @@ const Search = ({ limits }: ISearchProps) => {
   };
 
   return (
-    <Card>
+    <Card id="track-search">
       <Card.Body className="p-2">
-        <Form onSubmit={handleSearch}>
-          <Form.Group controlId="search-albion" className="px-2">
-            <Form.Label>Search</Form.Label>
-            <InputGroup>
+        <Form onSubmit={handleSearch} className="search-form">
+          <Form.Group controlId="search-albion" className="px-2 mb-0">
+            <Form.Label className="mb-2">Add to notification list</Form.Label>
+            <InputGroup className="search-input-group">
               <Form.Control
                 type="text"
                 aria-describedby="search-help"
-                placeholder="Search in Albion Online for name or ID"
+                placeholder="Search Albion Online by name or ID"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
               />
-              <Dropdown>
+              <Dropdown className="search-server-dropdown">
                 <Dropdown.Toggle variant="primary">
                   {server?.name}
                 </Dropdown.Toggle>
@@ -62,7 +62,7 @@ const Search = ({ limits }: ISearchProps) => {
                   ))}
                 </Dropdown.Menu>
               </Dropdown>
-              <Button variant="primary" type="submit">
+              <Button variant="primary" type="submit" aria-label="Search">
                 <FontAwesomeIcon icon={faSearch} />
               </Button>
             </InputGroup>
@@ -74,16 +74,24 @@ const Search = ({ limits }: ISearchProps) => {
       </Card.Body>
 
       {!searchResults.isUninitialized && (
-        <Card.Footer>
-          {searchResults.isFetching ? (
-            <Loader width={500} height={250}>
-              <rect x="5" y="10" rx="5" ry="5" width="490" height="70" />
-              <rect x="5" y="90" rx="5" ry="5" width="490" height="70" />
-              <rect x="5" y="170" rx="5" ry="5" width="490" height="70" />
-            </Loader>
-          ) : (
-            <SearchResults limits={limits} searchResults={searchResults.data} />
-          )}
+        <Card.Footer className="search-results-panel p-0">
+          <div className="search-results-panel-header px-3 py-2">
+            Search results
+          </div>
+          <div className="px-2 pb-2 pt-1">
+            {searchResults.isFetching ? (
+              <Loader width={500} height={250}>
+                <rect x="5" y="10" rx="5" ry="5" width="490" height="70" />
+                <rect x="5" y="90" rx="5" ry="5" width="490" height="70" />
+                <rect x="5" y="170" rx="5" ry="5" width="490" height="70" />
+              </Loader>
+            ) : (
+              <SearchResults
+                limits={limits}
+                searchResults={searchResults.data}
+              />
+            )}
+          </div>
         </Card.Footer>
       )}
     </Card>

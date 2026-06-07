@@ -17,10 +17,10 @@ const TrackList = ({ type, limit = 0, list }: ITrackListItemProps) => {
   const constants = useGetConstantsQuery();
 
   return (
-    <ListGroup>
+    <ListGroup className="entity-list entity-list--tracked">
       <ListGroup.Item
         variant="secondary"
-        className="d-flex justify-content-between align-items-baseline"
+        className="entity-list-header d-flex justify-content-between align-items-baseline"
       >
         <div>{capitalize(type)}</div>
         <Badge bg={list.length < limit ? "secondary" : "danger"}>
@@ -37,20 +37,27 @@ const TrackList = ({ type, limit = 0, list }: ITrackListItemProps) => {
         );
 
         return (
-          <ListGroup.Item key={id} className="paper">
-            <div className="d-flex justify-content-between align-items-center">
-              <Stack>
+          <ListGroup.Item
+            key={id}
+            className="paper entity-item entity-item--tracked"
+          >
+            <div className="track-list-item">
+              <Stack className="track-list-item-info">
                 <span className="id-text">{id}</span>
                 <Stack
                   direction="horizontal"
                   gap={2}
-                  className="d-flex align-items-baseline"
+                  className="d-flex align-items-baseline flex-wrap"
                 >
                   <div className={i >= limit ? "text-danger" : ""}>{name}</div>
                   {server && <Badge bg={server.id}>{server.name}</Badge>}
                 </Stack>
               </Stack>
-              <Stack direction="horizontal" gap={2}>
+              <Stack
+                direction="horizontal"
+                gap={2}
+                className="track-list-item-actions"
+              >
                 <TrackItemOptions type={type} item={item} />
                 <Button
                   size="sm"

@@ -26,9 +26,18 @@ Server-scoped routes (`/dashboard/:serverId/*`) use a shared shell:
 - [`constants/serverNav.ts`](dashboard/src/constants/serverNav.ts) — grouped nav sections, item metadata (path, name, icon, description), and `getServerNavItem()`
 - [`components/dashboard/server/ServerLayout.tsx`](dashboard/src/components/dashboard/server/ServerLayout.tsx) — sidebar + page header + outlet wrapper
 - Desktop: sticky grouped sidebar; mobile: Offcanvas nav from header menu button
-- Layout/nav tokens live in [`helpers/theme.ts`](dashboard/src/helpers/theme.ts) (`layout`, `nav`)
+- Layout/nav tokens live in [`helpers/theme.ts`](dashboard/src/helpers/theme.ts) (`layout`, `nav`, `layout.padding`, `layout.breakpoints`)
 
 Add or rename server sub-routes in `serverNav.ts` and `routes.tsx` together.
+
+## Track page (Notification List)
+
+[`TrackPage.tsx`](dashboard/src/pages/dashboard/server/TrackPage.tsx) layout order: alerts → search → tracked list card. Search is the primary action; page title comes from the server shell header, not a duplicate card header.
+
+- Search card uses `#track-search` anchor and responsive stacked input on narrow widths (`ContentPanel` styles).
+- Search results use green-accent styling (`entity-list--search`, "Search results" panel); tracked lists use gold-accent styling (`entity-list--tracked`, `tracked-entities-card`).
+- When the list is empty, only `TrackEmptyState` is shown (no empty section headers). When partially filled, only non-empty entity sections render.
+- Unsaved state is shown in a sticky `TrackSaveBar` at the bottom of the viewport; adding from search also triggers a save reminder toast.
 
 ## Local UI testing
 

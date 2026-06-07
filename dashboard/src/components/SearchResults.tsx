@@ -18,12 +18,21 @@ const SearchResults = ({ limits, searchResults }: ISearchResultsProps) => {
   const showError = (message: string) =>
     dispatch(addToast({ theme: "danger", message }));
 
+  const showSaveReminder = () =>
+    dispatch(
+      addToast({
+        theme: "warning",
+        message: "Added to your list. Save changes to apply on Discord.",
+      })
+    );
+
   const doTrackPlayer = (player: ISearchResults["players"][number]) => {
     const limit = limits.players || 0;
 
     if (track.players.length >= limit)
       return showError(`Maximum limit of ${limit} player(s) exceeded.`);
     dispatch(trackPlayer(player));
+    showSaveReminder();
   };
 
   const doTrackGuild = (guild: ISearchResults["guilds"][number]) => {
@@ -32,6 +41,7 @@ const SearchResults = ({ limits, searchResults }: ISearchResultsProps) => {
     if (track.guilds.length >= limit)
       return showError(`Maximum limit of ${limit} guild(s) exceeded.`);
     dispatch(trackGuild(guild));
+    showSaveReminder();
   };
 
   const doTrackAlliance = (alliance: ISearchResults["alliances"][number]) => {
@@ -40,6 +50,7 @@ const SearchResults = ({ limits, searchResults }: ISearchResultsProps) => {
     if (track.alliances.length >= limit)
       return showError(`Maximum limit of ${limit} alliances(s) exceeded.`);
     dispatch(trackAlliance(alliance));
+    showSaveReminder();
   };
 
   if (
@@ -49,9 +60,9 @@ const SearchResults = ({ limits, searchResults }: ISearchResultsProps) => {
       searchResults.alliances.length === 0)
   )
     return (
-      <span className="d-flex justify-content-center p-2">
-        Nothing was found. Please use a different search term.
-      </span>
+      <p className="text-muted text-center mb-0 py-2 px-3">
+        Nothing was found. Try a different search term or alliance ID.
+      </p>
     );
 
   const { players, guilds, alliances } = searchResults;

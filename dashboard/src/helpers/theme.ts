@@ -36,6 +36,42 @@ export interface ThemeProps {
     contentMaxWidth: string;
     navSectionGap: string;
     navItemRadius: string;
+    breakpoints: {
+      sm: string;
+      md: string;
+      lg: string;
+      xl: string;
+      xxl: string;
+    };
+    padding: {
+      pageY: {
+        lg: string;
+        xl: string;
+        xxl: string;
+      };
+      pageX: {
+        lg: string;
+        xl: string;
+        xxl: string;
+      };
+      panel: {
+        base: string;
+        md: string;
+        lg: string;
+        xl: string;
+        xxl: string;
+      };
+      sidebar: {
+        lg: string;
+        xl: string;
+        xxl: string;
+      };
+      layoutGap: {
+        lg: string;
+        xl: string;
+        xxl: string;
+      };
+    };
   };
 
   nav: {
@@ -77,6 +113,42 @@ const theme: ThemeProps = {
     contentMaxWidth: "960px",
     navSectionGap: "1.5rem",
     navItemRadius: "0.5rem",
+    breakpoints: {
+      sm: "576px",
+      md: "768px",
+      lg: "992px",
+      xl: "1200px",
+      xxl: "1904px",
+    },
+    padding: {
+      pageY: {
+        lg: "0.5rem",
+        xl: "1rem",
+        xxl: "1.25rem",
+      },
+      pageX: {
+        lg: "0.5rem",
+        xl: "1.25rem",
+        xxl: "1.5rem",
+      },
+      panel: {
+        base: "0.75rem",
+        md: "1rem",
+        lg: "1.25rem",
+        xl: "1.5rem",
+        xxl: "1.75rem",
+      },
+      sidebar: {
+        lg: "0.875rem",
+        xl: "1rem",
+        xxl: "1.125rem",
+      },
+      layoutGap: {
+        lg: "1rem",
+        xl: "1.25rem",
+        xxl: "1.5rem",
+      },
+    },
   },
 
   nav: {
