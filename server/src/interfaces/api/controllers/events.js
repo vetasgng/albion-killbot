@@ -13,13 +13,14 @@ async function getEvent(req, res) {
 
 async function getEventImage(req, res) {
   const { eventId } = req.params;
-  const { server } = req.query;
+  const { server, combined } = req.query;
 
   const event = await eventsService.getEvent(eventId, { server });
   if (!event) return res.sendStatus(404);
 
   event.lootValue = await eventsService.getEventVictimLootValue(event, { server });
-  const eventImage = await generateEventImage(event);
+  const includeInventory = combined === "true" && event.Victim.Inventory.some((i) => i != null);
+  const eventImage = await generateEventImage(event, { includeInventory });
 
   return res.set("Content-Disposition", `inline; filename="${event.EventId}-event.png"`).type("png").send(eventImage);
 }

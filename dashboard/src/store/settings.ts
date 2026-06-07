@@ -8,6 +8,7 @@ const initialState: ISettings = {
     showAttunement: false,
     guildTags: false,
     splitLootValue: false,
+    combinedEventImage: false,
   },
   kills: {
     enabled: true,
@@ -80,6 +81,9 @@ export const settingsSlice = createSlice({
     },
     setGeneralSplitLootValue: (state, action: PayloadAction<boolean>) => {
       state.general.splitLootValue = action.payload;
+    },
+    setGeneralCombinedEventImage: (state, action: PayloadAction<boolean>) => {
+      state.general.combinedEventImage = action.payload;
     },
     setKillsEnabled: (state, action: PayloadAction<boolean>) => {
       state.kills.enabled = action.payload;
@@ -186,6 +190,7 @@ export const {
   setGeneralShowAttunement,
   setGeneralGuildTags,
   setGeneralSplitLootValue,
+  setGeneralCombinedEventImage,
   setKillsEnabled,
   setKillsChannel,
   setKillsMode,

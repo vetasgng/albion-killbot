@@ -85,7 +85,8 @@
       "RANKING_MONTHLY": "Ranking de PvP Mensal",
       "RANKING_WEEKLY": "Ranking de PvP Semanal",
       "SHOW_ATTUNEMENT": "Exibir estatísticas da arma despertada.",
-      "SPLIT_LOOT_VALUE": "Divida o valor do loot entre equipamento e inventário."
+      "SPLIT_LOOT_VALUE": "Divida o valor do loot entre equipamento e inventário.",
+      "COMBINED_EVENT_IMAGE": "Anexa o inventário da vítima às imagens de kills."
     },
     "FREQUENCIES": {
       "12HOUR": "Exibir a cada 12 horas",
@@ -138,6 +139,9 @@
     },
     "SPLIT_LOOT_VALUE": {
       "SET": "Valor do loot dividido: {{ enabled }}"
+    },
+    "COMBINED_EVENT_IMAGE": {
+      "SET": "Imagem combinada de kill e inventário: {{ enabled }}"
     }
   },
   "SUBSCRIPTION": {

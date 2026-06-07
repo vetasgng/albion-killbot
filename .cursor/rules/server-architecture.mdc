@@ -57,6 +57,7 @@ services/images/
     index.js
   draw/                 # drawing primitives
     background.js
+    inventory.js
     items.js
     player.js
     stats.js

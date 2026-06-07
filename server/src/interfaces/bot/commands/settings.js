@@ -223,6 +223,9 @@ const general = (subcommand) =>
     .addBooleanOption((option) => option.setName("guild_tags").setDescription(t("SETTINGS.DESCRIPTION.GUILD_TAGS")))
     .addBooleanOption((option) =>
       option.setName("split_loot_value").setDescription(t("SETTINGS.DESCRIPTION.SPLIT_LOOT_VALUE")),
+    )
+    .addBooleanOption((option) =>
+      option.setName("combined_event_image").setDescription(t("SETTINGS.DESCRIPTION.COMBINED_EVENT_IMAGE")),
     );
 
 function getCommonOptions(settings, category, interaction) {
@@ -286,6 +289,11 @@ const command = {
           settings.general.splitLootValue = splitLootValue;
         }
 
+        const combinedEventImage = interaction.options.getBoolean("combined_event_image");
+        if (typeof combinedEventImage === "boolean") {
+          settings.general.combinedEventImage = combinedEventImage;
+        }
+
         await interaction.deferReply({ ephemeral: true });
         await setSettings(interaction.guild.id, settings);
 
@@ -302,6 +310,12 @@ const command = {
         reply +=
           t("SETTINGS.SPLIT_LOOT_VALUE.SET", {
             enabled: settings.general.splitLootValue ? t("SETTINGS.CATEGORY.ENABLED") : t("SETTINGS.CATEGORY.DISABLED"),
+          }) + "\n";
+        reply +=
+          t("SETTINGS.COMBINED_EVENT_IMAGE.SET", {
+            enabled: settings.general.combinedEventImage
+              ? t("SETTINGS.CATEGORY.ENABLED")
+              : t("SETTINGS.CATEGORY.DISABLED"),
           }) + "\n";
 
         return await editReply(reply);

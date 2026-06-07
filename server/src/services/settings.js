@@ -12,6 +12,7 @@ const DEFAULT_SETTINGS = Object.freeze({
     showAttunement: true,
     guildTags: false,
     splitLootValue: false,
+    combinedEventImage: false,
   },
   kills: {
     enabled: true,

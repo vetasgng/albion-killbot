@@ -1,5 +1,6 @@
 import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import combinedEventImage from "assets/settings/combinedEventImage.png";
 import guildTags from "assets/settings/guildTags.png";
 import showAttunement from "assets/settings/showAttunement.png";
 import splitLootValue from "assets/settings/splitLootValue.png";
@@ -15,6 +16,7 @@ import {
   setGeneralLocale,
   setGeneralShowAttunement,
   setGeneralSplitLootValue,
+  setGeneralCombinedEventImage,
 } from "store/settings";
 
 const SettingsPage = () => {
@@ -152,6 +154,49 @@ const SettingsPage = () => {
                         <img
                           src={splitLootValue}
                           alt="Example of Split Loot"
+                          style={{ borderRadius: "0.2rem" }}
+                        />
+                      </Stack>
+                    </Tooltip>
+                  }
+                >
+                  <Button className="btn-icon" variant="secondary" size="sm">
+                    <FontAwesomeIcon icon={faQuestionCircle} />
+                  </Button>
+                </OverlayTrigger>
+              </Stack>
+            </Form.Switch.Label>
+          </Form.Switch>
+        </Form.Group>
+
+        <Form.Group controlId="combinedEventImage">
+          <Form.Switch>
+            <Form.Switch.Input
+              checked={general.combinedEventImage}
+              type="checkbox"
+              onChange={(e) =>
+                dispatch(setGeneralCombinedEventImage(e.target.checked))
+              }
+            />
+            <Form.Switch.Label>
+              <Stack
+                direction="horizontal"
+                gap={1}
+                className="align-items-center"
+              >
+                <div>Combined Kill Image</div>
+                <OverlayTrigger
+                  placement="auto-end"
+                  overlay={
+                    <Tooltip>
+                      <Stack gap={2} className="align-items-start">
+                        <div>
+                          Append victim inventory to kill report images
+                          instead of sending a separate inventory image:
+                        </div>
+                        <img
+                          src={combinedEventImage}
+                          alt="Example of Combined Kill"
                           style={{ borderRadius: "0.2rem" }}
                         />
                       </Stack>

@@ -220,6 +220,12 @@ router.get(`/:eventId`, eventsController.getEvent);
  *         type: string
  *         enum: ["americas", "asia", "europe"]
  *         default: "americas"
+ *     - name: combined
+ *       in: query
+ *       schema:
+ *         type: boolean
+ *         default: false
+ *       description: Append victim inventory to the kill report image when present.
  *     summary: Get event report as image.
  *     operationId: getEventImage
  *     responses:

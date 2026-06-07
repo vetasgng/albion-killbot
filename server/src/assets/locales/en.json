@@ -85,7 +85,8 @@
       "RANKING_MONTHLY": "Monthly PvP Ranking",
       "RANKING_WEEKLY": "Weekly PvP Ranking",
       "SHOW_ATTUNEMENT": "Display awakened weapon stats",
-      "SPLIT_LOOT_VALUE": "Split the loot value between gear and inventory."
+      "SPLIT_LOOT_VALUE": "Split the loot value between gear and inventory.",
+      "COMBINED_EVENT_IMAGE": "Append victim inventory to kill report images."
     },
     "FREQUENCIES": {
       "12HOUR": "Display every 12 hours",
@@ -138,6 +139,9 @@
     },
     "SPLIT_LOOT_VALUE": {
       "SET": "Split loot value: {{ enabled }}"
+    },
+    "COMBINED_EVENT_IMAGE": {
+      "SET": "Combined kill and inventory image: {{ enabled }}"
     }
   },
   "SUBSCRIPTION": {

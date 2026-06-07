@@ -85,7 +85,8 @@
       "RANKING_MONTHLY": "Classement PvP Mensuel",
       "RANKING_WEEKLY": "Classement PvP Hebdomadaire",
       "SHOW_ATTUNEMENT": "Afficher les statistiques de l'arme éveillée.",
-      "SPLIT_LOOT_VALUE": "Divisez la valeur du butin entre l'équipement et l'inventaire."
+      "SPLIT_LOOT_VALUE": "Divisez la valeur du butin entre l'équipement et l'inventaire.",
+      "COMBINED_EVENT_IMAGE": "Ajoute l'inventaire de la victime aux images de kills."
     },
     "FREQUENCIES": {
       "12HOUR": "Afficher toutes les 12 heures",
@@ -138,6 +139,9 @@
     },
     "SPLIT_LOOT_VALUE": {
       "SET": "Valeur du butin partagé : {{ enabled }}"
+    },
+    "COMBINED_EVENT_IMAGE": {
+      "SET": "Image combinée kill et inventaire : {{ enabled }}"
     }
   },
   "SUBSCRIPTION": {

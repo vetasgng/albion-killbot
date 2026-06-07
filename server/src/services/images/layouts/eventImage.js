@@ -13,21 +13,28 @@ const {
   getParticipantBarsBottom,
   PARTICIPANT_BARS_BOTTOM_PADDING,
 } = require("../draw/participantBars");
+const { getInventorySectionHeight, drawInventorySection } = require("../draw/inventory");
 
 const CANVAS_WIDTH = 1600;
 const BASE_HEIGHT = 1250;
 const ATTUNEMENT_HEIGHT = 250;
 const PARTICIPANT_BARS_Y = 1100;
 
-async function generateEventImage(event, { showAttunement = true, splitLootValue = false } = {}) {
+async function generateEventImage(event, { showAttunement = true, splitLootValue = false, includeInventory = false } = {}) {
+  const cacheKey = includeInventory ? `eventImage-${event.EventId}-combined` : `eventImage-${event.EventId}`;
+
   return memoize(
-    `eventImage-${event.EventId}`,
+    cacheKey,
     async () => {
       showAttunement = showAttunement && hasAwakening(event);
       const attunementHeight = showAttunement ? ATTUNEMENT_HEIGHT : 0;
       const barsY = PARTICIPANT_BARS_Y + attunementHeight;
       const barsBottom = getParticipantBarsBottom(event.Participants, barsY);
-      const canvasHeight = Math.max(BASE_HEIGHT + attunementHeight, barsBottom + PARTICIPANT_BARS_BOTTOM_PADDING);
+      const eventHeight = Math.max(BASE_HEIGHT + attunementHeight, barsBottom + PARTICIPANT_BARS_BOTTOM_PADDING);
+
+      const inventory = includeInventory ? event.Victim.Inventory.filter((i) => i != null) : [];
+      const inventoryHeight = getInventorySectionHeight(inventory, { splitLootValue, lootValue: event.lootValue });
+      const canvasHeight = eventHeight + inventoryHeight;
 
       let canvas = createCanvas(CANVAS_WIDTH, canvasHeight);
       const w = canvas.width;
@@ -43,6 +50,10 @@ async function generateEventImage(event, { showAttunement = true, splitLootValue
       if (event.lootValue) await drawLootValue(ctx, event.lootValue, w / 2, 675, { splitLootValue });
 
       await drawParticipantBars(ctx, event.Participants, w, barsY);
+
+      if (inventory.length) {
+        await drawInventorySection(ctx, inventory, eventHeight, { splitLootValue, lootValue: event.lootValue });
+      }
 
       const buffer = await optimizeImage(canvas.toBuffer(), 580);
       canvas = null;

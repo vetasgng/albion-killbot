@@ -5,6 +5,7 @@ export interface ISettings {
     showAttunement?: boolean;
     guildTags: boolean;
     splitLootValue: boolean;
+    combinedEventImage: boolean;
   };
   kills: {
     enabled: boolean;

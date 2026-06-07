@@ -126,6 +126,10 @@ router.use(`/:serverId`, serverAdmin);
  *              type: boolean
  *              description: Split the loot value between gear and inventory
  *              default: false
+ *            combinedEventImage:
+ *              type: boolean
+ *              description: Append victim inventory to kill report images
+ *              default: false
  *        battles:
  *          allOf:
  *          - $ref: '#/components/schemas/Category'

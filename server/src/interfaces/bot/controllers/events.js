@@ -46,7 +46,7 @@ const sendEvent = async ({ client, server, guild, event, settings, track, limits
   }
 
   const { enabled, mode, provider: providerId } = setting;
-  const { locale, showAttunement, guildTags, splitLootValue } = settings.general;
+  const { locale, showAttunement, guildTags, splitLootValue, combinedEventImage } = settings.general;
 
   // Simple enabled on/off
   if (typeof enabled === "boolean" && !enabled) {
@@ -81,20 +81,24 @@ const sendEvent = async ({ client, server, guild, event, settings, track, limits
   logger.info(`[${server.name}] Sending ${killType} event ${event.EventId} to "${guild.name}".`, logMeta);
 
   if (mode === REPORT_MODES.IMAGE) {
-    const inventory = event.Victim.Inventory.filter((i) => i != null);
-    const hasInventory = inventory.length > 0;
-    const eventImage = await generateEventImage(event, { showAttunement, splitLootValue });
+    const hasInventory = event.Victim.Inventory.some((i) => i != null);
+    const useCombinedImage = combinedEventImage && hasInventory;
+    const eventImage = await generateEventImage(event, {
+      showAttunement,
+      splitLootValue,
+      includeInventory: useCombinedImage,
+    });
     await sendNotification(
       client,
       channel,
       embedEventImage(event, eventImage, {
         locale,
         guildTags,
-        addFooter: !hasInventory,
+        addFooter: !hasInventory || useCombinedImage,
         providerId,
       }),
     );
-    if (hasInventory) {
+    if (hasInventory && !useCombinedImage) {
       const inventoryImage = await generateInventoryImage(event, { splitLootValue });
       await sendNotification(
         client,
