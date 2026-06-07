@@ -1,7 +1,13 @@
 import Loader from "components/common/Loader";
+import LoadError from "components/LoadError";
 import Page from "components/Page";
 import ServerSelect from "components/ServerSelect";
+import PremiumNoPlansEmptyState from "components/subscriptions/PremiumNoPlansEmptyState";
 import SubscriptionStripePriceCard from "components/subscriptions/SubscriptionStripePriceCard";
+import {
+  PremiumCurrencyDropdownMenu,
+  PremiumCurrencyLabel,
+} from "components/subscriptions/styles";
 import { useState } from "react";
 import { Button, Col, Dropdown, Modal, Row, Stack } from "react-bootstrap";
 import { Link, useSearchParams } from "react-router-dom";
@@ -29,24 +35,17 @@ const PremiumPage = () => {
     if (!pricesResponse.data?.currencies) return null;
 
     return (
-      <Stack
-        direction="horizontal"
-        gap={2}
-        className="d-flex align-items-center"
-      >
-        <div>Currency:</div>
+      <Stack direction="horizontal" gap={2} className="align-items-center">
+        <PremiumCurrencyLabel>Currency:</PremiumCurrencyLabel>
 
         <Dropdown className="d-flex">
           <Dropdown.Toggle variant="primary" id="currencies">
             {currency?.toUpperCase() || "USD"}
           </Dropdown.Toggle>
-          <Dropdown.Menu>
-            {pricesResponse.data.currencies.map((currency) => (
-              <Dropdown.Item
-                key={currency}
-                onClick={() => setCurrency(currency)}
-              >
-                {currency?.toUpperCase() || "USD"}
+          <Dropdown.Menu as={PremiumCurrencyDropdownMenu}>
+            {pricesResponse.data.currencies.map((item) => (
+              <Dropdown.Item key={item} onClick={() => setCurrency(item)}>
+                {item?.toUpperCase() || "USD"}
               </Dropdown.Item>
             ))}
           </Dropdown.Menu>
@@ -57,11 +56,21 @@ const PremiumPage = () => {
 
   const renderPrices = () => {
     if (pricesResponse.isFetching) return <Loader />;
+    if (pricesResponse.isError) return <LoadError />;
+
+    if (!pricesResponse.data?.prices.length) {
+      return (
+        <PremiumNoPlansEmptyState
+          currency={currency}
+          availableCurrencies={pricesResponse.data?.currencies}
+        />
+      );
+    }
 
     return (
-      <Row className="gy-2">
-        {pricesResponse.data?.prices.map((price: SubscriptionPrice, i) => (
-          <Col key={price.id} sm={6} lg={4} xxl={3} className="gx-4">
+      <Row className="gy-3">
+        {pricesResponse.data.prices.map((price: SubscriptionPrice) => (
+          <Col key={price.id} sm={6} lg={4} xxl={3}>
             <SubscriptionStripePriceCard
               price={price}
               onSelect={() => setPriceId(price.id)}
@@ -82,8 +91,8 @@ const PremiumPage = () => {
             <>
               <span>
                 Thank you for your purchase! Go to{" "}
-                <Link to="/subscriptions">Subscriptions</Link> to see your
-                new subscription.
+                <Link to="/subscriptions">Subscriptions</Link> to see your new
+                subscription.
               </span>
             </>
           ),
@@ -96,7 +105,10 @@ const PremiumPage = () => {
       ]}
       title="Premium"
     >
-      <Stack gap={2}>
+      <Stack gap={3}>
+        <p className="mb-0 text-muted">
+          Choose a plan for your Discord server.
+        </p>
         <div className="d-flex justify-content-end">
           {renderCurrenciesDropdown()}
         </div>

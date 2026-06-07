@@ -38,6 +38,9 @@ export interface SubscriptionPrice {
   metadata: {
     banner?: string;
     tag?: string;
+    players?: string;
+    guilds?: string;
+    alliances?: string;
   };
 }
 

@@ -1,15 +1,23 @@
 import { faStripe } from "@fortawesome/free-brands-svg-icons";
-import {
-  faCircleCheck,
-  faCircleQuestion,
-  faPeopleGroup,
-  faPerson,
-} from "@fortawesome/free-solid-svg-icons";
+import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { getSubscriptionPriceBanner } from "helpers/subscriptions";
+import {
+  getSubscriptionPriceBanner,
+  getSubscriptionPriceFeatures,
+} from "helpers/subscriptions";
 import { capitalize, getCurrency } from "helpers/utils";
-import { Badge, Button, Card, ListGroup } from "react-bootstrap";
+import { Card } from "react-bootstrap";
 import { SubscriptionPrice } from "types/subscription";
+import {
+  PriceAmountRow,
+  PriceCardRoot,
+  PriceCheckoutButton,
+  PriceDivider,
+  PriceFeatureItem,
+  PriceFeatureList,
+  PriceRecurrence,
+  PriceTagBadge,
+} from "./styles";
 
 interface SubscriptionPriceCardProps {
   price: SubscriptionPrice;
@@ -21,86 +29,49 @@ const SubscriptionStripePriceCard = ({
   onSelect,
 }: SubscriptionPriceCardProps) => {
   const { metadata } = price;
-  const big = metadata.tag === "popular";
-
-  const tag: {
-    [key: string]: string;
-  } = {
-    "best-deal": "success",
-  };
+  const isPopular = metadata.tag === "popular";
+  const features = getSubscriptionPriceFeatures(price);
 
   return (
-    <Card
-      style={{
-        minWidth: 250,
-        transform: `scale(${big ? 1 : 0.97})`,
-      }}
-    >
+    <PriceCardRoot $popular={isPopular}>
       <Card.Img variant="top" src={getSubscriptionPriceBanner(price)} />
       {metadata.tag && (
-        <Badge
-          bg={tag[metadata.tag] || "primary"}
-          style={{
-            position: "absolute",
-            top: "0.5rem",
-            right: -5,
-            borderTopRightRadius: 0,
-            borderBottomRightRadius: 0,
-            boxShadow: "1px 5px 10px #000000CC",
-          }}
-        >
+        <PriceTagBadge>
           {capitalize(metadata.tag, { splitWords: true })}
-        </Badge>
+        </PriceTagBadge>
       )}
       <Card.Body className="pb-0">
-        <div className="d-flex justify-content-end align-items-baseline">
+        <PriceAmountRow>
           <h4>
             {getCurrency(price.price / 100, {
               currency: price.currency,
             })}
           </h4>
-          <div>/</div>
-          <div>
+          <span>/</span>
+          <PriceRecurrence>
             {price.recurrence.count} {price.recurrence.interval}
-          </div>
-        </div>
+          </PriceRecurrence>
+        </PriceAmountRow>
       </Card.Body>
-      <hr className="mx-2" />
+      <PriceDivider />
       <Card.Body className="pt-0">
-        <ListGroup>
-          <ListGroup.Item className="d-flex align-items-center">
-            <FontAwesomeIcon icon={faCircleCheck} className="s-1" />
-            <span className="ps-2">No ads</span>
-          </ListGroup.Item>
-          <ListGroup.Item className="d-flex align-items-center">
-            <FontAwesomeIcon icon={faPerson} className="s-1" />
-            <span className="ps-2">10 Player slots</span>
-          </ListGroup.Item>
-          <ListGroup.Item className="d-flex align-items-center">
-            <FontAwesomeIcon icon={faPeopleGroup} className="s-1" />
-            <span className="ps-2">1 Guild slot</span>
-          </ListGroup.Item>
-          <ListGroup.Item className="d-flex align-items-center">
-            <FontAwesomeIcon icon={faCircleQuestion} className="s-1" />
-            <span className="ps-2">Premium support</span>
-          </ListGroup.Item>
-        </ListGroup>
+        <PriceFeatureList>
+          {features.map((feature) => (
+            <PriceFeatureItem key={feature.label}>
+              <FontAwesomeIcon icon={faCircleCheck} />
+              <span>{feature.label}</span>
+            </PriceFeatureItem>
+          ))}
+        </PriceFeatureList>
       </Card.Body>
 
       <Card.Footer>
-        <div className="d-flex justify-content-stretch">
-          <Button
-            variant="primary"
-            style={{ width: "100%" }}
-            className="d-flex align-items-center"
-            onClick={() => onSelect && onSelect(price.id)}
-          >
-            <FontAwesomeIcon icon={faStripe} className="s-2" />
-            <div>Checkout</div>
-          </Button>
-        </div>
+        <PriceCheckoutButton type="button" onClick={() => onSelect?.(price.id)}>
+          <FontAwesomeIcon icon={faStripe} />
+          <span>Checkout</span>
+        </PriceCheckoutButton>
       </Card.Footer>
-    </Card>
+    </PriceCardRoot>
   );
 };
 

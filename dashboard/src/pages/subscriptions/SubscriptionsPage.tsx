@@ -3,9 +3,10 @@ import Loader from "components/common/Loader";
 import NoData from "components/common/NoData";
 import SubscriptionCard from "components/subscriptions/SubscriptionCard";
 import SubscriptionCardStripe from "components/subscriptions/SubscriptionCardStripe";
+import SubscriptionsEmptyState from "components/subscriptions/SubscriptionsEmptyState";
 import { isSubscriptionActiveAndUnassiged } from "helpers/subscriptions";
 import { Stack } from "react-bootstrap";
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { useFetchSubscriptionsQuery } from "store/api/subscriptions";
 import { ISubscriptionBase } from "types/subscription";
 
@@ -34,14 +35,7 @@ const SubscriptionsPage = () => {
     if (!subscriptions.data) return <NoData />;
 
     if (subscriptions.data.length === 0) {
-      return (
-        <h5 className="d-flex justify-content-center py-5">
-          <span>
-            No subscriptions. Please visit the{" "}
-            <Link to="/premium">Premium Page</Link> to purchase one.
-          </span>
-        </h5>
-      );
+      return <SubscriptionsEmptyState />;
     }
 
     const sortedSubscriptions = [...subscriptions.data].sort(sortByExpireDate);

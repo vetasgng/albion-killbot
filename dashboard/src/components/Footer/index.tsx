@@ -1,37 +1,44 @@
 import { faDiscord, faGithub } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Paper from "components/Paper";
 import { DISCORD_SERVER_URL } from "helpers/discord";
-import StyledFooter from "./styles";
+import {
+  FooterCopyright,
+  FooterIconLink,
+  FooterRoot,
+  StyledFooter,
+} from "./styles";
 
 const Footer = () => {
+  const year = new Date().getFullYear();
+
   return (
-    <Paper elevation={0} className="d-flex justify-content-center">
+    <FooterRoot>
       <StyledFooter>
         <div className="footer-spacing d-none d-lg-flex" />
-        <div className="footer-copyright">
-          <div>© 2022 Black River Gaming</div>
+        <FooterCopyright>
+          <div>© {year} Black River Gaming</div>
           <div>All rights reserved</div>
-        </div>
+        </FooterCopyright>
         <div className="footer-icons">
-          <a
+          <FooterIconLink
             href={DISCORD_SERVER_URL}
             target="_blank"
-            className="navbar-link"
             rel="noreferrer"
+            aria-label="Join Discord server"
           >
             <FontAwesomeIcon icon={faDiscord} size="2x" />
-          </a>
-          <a
+          </FooterIconLink>
+          <FooterIconLink
             href="https://github.com/black-river-gaming/albion-killbot"
             target="_blank"
             rel="noreferrer"
+            aria-label="View on GitHub"
           >
             <FontAwesomeIcon icon={faGithub} size="2x" />
-          </a>
+          </FooterIconLink>
         </div>
       </StyledFooter>
-    </Paper>
+    </FooterRoot>
   );
 };
 
