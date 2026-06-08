@@ -1,11 +1,23 @@
-import Loader from "components/common/Loader";
+import DashboardManageableServerCard from "components/dashboard/DashboardManageableServerCard";
+import DashboardOtherServers from "components/dashboard/DashboardOtherServers";
 import DashboardEmptyState from "components/dashboard/DashboardEmptyState";
+import {
+  DashboardContent,
+  DashboardEyebrow,
+  DashboardHeader,
+  DashboardIntro,
+  DashboardSection,
+  DashboardSectionCount,
+  DashboardSectionDivider,
+  DashboardSectionHeader,
+  DashboardSectionTitle,
+  DashboardServerGrid,
+} from "components/dashboard/styles";
+import Loader from "components/common/Loader";
 import Page from "components/Page";
-import ServerCard from "components/ServerCard";
 import { getServerInviteUrl } from "helpers/discord";
-import { canManageServer } from "helpers/servers";
-import { Button, Col, OverlayTrigger, Row, Tooltip } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
+import { partitionUserServers } from "helpers/servers";
+import { useNavigate } from "react-router-dom";
 import { useFetchServersQuery } from "store/api";
 import { ServerPartial } from "types/server";
 
@@ -27,6 +39,10 @@ const DashboardPage = () => {
     );
   }
 
+  const { manageableServers, otherServers } = partitionUserServers(
+    servers.data ?? []
+  );
+
   let invitePopup: Window;
   const inviteToServer = (server: ServerPartial) => {
     if (!invitePopup || invitePopup.closed) {
@@ -47,64 +63,46 @@ const DashboardPage = () => {
     }
   };
 
-  const renderServer = (server: ServerPartial) => {
-    const manageable = canManageServer(server);
-
-    return (
-      <Col sm={6} lg={4} key={server.id}>
-        <ServerCard server={server} disabled={!manageable}>
-          <div className="d-flex justify-content-end">
-            {!manageable ? (
-              <OverlayTrigger
-                overlay={
-                  <Tooltip id={`no-access-${server.id}`}>
-                    Owner or Administrator permission required
-                  </Tooltip>
-                }
-              >
-                <span className="d-inline-block" tabIndex={0}>
-                  <Button variant="secondary" disabled style={{ pointerEvents: "none" }}>
-                    No access
-                  </Button>
-                </span>
-              </OverlayTrigger>
-            ) : server.bot ? (
-              <Link to={server.id}>
-                <Button variant="primary">Dashboard</Button>
-              </Link>
-            ) : (
-              <Button
-                variant="secondary"
-                onClick={() => inviteToServer(server)}
-              >
-                Invite
-              </Button>
-            )}
-          </div>
-        </ServerCard>
-      </Col>
-    );
-  };
-
   return (
-    <Page
-      title="Dashboard"
-      alerts={[
-        {
-          variant: "info",
-          message: (
-            <div>
-              <b>Can't find your server?</b> Please check if you are a server
-              owner or have the Administrator permissions.
-            </div>
-          ),
-        },
-      ]}
-    >
-      <Row className="g-4 align-self-center">
-        {servers.data && servers.data.map(renderServer)}
-      </Row>
-      {servers.data?.length === 0 && <DashboardEmptyState />}
+    <Page title="Dashboard">
+      <DashboardContent>
+        <DashboardHeader>
+          <DashboardEyebrow>Server management</DashboardEyebrow>
+          <DashboardIntro>
+            Choose a server to configure Albion Killbot, or invite the bot to a
+            server you manage.
+          </DashboardIntro>
+        </DashboardHeader>
+
+        {manageableServers.length > 0 ? (
+          <DashboardSection>
+            <DashboardSectionHeader>
+              <DashboardSectionTitle>Your servers</DashboardSectionTitle>
+              <DashboardSectionCount>
+                {manageableServers.length}
+              </DashboardSectionCount>
+            </DashboardSectionHeader>
+
+            <DashboardServerGrid>
+              {manageableServers.map((server) => (
+                <DashboardManageableServerCard
+                  key={server.id}
+                  server={server}
+                  onInvite={inviteToServer}
+                />
+              ))}
+            </DashboardServerGrid>
+          </DashboardSection>
+        ) : (
+          <DashboardEmptyState />
+        )}
+
+        {manageableServers.length > 0 && otherServers.length > 0 && (
+          <DashboardSectionDivider />
+        )}
+
+        <DashboardOtherServers servers={otherServers} />
+      </DashboardContent>
     </Page>
   );
 };
