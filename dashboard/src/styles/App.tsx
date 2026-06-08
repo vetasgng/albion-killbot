@@ -1,5 +1,16 @@
+import Paper from "components/Paper";
 import "react-cookienotice/dist/style.css";
 import styled from "styled-components";
+
+export const HomePaper = styled(Paper)`
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+`;
 
 export const ServerDashboardOutlet = styled.div`
   width: 100%;

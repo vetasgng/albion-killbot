@@ -12,9 +12,10 @@ interface PageProps {
   alerts?: IAlert[];
   title: string;
   children: ReactNode;
+  compact?: boolean;
 }
 
-const Page = ({ alerts, title, children }: PageProps) => {
+const Page = ({ alerts, title, children, compact = false }: PageProps) => {
   const renderAlert = (alert: IAlert, index: number) => {
     if (alert.show !== undefined && !alert.show) return;
     return (
@@ -25,7 +26,7 @@ const Page = ({ alerts, title, children }: PageProps) => {
   };
 
   return (
-    <Container fluid className="py-3">
+    <Container fluid={!compact} className="py-3">
       <ContentPanelRoot>
         <Stack gap={3}>
           {alerts?.map(renderAlert)}

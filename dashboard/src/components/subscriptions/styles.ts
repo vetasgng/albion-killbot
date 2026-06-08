@@ -16,7 +16,13 @@ export const PriceCardRoot = styled(Card)<{ $popular?: boolean }>`
   border-radius: ${({ theme }) => theme.layout.navItemRadius};
   box-shadow: none;
   overflow: hidden;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+
+  &:hover {
+    border-color: rgba(${({ theme }) => theme.rgb?.primary ?? "255,189,89"}, 0.28);
+    box-shadow: 0 10px 28px rgb(0 0 0 / 28%);
+    transform: translateY(-2px);
+  }
 
   ${({ $popular, theme }) =>
     $popular &&
@@ -24,6 +30,13 @@ export const PriceCardRoot = styled(Card)<{ $popular?: boolean }>`
       border-color: rgba(${theme.rgb?.primary ?? "255,189,89"}, 0.45);
       box-shadow: 0 0 0 1px rgba(${theme.rgb?.primary ?? "255,189,89"}, 0.2),
         0 8px 24px rgba(${theme.rgb?.primary ?? "255,189,89"}, 0.12);
+
+      &:hover {
+        border-color: rgba(${theme.rgb?.primary ?? "255,189,89"}, 0.58);
+        box-shadow: 0 0 0 1px rgba(${theme.rgb?.primary ?? "255,189,89"}, 0.28),
+          0 12px 32px rgba(${theme.rgb?.primary ?? "255,189,89"}, 0.18);
+        transform: translateY(-3px);
+      }
     `}
 
   .card-img-top {

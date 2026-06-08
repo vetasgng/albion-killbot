@@ -11,7 +11,7 @@ CommonJS (`require` / `module.exports`). Node 16.x. No TypeScript on server.
 ## Formatting (Prettier)
 
 - Double quotes, semicolons, trailing commas, 120 char width, 2-space indent
-- Run `npm run lint` and `npm run prettier` in `server/` before finishing
+- Before finishing, run in the API container: `ctl exec api npm run lint` and `ctl exec api npm run prettier` (see project overview for full `ctl` usage)
 
 ## Config and env
 

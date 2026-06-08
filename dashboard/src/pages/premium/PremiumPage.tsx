@@ -1,6 +1,9 @@
+import { faStripe } from "@fortawesome/free-brands-svg-icons";
+import { faCrown } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import AmbientPageShell from "components/layout/AmbientPageShell";
 import Loader from "components/common/Loader";
 import LoadError from "components/LoadError";
-import Page from "components/Page";
 import ServerSelect from "components/ServerSelect";
 import PremiumNoPlansEmptyState from "components/subscriptions/PremiumNoPlansEmptyState";
 import SubscriptionStripePriceCard from "components/subscriptions/SubscriptionStripePriceCard";
@@ -9,13 +12,28 @@ import {
   PremiumCurrencyLabel,
 } from "components/subscriptions/styles";
 import { useState } from "react";
-import { Button, Col, Dropdown, Modal, Row, Stack } from "react-bootstrap";
+import { Alert, Button, Col, Dropdown, Modal, Row } from "react-bootstrap";
 import { Link, useSearchParams } from "react-router-dom";
 import {
   useCreateSubscriptionCheckoutMutation,
   useFetchSubscriptionPricesQuery,
 } from "store/api/subscriptions";
 import { SubscriptionPrice } from "types/subscription";
+import {
+  PremiumCurrencyControl,
+  PremiumCurrencyToggle,
+  PremiumEyebrow,
+  PremiumFootnote,
+  PremiumHeader,
+  PremiumManageLink,
+  PremiumPageContent,
+  PremiumPanel,
+  PremiumPlansSection,
+  PremiumSubtitle,
+  PremiumTitle,
+  PremiumToolbar,
+  PremiumToolbarHint,
+} from "./styles";
 
 const PremiumPage = () => {
   const [currency, setCurrency] = useState("USD");
@@ -26,31 +44,39 @@ const PremiumPage = () => {
   const status = queryParams.get("status");
   const [priceId, setPriceId] = useState("");
 
-  if (createSubscriptionCheckout.isLoading) return <Loader />;
+  if (createSubscriptionCheckout.isLoading) {
+    return (
+      <AmbientPageShell compact>
+        <PremiumPageContent>
+          <Loader />
+        </PremiumPageContent>
+      </AmbientPageShell>
+    );
+  }
+
   if (createSubscriptionCheckout.isSuccess && createSubscriptionCheckout.data) {
     window.location.href = createSubscriptionCheckout.data.url;
   }
 
-  const renderCurrenciesDropdown = () => {
+  const renderCurrencyDropdown = () => {
     if (!pricesResponse.data?.currencies) return null;
 
     return (
-      <Stack direction="horizontal" gap={2} className="align-items-center">
-        <PremiumCurrencyLabel>Currency:</PremiumCurrencyLabel>
-
-        <Dropdown className="d-flex">
-          <Dropdown.Toggle variant="primary" id="currencies">
-            {currency?.toUpperCase() || "USD"}
-          </Dropdown.Toggle>
+      <PremiumCurrencyControl>
+        <PremiumCurrencyLabel>Currency</PremiumCurrencyLabel>
+        <Dropdown align="end">
+          <PremiumCurrencyToggle variant="primary" id="currencies">
+            {currency.toUpperCase() || "USD"}
+          </PremiumCurrencyToggle>
           <Dropdown.Menu as={PremiumCurrencyDropdownMenu}>
             {pricesResponse.data.currencies.map((item) => (
               <Dropdown.Item key={item} onClick={() => setCurrency(item)}>
-                {item?.toUpperCase() || "USD"}
+                {item.toUpperCase() || "USD"}
               </Dropdown.Item>
             ))}
           </Dropdown.Menu>
         </Dropdown>
-      </Stack>
+      </PremiumCurrencyControl>
     );
   };
 
@@ -68,9 +94,9 @@ const PremiumPage = () => {
     }
 
     return (
-      <Row className="gy-3">
+      <Row className="g-3">
         {pricesResponse.data.prices.map((price: SubscriptionPrice) => (
-          <Col key={price.id} sm={6} lg={4} xxl={3}>
+          <Col key={price.id} xs={12} md={6}>
             <SubscriptionStripePriceCard
               price={price}
               onSelect={() => setPriceId(price.id)}
@@ -81,48 +107,68 @@ const PremiumPage = () => {
     );
   };
 
+  const hasPlans = Boolean(pricesResponse.data?.prices.length);
+
   return (
-    <Page
-      alerts={[
-        {
-          show: status === "success",
-          variant: "success",
-          message: (
-            <>
-              <span>
-                Thank you for your purchase! Go to{" "}
-                <Link to="/subscriptions">Subscriptions</Link> to see your new
-                subscription.
-              </span>
-            </>
-          ),
-        },
-        {
-          show: status === "cancel",
-          variant: "danger",
-          message: "Purchase cancelled.",
-        },
-      ]}
-      title="Premium"
-    >
-      <Stack gap={3}>
-        <p className="mb-0 text-muted">
-          Choose a plan for your Discord server.
-        </p>
-        <div className="d-flex justify-content-end">
-          {renderCurrenciesDropdown()}
-        </div>
-        {renderPrices()}
-      </Stack>
+    <AmbientPageShell compact>
+      <PremiumPageContent>
+        <PremiumPanel>
+          {status === "success" && (
+            <Alert variant="success">
+              Thank you for your purchase! Go to{" "}
+              <Link to="/subscriptions">Subscriptions</Link> to see your new
+              subscription.
+            </Alert>
+          )}
+
+          {status === "cancel" && (
+            <Alert variant="danger">Purchase cancelled.</Alert>
+          )}
+
+          <PremiumHeader>
+            <PremiumEyebrow>
+              <FontAwesomeIcon icon={faCrown} aria-hidden />
+              Albion Killbot Premium
+            </PremiumEyebrow>
+            <PremiumTitle>Upgrade your server</PremiumTitle>
+            <PremiumSubtitle>
+              Unlock juicy kill alerts, higher tracking limits, and premium
+              features for your Discord server.
+            </PremiumSubtitle>
+          </PremiumHeader>
+
+          <PremiumToolbar>
+            <PremiumToolbarHint>
+              Select a plan, then choose which server to assign it to at
+              checkout.
+            </PremiumToolbarHint>
+            {renderCurrencyDropdown()}
+          </PremiumToolbar>
+
+          <PremiumPlansSection>{renderPrices()}</PremiumPlansSection>
+
+          {hasPlans && (
+            <PremiumFootnote>
+              Secure checkout powered by{" "}
+              <FontAwesomeIcon icon={faStripe} aria-hidden /> Stripe. Already
+              subscribed? Manage plans on the{" "}
+              <PremiumManageLink to="/subscriptions">
+                Subscriptions
+              </PremiumManageLink>{" "}
+              page.
+            </PremiumFootnote>
+          )}
+        </PremiumPanel>
+      </PremiumPageContent>
 
       <Modal
-        centered={true}
+        centered
         size="lg"
         show={priceId !== ""}
-        onExit={() => setPriceId("")}
+        onHide={() => setPriceId("")}
       >
-        <Modal.Header>
-          <Modal.Title>Please select a Server</Modal.Title>
+        <Modal.Header closeButton>
+          <Modal.Title>Select a server</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
@@ -137,14 +183,12 @@ const PremiumPage = () => {
         </Modal.Body>
 
         <Modal.Footer>
-          <div className="d-flex justify-content-end">
-            <Button variant="secondary" onClick={() => setPriceId("")}>
-              Cancel
-            </Button>
-          </div>
+          <Button variant="secondary" onClick={() => setPriceId("")}>
+            Cancel
+          </Button>
         </Modal.Footer>
       </Modal>
-    </Page>
+    </AmbientPageShell>
   );
 };
 

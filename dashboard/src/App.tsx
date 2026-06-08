@@ -5,11 +5,13 @@ import Header from "components/common/Header";
 import { ServerNavMobileProvider } from "helpers/serverNavMobile";
 import { CookieNotice } from "react-cookienotice";
 import { Outlet, useLocation } from "react-router-dom";
-import Container, { ServerDashboardOutlet } from "styles/App";
+import Container, { HomePaper, ServerDashboardOutlet } from "styles/App";
 
 export const App = () => {
   const location = useLocation();
   const isHome = location.pathname === "/";
+  const isPremium = location.pathname === "/premium";
+  const useAmbientPaper = isHome || isPremium;
   const isServerDashboard = /^\/dashboard\/[^/]+/.test(location.pathname);
 
   return (
@@ -17,8 +19,10 @@ export const App = () => {
       <Container>
         <Header />
         <Paper elevation={24} className="content">
-          {isHome ? (
-            <Outlet />
+          {useAmbientPaper ? (
+            <HomePaper elevation={0}>
+              <Outlet />
+            </HomePaper>
           ) : isServerDashboard ? (
             <ServerDashboardOutlet>
               <Outlet />

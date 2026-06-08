@@ -1,15 +1,31 @@
+import { faCrown } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import AmbientPageShell from "components/layout/AmbientPageShell";
 import {
-  EmptyStateRoot,
-  EmptyStateText,
-  EmptyStateTitle,
-} from "components/layout/ContentPanel";
+  PremiumEyebrow,
+  PremiumLoginPanel,
+  PremiumPageContent,
+  PremiumSubtitle,
+  PremiumTitle,
+} from "./styles";
 
 const PremiumLoginGate = () => {
   return (
-    <EmptyStateRoot>
-      <EmptyStateTitle>Sign in required</EmptyStateTitle>
-      <EmptyStateText>Please log in to see the available plans.</EmptyStateText>
-    </EmptyStateRoot>
+    <AmbientPageShell compact>
+      <PremiumPageContent>
+        <PremiumLoginPanel>
+          <PremiumEyebrow>
+            <FontAwesomeIcon icon={faCrown} aria-hidden />
+            Albion Killbot Premium
+          </PremiumEyebrow>
+          <PremiumTitle>Premium plans</PremiumTitle>
+          <PremiumSubtitle>
+            Sign in with Discord using the button below to view available plans
+            and upgrade your server.
+          </PremiumSubtitle>
+        </PremiumLoginPanel>
+      </PremiumPageContent>
+    </AmbientPageShell>
   );
 };
 

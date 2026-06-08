@@ -1,4 +1,7 @@
-import { faArrowRight, faRightToBracket } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowRight,
+  faRightToBracket,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { DISCORD_OAUTH_URL } from "helpers/discord";
 import {

@@ -2,36 +2,26 @@ import { Card, Carousel, Image } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import styled, { css, keyframes } from "styled-components";
 
-const homeOrbDriftPrimary = keyframes`
+export {
+  AmbientAuroraLayer as HomeAuroraLayer,
+  AmbientBackground as HomeBackground,
+  AmbientGlowOrb as HomeGlowOrb,
+  AmbientGridOverlay as HomeGridOverlay,
+  AmbientNoiseOverlay as HomeNoiseOverlay,
+  AmbientPageRoot as HomeRoot,
+  AmbientVignette as HomeVignette,
+} from "components/layout/styles";
+
+const homeCarouselGlow = keyframes`
   0%,
   100% {
-    transform: translate(0, 0) scale(1);
+    opacity: 0.72;
+    transform: scale(1);
   }
 
   50% {
-    transform: translate(4%, -3%) scale(1.06);
-  }
-`;
-
-const homeOrbDriftSecondary = keyframes`
-  0%,
-  100% {
-    transform: translate(0, 0) scale(1);
-  }
-
-  50% {
-    transform: translate(-5%, 4%) scale(1.08);
-  }
-`;
-
-const homeOrbPulse = keyframes`
-  0%,
-  100% {
-    opacity: 0.35;
-  }
-
-  50% {
-    opacity: 0.55;
+    opacity: 1;
+    transform: scale(1.08);
   }
 `;
 
@@ -55,122 +45,6 @@ const lightboxImageIn = keyframes`
     opacity: 1;
     transform: scale(1);
   }
-`;
-
-export const HomeRoot = styled.div`
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  min-height: 100%;
-`;
-
-export const HomeBackground = styled.div`
-  position: absolute;
-  inset: -1px;
-  z-index: 0;
-  pointer-events: none;
-  overflow: hidden;
-  background: radial-gradient(
-      ellipse 120% 80% at 50% -20%,
-      rgba(${({ theme }) => theme.rgb?.primary ?? "255,189,89"}, 0.08) 0%,
-      transparent 55%
-    ),
-    ${({ theme }) => theme.background};
-`;
-
-export const HomeGlowOrb = styled.div<{ $variant: "primary" | "accent" | "depth" }>`
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(72px);
-  will-change: transform;
-
-  ${({ $variant, theme }) => {
-    const primaryRgb = theme.rgb?.primary ?? "255,189,89";
-
-    switch ($variant) {
-      case "primary":
-        return css`
-          top: -12%;
-          left: -8%;
-          width: min(52vw, 28rem);
-          height: min(52vw, 28rem);
-          background: radial-gradient(
-            circle,
-            rgba(${primaryRgb}, 0.34) 0%,
-            rgba(${primaryRgb}, 0.08) 45%,
-            transparent 72%
-          );
-          animation: ${homeOrbDriftPrimary} 18s ease-in-out infinite;
-        `;
-      case "accent":
-        return css`
-          right: -10%;
-          bottom: 8%;
-          width: min(44vw, 22rem);
-          height: min(44vw, 22rem);
-          background: radial-gradient(
-            circle,
-            rgba(${primaryRgb}, 0.22) 0%,
-            rgba(${primaryRgb}, 0.05) 50%,
-            transparent 72%
-          );
-          animation: ${homeOrbDriftSecondary} 22s ease-in-out infinite;
-        `;
-      case "depth":
-        return css`
-          top: 38%;
-          right: 18%;
-          width: min(36vw, 16rem);
-          height: min(36vw, 16rem);
-          background: radial-gradient(
-            circle,
-            rgba(59, 104, 163, 0.18) 0%,
-            rgba(59, 104, 163, 0.05) 50%,
-            transparent 72%
-          );
-          animation: ${homeOrbPulse} 14s ease-in-out infinite;
-        `;
-    }
-  }}
-
-  @media (prefers-reduced-motion: reduce) {
-    animation: none;
-  }
-`;
-
-export const HomeGridOverlay = styled.div`
-  position: absolute;
-  inset: -1px;
-  opacity: 0.45;
-  background-image: linear-gradient(
-      rgba(255, 255, 255, 0.035) 1px,
-      transparent 1px
-    ),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
-  background-size: 3rem 3rem;
-  mask-image: radial-gradient(
-    ellipse 85% 70% at 50% 35%,
-    rgb(0 0 0 / 0.85) 15%,
-    transparent 78%
-  );
-`;
-
-export const HomeNoiseOverlay = styled.div`
-  position: absolute;
-  inset: -1px;
-  opacity: 0.35;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.45'/%3E%3C/svg%3E");
-  mix-blend-mode: soft-light;
-`;
-
-export const HomeVignette = styled.div`
-  position: absolute;
-  inset: -1px;
-  background: radial-gradient(
-    ellipse 95% 85% at 50% 40%,
-    transparent 50%,
-    rgba(0, 0, 0, 0.28) 100%
-  );
 `;
 
 export const HomeContent = styled.div`
@@ -479,10 +353,7 @@ const heroSecondaryActionStyles = css`
       0.55
     );
     box-shadow: 0 6px 20px rgb(0 0 0 / 30%),
-      0 0 0 1px rgba(
-        ${({ theme }) => theme.rgb?.primary ?? "255,189,89"},
-        0.15
-      );
+      0 0 0 1px rgba(${({ theme }) => theme.rgb?.primary ?? "255,189,89"}, 0.15);
     transform: translateY(-1px);
 
     ${HeroDashboardLabel} svg {
@@ -527,15 +398,42 @@ export const HeroLoginLink = styled.a`
 `;
 
 export const HeroCarouselWrap = styled.div`
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   min-width: 0;
   width: 100%;
-  max-width: 420px;
+  max-width: 520px;
   margin-inline: auto;
   justify-self: center;
   align-self: center;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: -20%;
+    z-index: 0;
+    border-radius: 50%;
+    background: radial-gradient(
+      ellipse at center,
+      rgba(${({ theme }) => theme.rgb?.primary ?? "255,189,89"}, 0.42) 0%,
+      rgba(59, 104, 163, 0.16) 38%,
+      transparent 68%
+    );
+    filter: blur(22px);
+    animation: ${homeCarouselGlow} 10s ease-in-out infinite;
+    pointer-events: none;
+
+    @media (prefers-reduced-motion: reduce) {
+      animation: none;
+    }
+  }
+
+  > * {
+    position: relative;
+    z-index: 1;
+  }
 `;
 
 export const HeroCarouselRoot = styled(Carousel)`
@@ -543,8 +441,7 @@ export const HeroCarouselRoot = styled(Carousel)`
   border-radius: ${({ theme }) => theme.layout.navItemRadius};
   border: 1px solid
     rgba(${({ theme }) => theme.rgb?.primary ?? "255,189,89"}, 0.25);
-  box-shadow: 0 12px 32px rgb(0 0 0 / 50%),
-    0 0 0 1px rgba(255, 255, 255, 0.04);
+  box-shadow: 0 12px 32px rgb(0 0 0 / 50%), 0 0 0 1px rgba(255, 255, 255, 0.04);
   overflow: hidden;
   background-color: transparent;
 
@@ -578,19 +475,60 @@ export const HeroCarouselRoot = styled(Carousel)`
 
   .carousel-control-prev,
   .carousel-control-next {
-    width: 2.25rem;
-    opacity: 0.9;
+    width: 3.5rem;
+    opacity: 1;
+    z-index: 3;
+
+    &:focus,
+    &:focus-visible,
+    &:active {
+      outline: none;
+      box-shadow: none !important;
+    }
+  }
+
+  .carousel-control-prev {
+    left: 0.65rem;
+  }
+
+  .carousel-control-next {
+    right: 0.65rem;
   }
 
   .carousel-control-prev-icon,
   .carousel-control-next-icon {
-    width: 1.35rem;
-    height: 1.35rem;
-    border-radius: 50%;
-    background-color: rgba(0, 0, 0, 0.45);
-    background-size: 65% 65%;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 0;
+    border-radius: ${({ theme }) => theme.layout.navItemRadius};
+    background-color: rgba(0, 0, 0, 0.72);
+    background-size: 52% 52%;
+    box-shadow: 0 2px 10px rgb(0 0 0 / 55%);
     filter: invert(77%) sepia(44%) saturate(629%) hue-rotate(337deg)
       brightness(103%) contrast(101%);
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    outline: none;
+  }
+
+  .carousel-control-prev:hover .carousel-control-prev-icon,
+  .carousel-control-next:hover .carousel-control-next-icon {
+    background-color: rgba(
+      ${({ theme }) => theme.rgb?.primary ?? "255,189,89"},
+      0.22
+    );
+    transform: scale(1.06);
+  }
+
+  .carousel-control-prev:focus .carousel-control-prev-icon,
+  .carousel-control-next:focus .carousel-control-next-icon,
+  .carousel-control-prev:focus-visible .carousel-control-prev-icon,
+  .carousel-control-next:focus-visible .carousel-control-next-icon,
+  .carousel-control-prev:active .carousel-control-prev-icon,
+  .carousel-control-next:active .carousel-control-next-icon {
+    outline: none;
+    box-shadow: 0 2px 10px rgb(0 0 0 / 55%);
+    background-color: rgba(0, 0, 0, 0.72);
+    transform: none;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -618,7 +556,7 @@ export const HeroCarouselSlideButton = styled.button`
 export const HeroCarouselSlideImage = styled.img`
   display: block;
   width: 100%;
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 1 / 1;
   object-fit: cover;
   object-position: top center;
   pointer-events: none;
@@ -664,7 +602,8 @@ export const ScreenshotLightboxImage = styled.img<{ $animate?: boolean }>`
   ${({ $animate }) =>
     $animate &&
     css`
-      animation: ${lightboxImageIn} 0.28s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      animation: ${lightboxImageIn} 0.28s cubic-bezier(0.22, 1, 0.36, 1)
+        forwards;
     `}
 
   @media (prefers-reduced-motion: reduce) {
@@ -696,7 +635,8 @@ export const ScreenshotLightboxIconButton = styled.button`
   border-radius: ${({ theme }) => theme.layout.navItemRadius};
   background-color: rgba(255, 255, 255, 0.08);
   color: ${({ theme }) => theme.text};
-  transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
+  transition: border-color 0.2s ease, color 0.2s ease,
+    background-color 0.2s ease;
 
   svg {
     width: 1rem;
@@ -779,8 +719,7 @@ export const FeatureCard = styled(Card)<{ $highlight?: boolean }>`
   );
   border: 1px solid ${({ theme }) => theme.borderSubtle};
   border-radius: ${({ theme }) => theme.layout.navItemRadius};
-  transition: border-color 0.2s ease, box-shadow 0.2s ease,
-    transform 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 
   ${({ $highlight, theme }) =>
     $highlight &&

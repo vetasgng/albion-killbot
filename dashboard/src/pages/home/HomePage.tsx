@@ -1,13 +1,14 @@
+import AmbientPageShell from "components/layout/AmbientPageShell";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import screenshot1 from "assets/screenshots/970551093-event.png";
-import screenshot2 from "assets/screenshots/971842546-event.png";
-import screenshot3 from "assets/screenshots/971900762-event.png";
-import screenshot4 from "assets/screenshots/971905670-event.png";
+import screenshot1 from "assets/screenshots/carousel1.png";
+import screenshot2 from "assets/screenshots/carousel2.png";
+import screenshot3 from "assets/screenshots/carousel3.png";
+import screenshot4 from "assets/screenshots/carousel4.png";
 import logo from "assets/logo_dark.svg";
-import wallpapper from "assets/wallpappers/call_to_arms.jpeg";
+import wallpapper from "assets/wallpappers/home_hero_bg.png";
 import { getUserPictureUrl } from "helpers/discord";
-import { Button, Col, Row } from "react-bootstrap";
+import { Col, Row } from "react-bootstrap";
 import { useFetchUserQuery } from "store/api";
 import { homeFeatures } from "./features";
 import HeroInviteButton from "./HeroInviteButton";
@@ -35,13 +36,7 @@ import {
   HeroEyebrow,
   HeroSubtitle,
   HeroTitle,
-  HomeBackground,
   HomeContent,
-  HomeGlowOrb,
-  HomeGridOverlay,
-  HomeNoiseOverlay,
-  HomeRoot,
-  HomeVignette,
   Section,
   SectionHeader,
   SectionSubtitle,
@@ -54,16 +49,7 @@ const HomePage = () => {
   const user = useFetchUserQuery();
 
   return (
-    <HomeRoot>
-      <HomeBackground aria-hidden>
-        <HomeGlowOrb $variant="primary" />
-        <HomeGlowOrb $variant="accent" />
-        <HomeGlowOrb $variant="depth" />
-        <HomeGridOverlay />
-        <HomeNoiseOverlay />
-        <HomeVignette />
-      </HomeBackground>
-
+    <AmbientPageShell>
       <HomeContent>
         <Hero $heroImage={wallpapper}>
           <HeroContent>
@@ -73,9 +59,9 @@ const HomePage = () => {
             </HeroEyebrow>
             <HeroTitle>Never miss a kill in your guild</HeroTitle>
             <HeroSubtitle>
-              Albion Killbot posts rich Discord notifications for kills, battles,
-              and rankings — with a dashboard to configure tracking for every
-              server you manage.
+              Albion Killbot posts rich Discord notifications for kills,
+              battles, and rankings — with a dashboard to configure tracking for
+              every server you manage.
             </HeroSubtitle>
             <HeroActions>
               <HeroInviteButton />
@@ -110,8 +96,8 @@ const HomePage = () => {
           <SectionHeader>
             <SectionTitle>Everything you need to stay informed</SectionTitle>
             <SectionSubtitle>
-              From individual kill alerts to battle summaries and fame rankings —
-              configure what matters for your server.
+              From individual kill alerts to battle summaries and fame rankings
+              — configure what matters for your server.
             </SectionSubtitle>
           </SectionHeader>
           <Row className="g-3 g-md-4">
@@ -138,7 +124,9 @@ const HomePage = () => {
                       </FeatureIconWrap>
                       <FeatureTitle>{feature.name}</FeatureTitle>
                     </FeatureCardHeader>
-                    <FeatureDescription>{feature.description}</FeatureDescription>
+                    <FeatureDescription>
+                      {feature.description}
+                    </FeatureDescription>
                   </div>
                 </FeatureCard>
               </Col>
@@ -158,7 +146,7 @@ const HomePage = () => {
           />
         </CtaSection>
       </HomeContent>
-    </HomeRoot>
+    </AmbientPageShell>
   );
 };
 

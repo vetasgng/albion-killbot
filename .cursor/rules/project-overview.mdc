@@ -19,9 +19,49 @@ Started via `server/bin/start.js` with `--mode` or `MODE` env var:
 
 ## Local development
 
-Prefer Docker: `ctl start` (from `npm link` on root `ctl.sh`). Logs: `ctl logs [component]`. Full restart when subprocesses misbehave: `ctl restart`.
+Prefer Docker via [`devenv/ctl.sh`](devenv/ctl.sh). Link it once from the repo root: `npm link --prefix devenv` (then use `ctl` globally), or run `./devenv/ctl.sh` directly.
 
 Env: `server/.env` needs at least `DISCORD_TOKEN`; MongoDB, AMQP, and other vars per `server/src/config/default.js`.
+
+### `ctl` commands
+
+| Command | Description |
+|---------|-------------|
+| `ctl start` | Start the full stack (detached) |
+| `ctl start [component]` | Start one service |
+| `ctl stop` | Stop the full stack |
+| `ctl stop [component]` | Stop and remove one service |
+| `ctl restart` | Restart the stack |
+| `ctl restart [component]` | Restart one service |
+| `ctl build [component]` | Build Docker image(s) |
+| `ctl logs [component]` | Follow logs (`ctrl+c` to exit) |
+| `ctl shell [component]` | Open an interactive bash shell in a container |
+| `ctl exec [component] [cmd...]` | Run a one-off command in a container |
+| `ctl migrate` | Run database migrations |
+| `ctl cmd <compose-args>` | Passthrough to `docker compose` |
+| `ctl help` | List commands and components |
+
+**App components** (for `shell`, `exec`, `logs`, `restart`): `crawler`, `bot`, `api`, `dashboard`.
+
+Infrastructure also runs in compose (`mongodb`, `amqp`, `nginx`, `stripe`) but app work usually targets the four components above.
+
+### Running package scripts in containers
+
+Prefer `ctl exec` over host `npm` when the dev stack is up — Node/tooling versions match the container and paths resolve correctly.
+
+```bash
+# Dashboard — lint, typecheck, format (before finishing dashboard UI work)
+ctl exec dashboard npm run lint
+ctl exec dashboard npx tsc --noEmit
+ctl exec dashboard npm run prettier
+ctl exec dashboard npx prettier --write src/pages/home/
+
+# Server — lint and format
+ctl exec api npm run lint
+ctl exec api npm run prettier
+```
+
+Use `ctl logs api`, `ctl logs bot`, etc. when debugging runtime issues. Full restart when subprocesses misbehave: `ctl restart` or `ctl restart [component]`.
 
 **Dashboard dev server:** Use **Albion Nexus - Development** for local UI testing and demos (`/dashboard/1447669162917761047/...`). Do not use Albion Killbot or other guilds unless explicitly asked.
 

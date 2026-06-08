@@ -27,7 +27,9 @@ interface HeroScreenshotCarouselProps {
 const HeroScreenshotCarousel = ({
   screenshots,
 }: HeroScreenshotCarouselProps) => {
-  const prefersReducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
+  const prefersReducedMotion = useMediaQuery(
+    "(prefers-reduced-motion: reduce)"
+  );
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   const closeLightbox = useCallback(() => {
@@ -35,18 +37,16 @@ const HeroScreenshotCarousel = ({
   }, []);
 
   const showPrevious = useCallback(() => {
-    setLightboxIndex(
-      (current) =>
-        current === null
-          ? null
-          : (current - 1 + screenshots.length) % screenshots.length
+    setLightboxIndex((current) =>
+      current === null
+        ? null
+        : (current - 1 + screenshots.length) % screenshots.length
     );
   }, [screenshots.length]);
 
   const showNext = useCallback(() => {
-    setLightboxIndex(
-      (current) =>
-        current === null ? null : (current + 1) % screenshots.length
+    setLightboxIndex((current) =>
+      current === null ? null : (current + 1) % screenshots.length
     );
   }, [screenshots.length]);
 
@@ -122,7 +122,9 @@ const HeroScreenshotCarousel = ({
           $animate={!prefersReducedMotion}
           onClick={closeLightbox}
         >
-          <ScreenshotLightboxToolbar onClick={(event) => event.stopPropagation()}>
+          <ScreenshotLightboxToolbar
+            onClick={(event) => event.stopPropagation()}
+          >
             <ScreenshotLightboxIconButton
               type="button"
               onClick={closeLightbox}
