@@ -12,7 +12,7 @@ const defaultSettings: ISettings = {
     showAttunement: false,
     guildTags: false,
     splitLootValue: false,
-    combinedEventImage: false,
+    combinedEventImage: true,
   },
   kills: {
     enabled: true,

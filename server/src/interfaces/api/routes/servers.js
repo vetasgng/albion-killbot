@@ -129,7 +129,7 @@ router.use(`/:serverId`, serverAdmin);
  *            combinedEventImage:
  *              type: boolean
  *              description: Append victim inventory to kill report images
- *              default: false
+ *              default: true
  *        battles:
  *          allOf:
  *          - $ref: '#/components/schemas/Category'
