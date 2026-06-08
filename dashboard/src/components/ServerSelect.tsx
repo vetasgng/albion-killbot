@@ -1,6 +1,7 @@
 import Loader from "components/common/Loader";
 import ServerCard from "components/ServerCard";
 import { Button, Col, Row } from "react-bootstrap";
+import { canManageServer } from "helpers/servers";
 import { useFetchServersQuery } from "store/api";
 
 interface Props {
@@ -12,7 +13,10 @@ const ServerSelect = ({ hiddenServerIds = [], onSelect }: Props) => {
   const servers = useFetchServersQuery();
 
   const availableServers = servers.data?.filter(
-    (server) => server.bot && hiddenServerIds.indexOf(server.id) === -1
+    (server) =>
+      canManageServer(server) &&
+      server.bot &&
+      hiddenServerIds.indexOf(server.id) === -1
   );
 
   return (

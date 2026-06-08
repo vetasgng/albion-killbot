@@ -1,7 +1,17 @@
 import { Card } from "react-bootstrap";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
-const StyledServerCard = styled(Card)`
+const disabledStyles = css`
+  opacity: 0.55;
+  filter: grayscale(0.35);
+
+  .server-name {
+    color: ${({ theme }) => theme.mutedText};
+  }
+`;
+
+const StyledServerCard = styled(Card)<{ $disabled?: boolean }>`
+  ${({ $disabled }) => $disabled && disabledStyles}
   .server-img-blurred {
     padding: 1rem;
     max-height: 120px;

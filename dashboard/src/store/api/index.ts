@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { sortUserServers } from "helpers/servers";
 import { IServer, ServerPartial } from "types/server";
 import { ISettings } from "types/settings";
 import { ISearchResults, ITrackList } from "types/track";
@@ -38,6 +39,7 @@ const api = createApi({
     }),
     fetchServers: builder.query<ServerPartial[], void>({
       query: () => `/servers`,
+      transformResponse: sortUserServers,
       providesTags: ["Server"],
     }),
     fetchServer: builder.query<IServer, string>({

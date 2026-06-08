@@ -3,7 +3,8 @@ import DashboardEmptyState from "components/dashboard/DashboardEmptyState";
 import Page from "components/Page";
 import ServerCard from "components/ServerCard";
 import { getServerInviteUrl } from "helpers/discord";
-import { Button, Col, Row } from "react-bootstrap";
+import { canManageServer } from "helpers/servers";
+import { Button, Col, OverlayTrigger, Row, Tooltip } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { useFetchServersQuery } from "store/api";
 import { ServerPartial } from "types/server";
@@ -47,11 +48,27 @@ const DashboardPage = () => {
   };
 
   const renderServer = (server: ServerPartial) => {
+    const manageable = canManageServer(server);
+
     return (
       <Col sm={6} lg={4} key={server.id}>
-        <ServerCard server={server}>
+        <ServerCard server={server} disabled={!manageable}>
           <div className="d-flex justify-content-end">
-            {server.bot ? (
+            {!manageable ? (
+              <OverlayTrigger
+                overlay={
+                  <Tooltip id={`no-access-${server.id}`}>
+                    Owner or Administrator permission required
+                  </Tooltip>
+                }
+              >
+                <span className="d-inline-block" tabIndex={0}>
+                  <Button variant="secondary" disabled style={{ pointerEvents: "none" }}>
+                    No access
+                  </Button>
+                </span>
+              </OverlayTrigger>
+            ) : server.bot ? (
               <Link to={server.id}>
                 <Button variant="primary">Dashboard</Button>
               </Link>

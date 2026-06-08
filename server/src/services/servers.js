@@ -25,15 +25,14 @@ async function getBotServers() {
 async function getServers(accessToken) {
   try {
     const servers = await discord.getUserGuilds(accessToken);
-    const serverIds = servers.map((server) => server.id);
-    const hasServerSettings = await settingsService.hasServerSettings(serverIds);
+    const isAdminServer = (server) => server.owner || server.admin;
+    const adminServers = servers.filter(isAdminServer);
+    const botPresence = await discord.hasBotInGuilds(adminServers.map((server) => server.id));
 
-    return servers
-      .filter((server) => server.owner || server.admin)
-      .map((server) => {
-        server.bot = hasServerSettings[server.id];
-        return server;
-      });
+    return servers.map((server) => {
+      server.bot = isAdminServer(server) ? (botPresence[server.id] ?? false) : false;
+      return server;
+    });
   } catch (error) {
     logger.error(`Error while retrieving user guilds: ${error.message}`, { error });
     throw error;

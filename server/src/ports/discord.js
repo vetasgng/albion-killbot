@@ -1,7 +1,7 @@
 const config = require("config");
 const discordApiClient = require("./adapters/discordApiClient");
 const discordHelper = require("../helpers/discord");
-const { memoize } = require("../helpers/cache");
+const { memoize, remove } = require("../helpers/cache");
 const { DAY, MINUTE, SECOND } = require("../helpers/constants");
 const { sleep } = require("../helpers/scheduler");
 
@@ -108,7 +108,36 @@ async function getGuildChannels(guildId) {
 
 async function leaveGuild(guildId) {
   await discordApiClient.leaveGuild(`Bot ${DISCORD_TOKEN}`, guildId);
+  remove("discord.botGuilds");
+  remove(`discord.botInGuild.${guildId}`);
+  remove(`discord.guilds.${guildId}`);
+  remove(`discord.guilds.${guildId}.channels`);
   return true;
+}
+
+async function isBotInGuild(guildId) {
+  return memoize(
+    `discord.botInGuild.${guildId}`,
+    async () => {
+      try {
+        await discordApiClient.getGuild(`Bot ${DISCORD_TOKEN}`, guildId);
+        return true;
+      } catch (error) {
+        if (error.response?.status === 404) return false;
+        throw error;
+      }
+    },
+    {
+      timeout: MINUTE,
+    },
+  );
+}
+
+async function hasBotInGuilds(guildIds = []) {
+  const uniqueGuildIds = [...new Set(guildIds)];
+  const presence = await Promise.all(uniqueGuildIds.map((guildId) => isBotInGuild(guildId)));
+
+  return Object.fromEntries(uniqueGuildIds.map((guildId, index) => [guildId, presence[index]]));
 }
 
 const addMemberRole = (guildId, memberId, roleId, reason) => {
@@ -163,6 +192,8 @@ module.exports = {
   getCurrentUser,
   getUser,
   getUserGuilds,
+  hasBotInGuilds,
+  isBotInGuild,
   leaveGuild,
   refreshToken,
   removeMemberRole,

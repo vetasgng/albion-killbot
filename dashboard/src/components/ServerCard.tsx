@@ -8,6 +8,7 @@ interface ServerCardProps {
   server?: ServerBase;
   list?: boolean;
   loading?: boolean;
+  disabled?: boolean;
   header?: JSX.Element | string | number;
   children?: JSX.Element | string | number;
 }
@@ -16,6 +17,7 @@ const ServerCard = ({
   server,
   list = false,
   loading = false,
+  disabled = false,
   header,
   children,
 }: ServerCardProps) => {
@@ -37,7 +39,11 @@ const ServerCard = ({
     if (!server) return null;
 
     return (
-      <Card>
+      <Card
+        style={
+          disabled ? { opacity: 0.55, filter: "grayscale(0.35)" } : undefined
+        }
+      >
         {header}
         <Row className="gy-2 p-3">
           <Col xs={12} md={6} className="d-flex align-items-center">
@@ -84,7 +90,7 @@ const ServerCard = ({
 
   if (!server) return null;
   return (
-    <StyledServerCard>
+    <StyledServerCard $disabled={disabled}>
       {header}
       <Card.Body>
         <div style={{ position: "relative" }}>
