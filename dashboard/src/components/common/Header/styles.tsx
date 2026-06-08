@@ -40,10 +40,50 @@ export const HeaderNavbar = styled(Navbar)`
   }
 `;
 
+export const HeaderBrandGroup = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 1;
+  min-width: 0;
+  margin-right: auto;
+`;
+
+export const HeaderServerNavButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  flex-shrink: 0;
+  border: 1px solid ${({ theme }) => theme.borderSubtle};
+  border-radius: ${({ theme }) => theme.layout.navItemRadius};
+  background-color: ${({ theme }) => theme.surfaceElevated};
+  background-image: linear-gradient(
+    rgba(255, 255, 255, 0.04),
+    rgba(255, 255, 255, 0.04)
+  );
+  color: ${({ theme }) => theme.text};
+  transition: border-color 0.2s ease, color 0.2s ease;
+
+  svg {
+    width: 1rem;
+  }
+
+  &:hover {
+    border-color: rgba(
+      ${({ theme }) => theme.rgb?.primary ?? "255,189,89"},
+      0.45
+    );
+    color: ${({ theme }) => theme.primary};
+  }
+`;
+
 export const HeaderBrand = styled(Navbar.Brand)`
   flex-shrink: 1;
   min-width: 0;
-  margin-right: 1rem;
+  margin-right: 0;
   padding: 0;
 
   img {

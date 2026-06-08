@@ -25,15 +25,20 @@ Server-scoped routes (`/dashboard/:serverId/*`) use a shared shell:
 
 - [`constants/serverNav.ts`](dashboard/src/constants/serverNav.ts) — grouped nav sections, item metadata (path, name, icon, description), and `getServerNavItem()`
 - [`components/dashboard/server/ServerLayout.tsx`](dashboard/src/components/dashboard/server/ServerLayout.tsx) — sidebar + page header + outlet wrapper
-- [`components/dashboard/server/ServerPageHeader.tsx`](dashboard/src/components/dashboard/server/ServerPageHeader.tsx) — page title row with nav icon, premium badge, and mobile menu button
+- [`components/dashboard/server/ServerPageHeader.tsx`](dashboard/src/components/dashboard/server/ServerPageHeader.tsx) — page title row with nav icon and premium badge
+- Mobile server nav opens from [`Header.tsx`](dashboard/src/components/common/Header.tsx) (`HeaderServerNavButton` next to the logo) via [`helpers/serverNavMobile.tsx`](dashboard/src/helpers/serverNavMobile.tsx); offcanvas lives in `ServerLayout`
 - Desktop: sticky grouped sidebar; mobile: Offcanvas nav from header menu button
 - Layout/nav tokens live in [`helpers/theme.ts`](dashboard/src/helpers/theme.ts) (`layout`, `nav`, `layout.padding`, `layout.breakpoints`)
 
 ## Site header
 
-[`components/common/Header.tsx`](dashboard/src/components/common/Header.tsx) + [`Header/styles.tsx`](dashboard/src/components/common/Header/styles.tsx) — global navbar with theme-aligned surface, compact logo, pill user menu, and polished mobile collapse nav.
+[`components/common/Header.tsx`](dashboard/src/components/common/Header.tsx) + [`Header/styles.tsx`](dashboard/src/components/common/Header/styles.tsx) — global navbar with theme-aligned surface, compact logo, pill user menu, polished mobile collapse nav, and `HeaderServerNavButton` on server dashboard routes
 
 Add or rename server sub-routes in `serverNav.ts` and `routes.tsx` together.
+
+## Home page
+
+[`pages/home/HomePage.tsx`](dashboard/src/pages/home/HomePage.tsx) — landing page with hero (invite + login/dashboard CTAs, screenshot carousel), feature grid, and bottom CTA band. [`HeroScreenshotCarousel.tsx`](dashboard/src/pages/home/HeroScreenshotCarousel.tsx) is the themed Bootstrap carousel in the hero right column; slide clicks open a custom fullscreen lightbox (fade + zoom in, not Bootstrap modal slide) with prev/next controls. [`HeroInviteButton.tsx`](dashboard/src/pages/home/HeroInviteButton.tsx) is the gold-gradient Discord invite CTA (Discord icon badge, hint line, arrow hover). Styled components and feature metadata live in [`pages/home/styles.ts`](dashboard/src/pages/home/styles.ts) and [`pages/home/features.ts`](dashboard/src/pages/home/features.ts) — mirrors dashboard server nav (track, kills, assists, deaths, juicy, battles, rankings) plus regional support, recent kill-image features (NEW), dashboard, and premium; uses theme gold accents consistent with header and subscription cards. Ambient page background (`HomeBackground`: animated gold orbs, grid, noise, vignette) sits behind `HomeContent`. Logged-in hero CTA uses `HeroDashboardLink` (avatar, username hint, gold-bordered card button). Logged-out secondary CTA uses [`HeroLoginButton.tsx`](dashboard/src/pages/home/HeroLoginButton.tsx) (same size/layout as dashboard link).
 
 ## Content panel
 

@@ -1,11 +1,10 @@
-import { faBars, faCrown } from "@fortawesome/free-solid-svg-icons";
+import { faCrown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ServerNavItem } from "constants/serverNav";
 import {
   PageDescription,
   PageHeaderContent,
   PageHeaderRoot,
-  PageMenuButton,
   PagePremiumBadge,
   PageTitle,
   PageTitleIcon,
@@ -14,24 +13,13 @@ import {
 
 interface ServerPageHeaderProps {
   item?: ServerNavItem;
-  onMenuClick?: () => void;
 }
 
-const ServerPageHeader = ({ item, onMenuClick }: ServerPageHeaderProps) => {
+const ServerPageHeader = ({ item }: ServerPageHeaderProps) => {
   return (
     <PageHeaderRoot>
       <PageHeaderContent>
         <PageTitleRow>
-          {onMenuClick && (
-            <PageMenuButton
-              type="button"
-              className="d-lg-none"
-              aria-label="Open navigation menu"
-              onClick={onMenuClick}
-            >
-              <FontAwesomeIcon icon={faBars} />
-            </PageMenuButton>
-          )}
           {item?.icon && (
             <PageTitleIcon aria-hidden="true">
               <FontAwesomeIcon icon={item.icon} />
@@ -45,6 +33,7 @@ const ServerPageHeader = ({ item, onMenuClick }: ServerPageHeaderProps) => {
             </PagePremiumBadge>
           )}
         </PageTitleRow>
+
         {item?.description && (
           <PageDescription>{item.description}</PageDescription>
         )}

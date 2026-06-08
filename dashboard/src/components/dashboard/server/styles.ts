@@ -112,6 +112,8 @@ export const MobileNavOffcanvas = styled(Offcanvas)`
 `;
 
 export const MainColumn = styled.main`
+  display: flex;
+  flex-direction: column;
   flex: 1;
   min-width: 0;
   max-width: none;
@@ -509,11 +511,6 @@ export const NavItemLabel = styled.span`
 
 export const PageHeaderRoot = styled.header`
   position: relative;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 1rem;
   margin-bottom: 1.25rem;
   padding: 0 0 1rem 0.75rem;
   border-bottom: 1px solid ${({ theme }) => theme.borderSubtle};
@@ -535,7 +532,6 @@ export const PageHeaderRoot = styled.header`
 `;
 
 export const PageHeaderContent = styled.div`
-  flex: 1;
   min-width: 0;
 `;
 
@@ -544,33 +540,6 @@ export const PageTitleRow = styled.div`
   align-items: center;
   gap: 0.625rem;
   flex-wrap: wrap;
-`;
-
-export const PageMenuButton = styled.button`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2rem;
-  height: 2rem;
-  padding: 0;
-  flex-shrink: 0;
-  border: 1px solid ${({ theme }) => theme.borderSubtle};
-  border-radius: ${({ theme }) => theme.layout.navItemRadius};
-  background-color: ${({ theme }) => theme.surfaceElevated};
-  background-image: linear-gradient(
-    rgba(255, 255, 255, 0.04),
-    rgba(255, 255, 255, 0.04)
-  );
-  color: ${({ theme }) => theme.text};
-  transition: border-color 0.2s ease, color 0.2s ease;
-
-  &:hover {
-    border-color: rgba(
-      ${({ theme }) => theme.rgb?.primary ?? "255,189,89"},
-      0.45
-    );
-    color: ${({ theme }) => theme.primary};
-  }
 `;
 
 export const PageTitleIcon = styled.span`

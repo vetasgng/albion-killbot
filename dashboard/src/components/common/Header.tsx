@@ -1,5 +1,6 @@
 import { faDiscord } from "@fortawesome/free-brands-svg-icons";
 import {
+  faBars,
   faCrown,
   faRightFromBracket,
   faRightToBracket,
@@ -16,15 +17,18 @@ import {
   getUserPictureUrl,
 } from "helpers/discord";
 import { useMediaQuery } from "helpers/hooks";
+import { useServerNavMobile } from "helpers/serverNavMobile";
 import theme from "helpers/theme";
 import { Button, Dropdown, Nav, Navbar } from "react-bootstrap";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { useFetchUserQuery, useLogoutMutation } from "store/api";
 import Loader from "./Loader";
 import {
   HeaderActionButton,
   HeaderBrand,
+  HeaderBrandGroup,
   HeaderExternalLink,
+  HeaderServerNavButton,
   HeaderNav,
   HeaderNavbar,
   HeaderNavLink,
@@ -105,7 +109,12 @@ const HeaderNavItem = ({
 const Header = () => {
   const user = useFetchUserQuery();
   const [logout] = useLogoutMutation();
+  const location = useLocation();
+  const serverNavMobile = useServerNavMobile();
   const isMobile = useMediaQuery("(max-width: 992px)");
+  const isServerDashboard = /^\/dashboard\/[^/]+/.test(location.pathname);
+  const showServerNavButton =
+    isMobile && isServerDashboard && Boolean(serverNavMobile);
 
   const doLogout = async (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
@@ -236,9 +245,21 @@ const Header = () => {
   return (
     <HeaderRoot>
       <HeaderNavbar collapseOnSelect expand="lg" variant="dark">
-        <HeaderBrand as={NavLink} to="/">
-          <img src={logo} alt="Albion Killbot" />
-        </HeaderBrand>
+        <HeaderBrandGroup>
+          {showServerNavButton && (
+            <HeaderServerNavButton
+              type="button"
+              aria-label="Open server navigation"
+              onClick={() => serverNavMobile?.openServerNav()}
+            >
+              <FontAwesomeIcon icon={faBars} />
+            </HeaderServerNavButton>
+          )}
+
+          <HeaderBrand as={NavLink} to="/">
+            <img src={logo} alt="Albion Killbot" />
+          </HeaderBrand>
+        </HeaderBrandGroup>
 
         <Navbar.Toggle aria-controls="header-navbar-nav">
           {user.data && (

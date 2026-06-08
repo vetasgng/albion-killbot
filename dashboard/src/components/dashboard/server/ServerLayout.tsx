@@ -1,6 +1,7 @@
 import { getServerNavItem } from "constants/serverNav";
 import { getServerPictureUrl } from "helpers/discord";
-import { ReactNode, useState } from "react";
+import { useServerNavMobile } from "helpers/serverNavMobile";
+import { ReactNode, useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { ServerBase } from "types/server";
 import ServerPageHeader from "./ServerPageHeader";
@@ -32,10 +33,16 @@ const ServerLayout = ({
   const { serverId = "" } = useParams();
   const location = useLocation();
   const [showNav, setShowNav] = useState(false);
+  const serverNavMobile = useServerNavMobile();
 
   const activeItem = getServerNavItem(location.pathname, serverId);
 
   const closeNav = () => setShowNav(false);
+
+  useEffect(() => {
+    serverNavMobile?.registerOpenHandler(() => setShowNav(true));
+    return () => serverNavMobile?.registerOpenHandler(null);
+  }, [serverNavMobile]);
 
   return (
     <>
@@ -44,10 +51,7 @@ const ServerLayout = ({
 
         <MainColumn>
           <ContentPanel>
-            <ServerPageHeader
-              item={activeItem}
-              onMenuClick={() => setShowNav(true)}
-            />
+            <ServerPageHeader item={activeItem} />
 
             {subscriptionAlert && (
               <SubscriptionAlertSlot>{subscriptionAlert}</SubscriptionAlertSlot>
