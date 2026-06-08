@@ -13,7 +13,7 @@ interfaces/   Entry points (api, bot, crawler) — HTTP routes, Discord commands
 services/     Business logic — orchestration, domain rules
 ports/        External abstractions — database, queue, albion, discord, stripe
 ports/adapters/   Concrete clients (mongoDbClient, albionApiClient, amqpClient, …)
-helpers/      Shared utilities (logger, embeds, locale, cache)
+helpers/      Shared utilities (logger, embeds, locale, cache, markers)
 config/       node-config files (default.js, production.js)
 ```
 
@@ -65,3 +65,13 @@ services/images/
 ```
 
 Post-processing (`optimizeImage` via sharp) stays in `helpers/images.js`.
+
+## Discord monospace tables
+
+Monospace table formatting for bot message `content` lives under `helpers/` (ported from albion-nexus):
+
+- `table.js` — `formatTableLines`, `formatPanelMessageContent` (title `##` + code-block table + footer subtext `-#`)
+- `string.js` — `monospaceDisplayWidth`, `padMonospace`, `truncatePlainTextEllipsis`
+- `discordLimits.js` — Discord text caps and `truncateDiscordText`
+
+Rankings (`embedRanking` in `helpers/embeds.js`) use message `content` only — no embed thumbnail or fields. Footer markers live in `helpers/markers.js` (`Markers.buildFooter.ranking`, `Markers.isRankingMessage`). Before posting, callers use `interfaces/bot/helpers/channels.js` (`resolveChannel`) and `messages.js` (`deleteMatchingMessages` + `Markers.isRankingMessage`) to remove prior bot posts of the same ranking type (cron + `/ranking`).

@@ -1,11 +1,14 @@
 const logger = require("../../../helpers/logger");
 const { embedRanking } = require("../../../helpers/embeds");
+const { Markers } = require("../../../helpers/markers");
 const { runCronjob } = require("../../../helpers/scheduler");
 const { transformGuild } = require("../../../helpers/discord");
 
 const { getRanking } = require("../../../services/rankings");
 const { getSettings } = require("../../../services/settings");
 
+const { deleteMatchingMessages } = require("../helpers/messages");
+const { resolveChannel } = require("../helpers/channels");
 const { sendNotification } = require("./notifications");
 
 async function init({ client }) {
@@ -53,11 +56,19 @@ async function displayRankings(client, rankingType) {
       if (!rankings) continue;
       if (rankings.killFameRanking.length === 0 && rankings.deathFameRanking.length === 0) continue;
 
+      const rankingChannel = await resolveChannel(client, channel);
+      if (!rankingChannel) continue;
+
       logger.verbose(`Sending ${type} ranking to ${guild.name}`, {
         guild: transformGuild(guild),
         type,
         rankings,
       });
+      await deleteMatchingMessages(
+        rankingChannel,
+        (message) => Markers.isRankingMessage(message, { type }),
+        { reason: `${type} ranking` },
+      );
       await sendNotification(
         client,
         channel,

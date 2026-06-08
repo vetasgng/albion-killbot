@@ -1,12 +1,16 @@
 const moment = require("moment");
 const { REPORT_PROVIDERS, EVENT_TYPES } = require("./constants");
 const { getLocale } = require("./locale");
-const { digitsFormatter, humanFormatter, printSpace } = require("./utils");
+const { digitsFormatter, humanFormatter } = require("./utils");
 const { SERVER_LIST } = require("./albion");
+const { truncateDiscordText, DISCORD_MESSAGE_CONTENT_MAX } = require("./discordLimits");
+const { formatPanelMessageContent, formatTableLines, wrapLinesInCodeBlock } = require("./table");
+const { Markers } = require("./markers");
 
 const BATTLE = 16752981;
-const RANKING_LINE_LENGTH = 40;
-const RANKING_RANK_PREFIX_WIDTH = 4;
+
+const RANKING_NAME_COL_WIDTH = 24;
+const RANKING_SCORE_COL_WIDTH = 10;
 
 const COLORS = {
   LIGHT_GREEN: 0x57ad65,
@@ -442,95 +446,80 @@ const embedTrackList = (track, limits, { locale }) => {
   };
 };
 
-const embedRanking = (rankings, { locale, test } = {}) => {
-  const { t } = getLocale(locale);
+const buildRankingTableLines = (ranking, scoreProperty) => {
+  if (ranking.length === 0) {
+    return [];
+  }
 
-  const truncateRankingName = (name, maxLen) => {
-    const safe = name || "?";
-    if (maxLen <= 0) return "";
-    if (safe.length <= maxLen) return safe;
-    if (maxLen === 1) return safe.slice(0, 1);
-    return `${safe.slice(0, maxLen - 1)}…`;
-  };
+  const lastRank = ranking.length;
+  const rankWidth = Math.max(1, lastRank.toString().length);
 
-  const formatRankingRow = (rankIndex, player, scoreProperty) => {
-    const prefix = `${rankIndex}. `.padEnd(RANKING_RANK_PREFIX_WIDTH, " ");
-    const scoreStr = humanFormatter(player.totalScore[scoreProperty], 2);
-    const maxNameLen = Math.max(1, RANKING_LINE_LENGTH - prefix.length - scoreStr.length - 1);
-    const namePart = truncateRankingName(player.name, maxNameLen);
-    const gap = RANKING_LINE_LENGTH - prefix.length - namePart.length - scoreStr.length;
-    return `${prefix}${namePart}${printSpace(Math.max(gap, 1))}${scoreStr}`;
-  };
+  const tableRows = ranking.map((player, index) => ({
+    rank: `${(index + 1).toString().padStart(rankWidth)}.`,
+    name: (player.name || "?").replace(/\*\*/g, ""),
+    score: humanFormatter(player.totalScore[scoreProperty], 2),
+  }));
 
-  const generateRankFieldValue = (ranking, scoreProperty) => {
-    let value = "```c";
-    if (ranking.length === 0) {
-      let nodata = t("RANKING.NO_DATA_SHORT");
-      if (nodata.length > RANKING_LINE_LENGTH) nodata = truncateRankingName(nodata, RANKING_LINE_LENGTH);
-      const count = RANKING_LINE_LENGTH - nodata.length;
-      value += `\n${nodata}${printSpace(Math.max(count, 0))}`;
-    }
-    ranking.forEach((player, i) => {
-      value += `\n${formatRankingRow(i + 1, player, scoreProperty)}`;
-    });
-    value += "```";
-    return value;
-  };
-
-  const icons = {
-    daily: "https://i.imgur.com/2qoyHQm.png",
-    weekly: "https://i.imgur.com/1F5mrVw.png",
-    monthly: "https://i.imgur.com/Qiwaxp3.png",
-    alltime: "https://i.imgur.com/sDx8gRq.png",
-  };
-
-  const colors = {
-    daily: COLORS.GREEN,
-    weekly: COLORS.BLUE,
-    monthly: COLORS.PURPLE,
-    alltime: COLORS.YELLOW,
-  };
-
-  return {
-    content: test ? t("RANKING.TEST") : undefined,
-    embeds: [
+  return formatTableLines(
+    [
       {
-        title: t(`RANKING.${rankings.type.toUpperCase()}`),
-        color: colors[rankings.type],
-        thumbnail: {
-          url: icons[rankings.type],
-        },
-        fields: [
-          {
-            name: t("RANKING.TOTAL_KILL_FAME"),
-            value: digitsFormatter(rankings.killFameTotal),
-            inline: true,
-          },
-          {
-            name: t("RANKING.TOTAL_DEATH_FAME"),
-            value: digitsFormatter(rankings.deathFameTotal),
-            inline: true,
-          },
-          {
-            name: "\u200B",
-            value: "\u200B",
-            inline: true,
-          },
-          {
-            name: t("RANKING.KILL_FAME"),
-            value: generateRankFieldValue(rankings.killFameRanking, "killFame"),
-            inline: false,
-          },
-          {
-            name: t("RANKING.DEATH_FAME"),
-            value: generateRankFieldValue(rankings.deathFameRanking, "deathFame"),
-            inline: false,
-          },
-        ],
-        footer,
+        accessor: "rank",
+        width: rankWidth + 1,
+        alignment: "right",
+      },
+      {
+        accessor: "name",
+        width: RANKING_NAME_COL_WIDTH,
+        alignment: "left",
+        truncate: RANKING_NAME_COL_WIDTH,
+      },
+      {
+        accessor: "score",
+        width: RANKING_SCORE_COL_WIDTH,
+        alignment: "right",
       },
     ],
-  };
+    tableRows,
+  );
+};
+
+const formatRankingSection = (title, tableLines, emptyLabel) => {
+  const table = tableLines.length > 0 ? wrapLinesInCodeBlock(tableLines) : emptyLabel;
+  return `### ${title}\n\n${table}`;
+};
+
+const embedRanking = (rankings, { locale, test } = {}) => {
+  const { t } = getLocale(locale);
+  const emptyLabel = t("RANKING.NO_DATA_SHORT");
+
+  const totalsBlock = wrapLinesInCodeBlock([
+    `${t("RANKING.TOTAL_KILL_FAME")}: ${digitsFormatter(rankings.killFameTotal)}`,
+    `${t("RANKING.TOTAL_DEATH_FAME")}: ${digitsFormatter(rankings.deathFameTotal)}`,
+  ]);
+
+  let content = formatPanelMessageContent({
+    title: Markers.formatRankingLabel(rankings.type, t(`RANKING.${rankings.type.toUpperCase()}`)),
+    body: [
+      totalsBlock,
+      formatRankingSection(
+        t("RANKING.KILL_FAME"),
+        buildRankingTableLines(rankings.killFameRanking, "killFame"),
+        emptyLabel,
+      ),
+      formatRankingSection(
+        t("RANKING.DEATH_FAME"),
+        buildRankingTableLines(rankings.deathFameRanking, "deathFame"),
+        emptyLabel,
+      ),
+    ].join("\n"),
+    footer: Markers.buildFooter.ranking(rankings.type),
+  });
+
+  if (test) {
+    content = truncateDiscordText(`${t("RANKING.TEST")}\n\n${content}`, DISCORD_MESSAGE_CONTENT_MAX);
+  }
+
+  return { content };
 };
 
 module.exports = {

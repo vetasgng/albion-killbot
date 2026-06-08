@@ -2,6 +2,8 @@ const { SlashCommandBuilder } = require("discord.js");
 const { getLocale } = require("../../../helpers/locale");
 const { getRanking } = require("../../../services/rankings");
 const { embedRanking } = require("../../../helpers/embeds");
+const { Markers } = require("../../../helpers/markers");
+const { deleteMatchingMessages } = require("../helpers/messages");
 
 const { t } = getLocale();
 
@@ -37,6 +39,11 @@ const command = {
       return await interaction.editReply(t("RANKING.NO_DATA"));
     }
 
+    await deleteMatchingMessages(
+      interaction.channel,
+      (message) => Markers.isRankingMessage(message, { type }),
+      { reason: `${type} ranking` },
+    );
     return await interaction.editReply(embedRanking(ranking, { locale: settings.general.locale }));
   },
 };
