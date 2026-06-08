@@ -85,17 +85,32 @@ export const HeaderBrand = styled(Navbar.Brand)`
   min-width: 0;
   margin-right: 0;
   padding: 0;
+  transition: transform 0.16s ease;
+
+  &:focus,
+  &:focus-visible,
+  &:active {
+    transform: scale(0.96);
+    ring: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+  }
 
   img {
     display: block;
     height: 2.5rem;
     max-width: min(280px, 55vw);
     width: auto;
+    transition: filter 0.16s ease;
 
     @media (min-width: ${({ theme }) => theme.layout.breakpoints.lg}) {
       height: 3rem;
       max-width: 320px;
     }
+  }
+
+  &:active img {
+    filter: brightness(1.1);
   }
 `;
 

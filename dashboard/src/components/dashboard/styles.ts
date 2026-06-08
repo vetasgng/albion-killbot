@@ -211,6 +211,11 @@ export const DashboardServerIconButton = styled.button`
     outline-offset: 3px;
   }
 
+  &:active {
+    outline: none;
+    box-shadow: none;
+  }
+
   &:active ${DashboardServerIcon} {
     transform: scale(0.92);
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.28);
