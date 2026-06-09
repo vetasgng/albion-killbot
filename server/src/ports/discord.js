@@ -3,8 +3,6 @@ const discordApiClient = require("./adapters/discordApiClient");
 const discordHelper = require("../helpers/discord");
 const { memoize, remove } = require("../helpers/cache");
 const { DAY, MINUTE, SECOND } = require("../helpers/constants");
-const { sleep } = require("../helpers/scheduler");
-
 const DISCORD_TOKEN = config.get("discord.token");
 
 async function getToken(code) {
@@ -54,32 +52,6 @@ async function getUserGuilds(accessToken, params) {
   );
 }
 
-async function getBotGuilds() {
-  return memoize(
-    `discord.botGuilds`,
-    async () => {
-      let foundAll = false;
-      let after;
-      const guilds = [];
-
-      // Iterate over all pages of guilds because bot can join more than the default 200 servers limit
-      while (!foundAll) {
-        const guildList = await discordApiClient.getCurrentUserGuilds(`Bot ${DISCORD_TOKEN}`, { limit: 200, after });
-        guilds.push(...guildList);
-
-        after = guilds[guilds.length - 1].id;
-        if (guildList.length < 200) foundAll = true;
-        else await sleep(2000);
-      }
-
-      return guilds.map(discordHelper.transformGuild);
-    },
-    {
-      refresh: 10 * MINUTE,
-    },
-  );
-}
-
 async function getGuild(guildId) {
   return memoize(
     `discord.guilds.${guildId}`,
@@ -108,7 +80,6 @@ async function getGuildChannels(guildId) {
 
 async function leaveGuild(guildId) {
   await discordApiClient.leaveGuild(`Bot ${DISCORD_TOKEN}`, guildId);
-  remove("discord.botGuilds");
   remove(`discord.botInGuild.${guildId}`);
   remove(`discord.guilds.${guildId}`);
   remove(`discord.guilds.${guildId}.channels`);
@@ -185,7 +156,6 @@ const sendMessage = (channelId, payload) => {
 
 module.exports = {
   addMemberRole,
-  getBotGuilds,
   getGuild,
   getGuildChannels,
   getToken,

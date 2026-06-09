@@ -11,17 +11,47 @@ router.use(admin);
  * /admin/servers:
  *   get:
  *     tags: [Admin]
- *     summary: Return list of servers for the bot
+ *     summary: Return paginated list of servers for the bot
  *     operationId: getServers
+ *     parameters:
+ *     - name: search
+ *       in: query
+ *       description: Filter by server name or id
+ *       schema:
+ *         type: string
+ *     - name: page
+ *       in: query
+ *       description: Page number (1-based)
+ *       schema:
+ *         type: integer
+ *         minimum: 1
+ *         default: 1
+ *     - name: pageSize
+ *       in: query
+ *       description: Number of servers per page
+ *       schema:
+ *         type: integer
+ *         minimum: 1
+ *         maximum: 100
+ *         default: 10
  *     responses:
  *       200:
- *         description: List of servers
+ *         description: Paginated list of servers
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/ServerPartial'
+ *               type: object
+ *               properties:
+ *                 items:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/ServerPartial'
+ *                 total:
+ *                   type: integer
+ *                 page:
+ *                   type: integer
+ *                 pageSize:
+ *                   type: integer
  *       403:
  *         description: Unable to authenticate
  *       500:

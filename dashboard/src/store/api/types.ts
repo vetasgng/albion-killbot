@@ -7,6 +7,11 @@ import {
 } from "types/subscription";
 
 // Admin
+export type IFindAdminServers = {
+  search?: string;
+  page?: number;
+  pageSize?: number;
+};
 export type IFindSubscriptions = {
   server?: string;
   owner?: string;

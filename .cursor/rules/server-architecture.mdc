@@ -40,6 +40,16 @@ const albionApiClient = require("../../../ports/adapters/albionApiClient");
 
 New external integrations: add adapter under `ports/adapters/`, expose via a `ports/*.js` module, consume from services.
 
+## Bot guild registry
+
+Admin `/admin/servers` reads from MongoDB collection `botGuilds` via `services/botGuilds.js` (paginated `findBotGuilds`) — not Discord's paginated guild API. The bot process keeps the collection in sync:
+
+- **Startup**: each shard upserts its cached guilds once (`interfaces/bot/controllers/servers.js` `preinit`)
+- **Realtime**: `GuildCreate` upserts, `GuildDelete` removes
+- **Periodic cache refresh** updates limits/settings/track only; it does not re-sync all guilds
+
+Indexes: unique `{ id: 1 }`, `{ name: 1, id: 1 }` (see migration `bot-guilds-indexes`).
+
 ## Event image rendering
 
 Killboard canvas code lives under `services/images/` (import as `require("…/services/images")`):

@@ -11,11 +11,11 @@ const FAKE_INSANE_EVENT = require("../assets/mocks/event_1000545635.json");
 const FAKE_BATTLE = require("../assets/mocks/battle_934264285.json");
 const FAKE_PVP_RANKING = require("../assets/mocks/ranking_daily.json");
 const axios = require("axios");
+const botGuildsService = require("./botGuilds");
 
-async function getBotServers() {
+async function getBotServers({ search, page, pageSize } = {}) {
   try {
-    const servers = await discord.getBotGuilds();
-    return servers;
+    return await botGuildsService.findBotGuilds({ search, page, pageSize });
   } catch (error) {
     logger.error(`Error while retrieving bot servers: ${error.message}`, { error });
     throw error;
@@ -61,6 +61,7 @@ async function getServerChannels(serverId) {
 
 async function leaveServer(serverId) {
   try {
+    await botGuildsService.removeBotGuild(serverId);
     return await discord.leaveGuild(serverId);
   } catch (error) {
     logger.error(`Error while leaving discord server: ${error.message}`, { error });

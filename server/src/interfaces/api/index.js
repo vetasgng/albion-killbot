@@ -1,6 +1,7 @@
 const config = require("config");
 const logger = require("../../helpers/logger");
 const database = require("../../ports/database");
+const botGuildsService = require("../../services/botGuilds");
 const api = require("./api");
 
 const port = config.get("api.port");
@@ -19,6 +20,7 @@ async function run() {
   logger.info(`Starting Albion-Killbot rest api.`);
 
   await database.init();
+  await botGuildsService.ensureIndexes();
   await api.init(port);
   logger.verbose(`Api is listening on port ${port}.`);
 }

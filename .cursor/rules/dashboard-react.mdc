@@ -92,6 +92,7 @@ Use the **Albion Nexus - Development** guild (`1447669162917761047`), e.g. `http
 
 - [`AdminPage.tsx`](dashboard/src/pages/admin/AdminPage.tsx) + [`pages/admin/styles.ts`](dashboard/src/pages/admin/styles.ts) — `ContentPanelRoot` shell with themed pill nav (`AdminNav`), filter panels (`AdminFilterPanel`, `AdminFilterFooter`), and detail rows (`AdminDetailRow`)
 - [`AdminServersPage.tsx`](dashboard/src/pages/admin/servers/AdminServersPage.tsx) / [`AdminSubscriptionsPage.tsx`](dashboard/src/pages/admin/subscriptions/AdminSubscriptionsPage.tsx) — section titles, themed search/filter forms, status dropdown menu
+- Admin servers use server-side pagination (`search`, `page`, `pageSize` query params) via `useLazyFetchAdminServersQuery`; [`ServerList.tsx`](dashboard/src/components/ServerList.tsx) supports controlled pagination (`page`, `pages`, `onPageChange`)
 - [`ServerList.tsx`](dashboard/src/components/ServerList.tsx) / [`SubscriptionList.tsx`](dashboard/src/components/SubscriptionList.tsx) — dashed empty states when no results
 - [`SubscriptionListItem.tsx`](dashboard/src/components/SubscriptionListItem.tsx) / [`AdminSubscriptionPage.tsx`](dashboard/src/pages/admin/subscriptions/AdminSubscriptionPage.tsx) — detail rows with `SubscriptionStatusBadge`; list items include `SubscriptionDelete` with confirmation modal
 

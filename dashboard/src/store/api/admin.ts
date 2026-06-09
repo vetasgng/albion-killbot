@@ -1,9 +1,11 @@
+import { PaginatedResponse } from "types/pagination";
 import { ServerPartial } from "types/server";
 import { ISubscription, ISubscriptionExtended } from "types/subscription";
 import api from "./index";
 import {
   ICreateSubscription,
   IDeleteSubscription,
+  IFindAdminServers,
   IFindSubscriptions,
   IGetSubscription,
   IUpdateSubscription,
@@ -11,8 +13,14 @@ import {
 
 const admin = api.injectEndpoints({
   endpoints: (builder) => ({
-    fetchAdminServers: builder.query<ServerPartial[], void>({
-      query: () => `/admin/servers`,
+    fetchAdminServers: builder.query<
+      PaginatedResponse<ServerPartial>,
+      IFindAdminServers
+    >({
+      query: (params) => ({
+        url: `/admin/servers`,
+        params,
+      }),
       providesTags: ["Admin", "Server"],
     }),
     doLeaveServer: builder.mutation<void, { serverId: string }>({
@@ -76,7 +84,7 @@ const admin = api.injectEndpoints({
 });
 
 export const {
-  useFetchAdminServersQuery,
+  useLazyFetchAdminServersQuery,
   useDoLeaveServerMutation,
 
   useLazyFetchAdminSubscriptionsQuery,

@@ -3,31 +3,50 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Loader from "components/common/Loader";
 import ServerList from "components/ServerList";
 import { AdminFilterPanel, AdminSectionTitle } from "pages/admin/styles";
-import { useEffect, useState } from "react";
+import { FormEvent, useCallback, useEffect, useState } from "react";
 import { Button, Card, Form, InputGroup, Stack } from "react-bootstrap";
-import { useFetchAdminServersQuery } from "store/api/admin";
-import { ServerPartial } from "types/server";
+import { useLazyFetchAdminServersQuery } from "store/api/admin";
+
+const PAGE_SIZE = 10;
 
 const AdminServersPage = () => {
-  const serversQuery = useFetchAdminServersQuery();
-  const [servers, setServers] = useState<ServerPartial[]>([]);
   const [searchServer, setSearchServer] = useState("");
+  const [page, setPage] = useState(1);
+  const [fetchServers, serversQuery] = useLazyFetchAdminServersQuery();
+
+  const buildQuery = useCallback(
+    (nextPage = page) => ({
+      search: searchServer.trim() || undefined,
+      page: nextPage,
+      pageSize: PAGE_SIZE,
+    }),
+    [page, searchServer]
+  );
+
+  const refetchServers = useCallback(
+    (nextPage = page) => {
+      fetchServers(buildQuery(nextPage));
+    },
+    [buildQuery, fetchServers, page]
+  );
 
   useEffect(() => {
-    if (serversQuery.data) {
-      setServers(
-        serversQuery.data.filter(
-          (server) =>
-            server.id.includes(searchServer.replace("#", "")) ||
-            server.name
-              .toLocaleLowerCase()
-              .includes(searchServer.toLocaleLowerCase())
-        )
-      );
-    }
-  }, [searchServer, serversQuery]);
+    refetchServers(1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  if (serversQuery.isFetching) {
+  const handleSearch = (event: FormEvent) => {
+    event.preventDefault();
+    setPage(1);
+    refetchServers(1);
+  };
+
+  const handlePageChange = (nextPage: number) => {
+    setPage(nextPage);
+    refetchServers(nextPage);
+  };
+
+  if (serversQuery.isFetching && !serversQuery.data) {
     return (
       <Loader width={500} height={500}>
         <rect x="160" y="10" rx="0" ry="0" width="210" height="15" />
@@ -44,13 +63,19 @@ const AdminServersPage = () => {
     );
   }
 
+  const servers = serversQuery.data?.items ?? [];
+  const totalPages = Math.max(
+    1,
+    Math.ceil((serversQuery.data?.total ?? 0) / PAGE_SIZE)
+  );
+
   return (
     <Stack gap={3}>
       <AdminSectionTitle>Servers</AdminSectionTitle>
 
       <AdminFilterPanel>
         <Card.Body>
-          <Form onSubmit={() => serversQuery.refetch()}>
+          <Form onSubmit={handleSearch}>
             <Form.Group controlId="search">
               <Form.Label>Search</Form.Label>
               <InputGroup>
@@ -70,7 +95,14 @@ const AdminServersPage = () => {
         </Card.Body>
       </AdminFilterPanel>
 
-      <ServerList servers={servers} />
+      <ServerList
+        servers={servers}
+        page={page}
+        pages={totalPages}
+        pageSize={PAGE_SIZE}
+        onPageChange={handlePageChange}
+        onServerLeave={() => refetchServers(page)}
+      />
     </Stack>
   );
 };

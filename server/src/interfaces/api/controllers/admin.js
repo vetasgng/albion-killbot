@@ -4,8 +4,10 @@ const serversService = require("../../../services/servers");
 const subscriptionsService = require("../../../services/subscriptions");
 
 async function getServers(req, res) {
+  const { search, page, pageSize } = req.query;
+
   try {
-    const servers = await serversService.getBotServers();
+    const servers = await serversService.getBotServers({ search, page, pageSize });
 
     return res.send(servers);
   } catch (error) {
