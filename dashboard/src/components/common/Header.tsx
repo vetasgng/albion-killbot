@@ -17,6 +17,7 @@ import {
   getUserPictureUrl,
 } from "helpers/discord";
 import { useMediaQuery } from "helpers/hooks";
+import { useAdminNavMobile } from "helpers/adminNavMobile";
 import { useServerNavMobile } from "helpers/serverNavMobile";
 import theme from "helpers/theme";
 import { Button, Dropdown, Nav, Navbar } from "react-bootstrap";
@@ -111,10 +112,14 @@ const Header = () => {
   const [logout] = useLogoutMutation();
   const location = useLocation();
   const serverNavMobile = useServerNavMobile();
+  const adminNavMobile = useAdminNavMobile();
   const isMobile = useMediaQuery("(max-width: 992px)");
   const isServerDashboard = /^\/dashboard\/[^/]+/.test(location.pathname);
+  const isAdminDashboard = /^\/admin(?:\/|$)/.test(location.pathname);
   const showServerNavButton =
     isMobile && isServerDashboard && Boolean(serverNavMobile);
+  const showAdminNavButton =
+    isMobile && isAdminDashboard && Boolean(adminNavMobile);
 
   const doLogout = async (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
@@ -251,6 +256,15 @@ const Header = () => {
               type="button"
               aria-label="Open server navigation"
               onClick={() => serverNavMobile?.openServerNav()}
+            >
+              <FontAwesomeIcon icon={faBars} />
+            </HeaderServerNavButton>
+          )}
+          {showAdminNavButton && (
+            <HeaderServerNavButton
+              type="button"
+              aria-label="Open admin navigation"
+              onClick={() => adminNavMobile?.openAdminNav()}
             >
               <FontAwesomeIcon icon={faBars} />
             </HeaderServerNavButton>
