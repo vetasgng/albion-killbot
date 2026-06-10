@@ -294,7 +294,9 @@ const AdminDebugPage = () => {
                 isSaving={publishMutation.isLoading}
                 onReset={() => setSelectedEventIds(new Set())}
                 onSave={handlePublish}
-                title={`${selectedCount} kill${selectedCount === 1 ? "" : "s"} selected`}
+                title={`${selectedCount} kill${
+                  selectedCount === 1 ? "" : "s"
+                } selected`}
                 description="Publish selected kills to Discord."
                 saveLabel="Publish"
                 savingLabel="Publishing..."

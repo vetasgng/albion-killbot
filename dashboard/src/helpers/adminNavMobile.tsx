@@ -11,8 +11,9 @@ interface AdminNavMobileContextValue {
   openAdminNav: () => void;
 }
 
-const AdminNavMobileContext =
-  createContext<AdminNavMobileContextValue | null>(null);
+const AdminNavMobileContext = createContext<AdminNavMobileContextValue | null>(
+  null
+);
 
 export const AdminNavMobileProvider = ({
   children,

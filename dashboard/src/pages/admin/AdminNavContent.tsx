@@ -18,11 +18,7 @@ const AdminNavContent = ({ onNavigate }: AdminNavContentProps) => {
 
       <AdminNavSections>
         {ADMIN_NAV_ITEMS.map((item) => (
-          <AdminNavItemLink
-            key={item.path}
-            to={item.path}
-            onClick={onNavigate}
-          >
+          <AdminNavItemLink key={item.path} to={item.path} onClick={onNavigate}>
             <FontAwesomeIcon icon={item.icon} className="nav-icon" />
             <AdminNavItemLabel>{item.name}</AdminNavItemLabel>
           </AdminNavItemLink>

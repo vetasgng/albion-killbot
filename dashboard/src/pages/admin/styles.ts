@@ -156,8 +156,7 @@ export const AdminNavItemLink = styled(NavLink)`
     border-color 0.2s ease;
 
   &.active {
-    background-color: ${({ theme }) =>
-      theme.nav.activeBackground} !important;
+    background-color: ${({ theme }) => theme.nav.activeBackground} !important;
     border-left-color: ${({ theme }) => theme.nav.activeBorder};
     color: ${({ theme }) => theme.primary} !important;
   }
@@ -346,7 +345,8 @@ export const AdminKillListItem = styled.div<{
   display: flex;
   align-items: ${({ $compact }) => ($compact ? "center" : "flex-start")};
   gap: ${({ $compact }) => ($compact ? "0.5rem" : "0.75rem")};
-  padding: ${({ $compact }) => ($compact ? "0.4375rem 0.75rem" : "0.75rem 1rem")};
+  padding: ${({ $compact }) =>
+    $compact ? "0.4375rem 0.75rem" : "0.75rem 1rem"};
   border-bottom: 1px solid ${({ theme }) => theme.borderSubtle};
   border-left: 3px solid
     ${({ theme, $selected }) =>

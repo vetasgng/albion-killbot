@@ -125,7 +125,9 @@ export const toastSlice = createSlice({
       (state, action) => {
         const { published, failed } = action.payload;
         const failedSuffix =
-          failed.length > 0 ? ` ${failed.length} event(s) could not be loaded.` : "";
+          failed.length > 0
+            ? ` ${failed.length} event(s) could not be loaded.`
+            : "";
 
         state.push({
           id: uid(),

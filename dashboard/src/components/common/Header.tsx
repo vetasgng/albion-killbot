@@ -209,11 +209,7 @@ const Header = () => {
       />
       {isFetching ? (
         <NavLoaderSlot>
-          <Loader
-            width={220}
-            height={20}
-            foregroundColor={theme.secondary}
-          >
+          <Loader width={220} height={20} foregroundColor={theme.secondary}>
             <rect x="0" y="2" rx="3" ry="3" width="120" height="16" />
           </Loader>
         </NavLoaderSlot>
@@ -285,10 +281,7 @@ const Header = () => {
           )}
         </Navbar.Toggle>
 
-        <Navbar.Collapse
-          id="header-navbar-nav"
-          className="justify-content-end"
-        >
+        <Navbar.Collapse id="header-navbar-nav" className="justify-content-end">
           {isMobile ? renderMobileNav(user) : renderDesktopNav(user)}
         </Navbar.Collapse>
       </HeaderNavbar>

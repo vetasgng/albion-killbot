@@ -1,9 +1,5 @@
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
-import {
-  faBug,
-  faCrown,
-  faList,
-} from "@fortawesome/free-solid-svg-icons";
+import { faBug, faCrown, faList } from "@fortawesome/free-solid-svg-icons";
 
 export interface AdminNavItem {
   path: string;
@@ -29,7 +25,8 @@ export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
     path: "debug",
     name: "Debug",
     icon: faBug,
-    description: "Look up Albion players by name or ID and inspect recent kills.",
+    description:
+      "Look up Albion players by name or ID and inspect recent kills.",
   },
 ];
 
