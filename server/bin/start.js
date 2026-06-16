@@ -27,6 +27,16 @@ const modes = [
   },
 ];
 
+// Render Port Kandırmacası
+const http = require('http');
+const expressPort = process.env.PORT || 10000;
+http.createServer((req, res) => {
+  res.writeHead(200, { 'Content-Type': 'text/plain' });
+  res.end('Bot is running 7/24!\n');
+}).listen(expressPort, () => {
+  console.log(`Render port binding simulation successful on port ${expressPort}`);
+});
+
 async function start() {
   const logger = require("../src/helpers/logger");
 
