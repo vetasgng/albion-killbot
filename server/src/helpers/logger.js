@@ -76,7 +76,7 @@ if (config.has("datadog.apiKey")) {
   );
 }
 
-if (config.has("loggly.token") && config.has("loggly.subdomain")) {
+if (false && config.has("loggly.token") && config.has("loggly.subdomain")) {
   logger.add(
     new Loggly({
       token: config.get("loggly.token"),
